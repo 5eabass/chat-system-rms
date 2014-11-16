@@ -18,7 +18,12 @@ public class Controler implements ActionListener {
         }
         if(e.getActionCommand().equals("Enter the chat")) {
             System.out.println("> Enter the chat button pressed");
+            performHello(ChatSystem.getGUI().getUsername());
         }
+    }
+    
+    public void performHello(String username) {
+        ChatSystem.getNetwork().sendHello(username);
     }
     
 }
