@@ -72,7 +72,7 @@ public class GUI extends JFrame {
     }
 
     // Getters and setters
-    public String getUserName() {
+    public String getUsername() {
         return this.login.getText();
     }
 }
