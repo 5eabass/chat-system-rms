@@ -2,10 +2,32 @@ package chatsystem;
 
 public class ChatSystem {
 
+    private static Network n0;
+    private static GUI g0;
+    private static Controler c0;
+    
+    public ChatSystem() {
+        
+    }
+    
     public static void main(String[] args) {
        
-       Network n0 = new Network();
-       GUI g0 = new GUI();
+       n0 = new Network();
+       g0 = new GUI();
+       c0 = new Controler();
     }
+
+    public static Network getNetwork() {
+        return n0;
+    }
+
+    public static GUI getGUI() {
+        return g0;
+    }
+
+    public static Controler getControler() {
+        return c0;
+    }
+    
     
 }
