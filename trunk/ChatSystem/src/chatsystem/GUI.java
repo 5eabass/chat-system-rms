@@ -1,3 +1,7 @@
+
+// on va le faire avec le drag and drop le GUI je pense 
+
+
 package chatsystem;
 
 import java.awt.BorderLayout;

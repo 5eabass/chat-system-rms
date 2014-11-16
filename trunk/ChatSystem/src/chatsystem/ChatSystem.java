@@ -10,12 +10,7 @@ public class ChatSystem {
         
     }
     
-    public static void main(String[] args) {
-       
-       n0 = new Network();
-       g0 = new GUI();
-       c0 = new Controler();
-    }
+    
 
     public static Network getNetwork() {
         return n0;
@@ -28,6 +23,17 @@ public class ChatSystem {
     public static Controler getControler() {
         return c0;
     }
+    
+    
+    public static void main(String[] args) {
+       
+       n0 = new Network();
+       g0 = new GUI();
+       c0 = new Controler();
+       
+    }
+    
+    
     
     
 }
