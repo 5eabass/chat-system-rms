@@ -4,6 +4,7 @@
 
 package chatsystem;
 
+import interfaces.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -15,7 +16,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-public class GUI extends JFrame {
+public class GUI extends JFrame implements CtrlToGUI{
 
     private JButton[] buttons;
     private JTextArea login;
@@ -79,4 +80,40 @@ public class GUI extends JFrame {
     public String getUsername() {
         return this.login.getText();
     }
+    
+    
+    /*
+     * ICI TOUTES LES FONCTIONS A IMPLEMENTER AU FUR ET A MESURE 
+    */
+
+    @Override
+    public void addUser(String username) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void processTextMessage() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void notifyTransmitted() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void notifyNotTransmitted() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void deleteUser(String remoteName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
+    
+    
+    
+    
 }

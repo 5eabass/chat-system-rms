@@ -16,18 +16,14 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import signals.Hello;
+import interfaces.*;
 
-public class Network {
+public class Network implements CtrlToNetwork{
 
     private String username;
 
     public Network() {
 
-    }
-
-    public void sendHello(String u) {
-
-        Hello helloMessage = new Hello(username);
     }
 
     public void udpSocket(InetAddress aIp, int dPort) {
@@ -73,4 +69,52 @@ public class Network {
 
         return ips;
     }
+
+    /*
+     * ICI TOUTES LES FONCTIONS A IMPLEMENTER AU FUR ET A MESURE
+    */
+    
+    /*
+     * FROM CONTROLER
+    */
+    
+    @Override
+    public void sendHello(String u) {
+        Hello helloMessage = new Hello(u);
+        System.out.println(u);
+    }
+
+    @Override
+    public void sendHelloOk(String username) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void processTextMessage() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void performRefuseTransfer() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void performAcceptTransfer() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    // appelé quand on disconnect par le ctrl
+    public void sendGoodbye(String localName) {
+        System.out.println("GOODBYE");
+    }
+    
+    /*
+     * FIN FROM CTRL
+    */
+    
+    
+    
+    
 }
