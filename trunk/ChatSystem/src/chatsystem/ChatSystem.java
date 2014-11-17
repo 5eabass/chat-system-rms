@@ -1,7 +1,5 @@
 package chatsystem;
 
-import gui.EntryFrame;
-
 public class ChatSystem {
 
     private static Network n0;
@@ -32,8 +30,8 @@ public class ChatSystem {
        n0 = new Network();
       // g0 = new GUI();
        c0 = new Controler();
-       EntryFrame e0 = new EntryFrame(c0);
-       e0.setVisible(true);
+       GUI_SEB gui = new GUI_SEB();
+       gui.setVisible(true);
        
        
        
