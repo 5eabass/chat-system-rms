@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import signals.Hello;
 import interfaces.*;
+import signals.TextMessage;
 
 public class Network implements CtrlToNetwork{
 
@@ -90,8 +91,11 @@ public class Network implements CtrlToNetwork{
     }
 
     @Override
-    public void processTextMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    // appelé quand on envoie un message
+    public void processTextMessage(String message ,String remoteName) {
+       // a coder:la liste des receiver en global et la modifier ici 
+       // TextMessage m = new TextMessage(message, "localname", receivers);
+    
     }
 
     @Override

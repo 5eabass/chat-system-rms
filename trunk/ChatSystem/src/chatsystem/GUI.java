@@ -83,17 +83,19 @@ public class GUI extends JFrame implements CtrlToGUI{
     
     
     /*
-     * ICI TOUTES LES FONCTIONS A IMPLEMENTER AU FUR ET A MESURE 
+     * ICI TOUTES LES FONCTIONS SONT A IMPLEMENTER AU FUR ET A MESURE 
     */
 
     @Override
-    public void addUser(String username) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    // appelé quand on recoit un hello ou un helloOK
+    public void addUser(String remoteName) {
+    // il faut update la liste : list.add(remoteName)
     }
 
     @Override
-    public void processTextMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    // appelé quand on recoit un message il faut juste le print
+    public void processTextMessage(String message, String remoteName) {
+       // print du message textArea.setText(remoteName+" : "+ message)
     }
 
     @Override
@@ -107,8 +109,9 @@ public class GUI extends JFrame implements CtrlToGUI{
     }
 
     @Override
+    // appelé quand on recoit un goodbye
     public void deleteUser(String remoteName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    // update de la liste : list.delete(remoteName) ;
     }
     
     
