@@ -42,21 +42,22 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
     */
     
     @Override
-    // on recoit un Hello 
+    // appelé quand on recoit un Hello 
     public void performHello(String remoteName) {
         ChatSystem.getGUI().addUser(remoteName);
         ChatSystem.getNetwork().sendHelloOk("localname"); // a changer localname par notre nom
     }
 
     @Override
-    // on recoit un HelloOK 
+    // appelé quand on recoit un HelloOK 
     public void performHelloOk(String username) {
           ChatSystem.getGUI().addUser(username);  
     }
 
     @Override
-    public void performTextMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    // appelé quand on recoit un message 
+    public void performTextMessage(String message, String remoteName) {
+      ChatSystem.getGUI().processTextMessage(message, remoteName);
     }
 
 
@@ -90,13 +91,15 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
     */
     
     @Override
+    // appelé quand on se connect au chatsystem
     public void performConnect(String username) {
         ChatSystem.getNetwork().sendHello(username);    
     }
 
     @Override
-    public void performSendMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    // appelé quand on envoie un message
+    public void performSendMessage(String message, String remoteName) {
+        ChatSystem.getNetwork().processTextMessage(message, remoteName);
     }
 
     @Override
