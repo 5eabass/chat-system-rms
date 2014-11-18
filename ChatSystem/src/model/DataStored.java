@@ -1,35 +1,44 @@
 package model;
 
-import java.util.ArrayList;
-
+import java.util.*;
 /* 
  * MODEL
 */
 
-public class DataStored {
-    private ArrayList<UserCouple> remoteTable; // info des remotes users
-    private UserCouple localInfo ; // info du localuser
-        
-    public DataStored(ArrayList<UserCouple> remoteTable, UserCouple localInfo) {
-        this.remoteTable = remoteTable;
-        this.localInfo = localInfo;
+
+public class DataStored{
+    private HashMap<String,String> remoteTable; // info des remotes users
+    // hashmap : <name , @ip>
+    private String localName ; // info de l'utilisateur qui s'initialise à la connection
+    private String localAdress ;
+    
+    public DataStored(String localName,String localAdress) {
+        this.remoteTable = new HashMap<String,String>();
+        this.localName = localName;
+        this.localAdress = localAdress;
     }
 
-    public ArrayList<UserCouple> getRemoteTable() {
+    public HashMap<String,String> getRemoteTable() {
         return remoteTable;
     }
 
-    public void setRemoteTable(ArrayList<UserCouple> remoteTable) {
-        this.remoteTable = remoteTable;
+    public String getLocalName() {
+        return localName;
     }
 
-    public UserCouple getLocalInfo() {
-        return localInfo;
+    public void setLocalName(String localName) {
+        this.localName = localName;
     }
 
-    public void setLocalInfo(UserCouple localInfo) {
-        this.localInfo = localInfo;
+    public String getLocalAdress() {
+        return localAdress;
     }
+
+    public void setLocalAdress(String localAdress) {
+        this.localAdress = localAdress;
+    }
+
+    
     
     
     
