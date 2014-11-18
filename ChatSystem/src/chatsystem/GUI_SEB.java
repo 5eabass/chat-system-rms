@@ -1,11 +1,12 @@
 package chatsystem;
 import chatsystem.*;
 import java.awt.CardLayout;
+import interfaces.*;
 /**
  *
  * @author seb
  */
-public class GUI_SEB extends javax.swing.JFrame {   
+public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{   
     /**
      * Creates new form EntryFrame
      */
@@ -199,11 +200,12 @@ public class GUI_SEB extends javax.swing.JFrame {
 
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
         // TODO add your handling code here:
+        ChatSystem.getControler().createLocalInfo(usernameArea.getText());
         ChatSystem.getControler().performConnect(usernameArea.getText());
         this.usernameLabel.setText(usernameArea.getText());
+        this.receivedMessageArea.setText("your adress ip is : " + ChatSystem.getControler().getModel().getLocalInfo().getAdress()+"\n");
         this.EntryPanel.setVisible(false);
         this.UsagePanel.setVisible(true);
-        
     }//GEN-LAST:event_connectButtonActionPerformed
     
     
@@ -244,4 +246,33 @@ public class GUI_SEB extends javax.swing.JFrame {
     private javax.swing.JTextField usernameArea;
     private javax.swing.JLabel usernameLabel;
     // End of variables declaration//GEN-END:variables
+
+    
+    // toutes les fonctions à implémenter ! 
+    
+    @Override
+    public void addUser(String remoteName) {
+       // connectedList.add le name ;
+        connectedList.validate();
+    }
+
+    @Override
+    public void processTextMessage(String message, String remoteName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void notifyTransmitted() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void notifyNotTransmitted() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void deleteUser(String remoteName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

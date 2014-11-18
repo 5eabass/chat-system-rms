@@ -38,6 +38,8 @@ public class Network implements CtrlToNetwork{
         writer = new BufferedWriter(out);
         reader = new BufferedReader(in);*/
     }
+    
+    // il suffit pas de faire InetAddress.getLocalHost().getHostAddress() ?
 
     public ArrayList getIps() {
         ArrayList ips = new ArrayList();
@@ -63,6 +65,8 @@ public class Network implements CtrlToNetwork{
                     ips.add(adress);
                 }
             }
+            // print de ce que je dis plus haut 
+            System.out.println(InetAddress.getLocalHost().getHostAddress());
         } catch (Exception e) {
             System.out.println("pas de carte reseau");
             e.printStackTrace();
@@ -71,6 +75,18 @@ public class Network implements CtrlToNetwork{
         return ips;
     }
 
+    //appelé par le controler pour créer le localInfo 
+    
+    public String getIP(){
+        try{
+            return InetAddress.getLocalHost().getHostAddress();
+        }catch(IOException e){
+            System.err.println("no IP adress for local user");
+            return null;
+        } 
+    }
+    
+    
     /*
      * ICI TOUTES LES FONCTIONS A IMPLEMENTER AU FUR ET A MESURE
     */
@@ -82,7 +98,6 @@ public class Network implements CtrlToNetwork{
     @Override
     public void sendHello(String u) {
         Hello helloMessage = new Hello(u);
-        System.out.println(u);
     }
 
     @Override
@@ -97,7 +112,7 @@ public class Network implements CtrlToNetwork{
        // TextMessage m = new TextMessage(message, "localname", receivers);
     
     }
-
+    
     @Override
     public void performRefuseTransfer() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

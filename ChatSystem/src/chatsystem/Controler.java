@@ -1,14 +1,20 @@
 package chatsystem;
 
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import gui.*;
 import interfaces.*;
+import java.util.ArrayList;
+import model.*;
 
 public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
-    
-    public Controler() {
+        private DataStored model;
+
+    public DataStored getModel() {
+        return model;
+    }
         
+    public Controler() {
     }
     
     /*
@@ -51,6 +57,7 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
     @Override
     // appelé quand on recoit un HelloOK 
     public void performHelloOk(String username) {
+            
           ChatSystem.getGUI().addUser(username);  
     }
 
@@ -90,9 +97,16 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
      * FROM GUI
     */
     
+    // pour créer les infos locales
+    
+    public void createLocalInfo(String username){
+        model = new DataStored(new ArrayList<UserCouple>(),new UserCouple(username,ChatSystem.getNetwork().getIP()));
+    }
+    
+    
     @Override
     // appelé quand on se connect au chatsystem
-    public void performConnect(String username) {
+    public void performConnect(String username) { 
         ChatSystem.getNetwork().sendHello(username);    
     }
 
