@@ -1,4 +1,6 @@
+
 package chatsystem;
+
 
 public class ChatSystem {
 
@@ -9,8 +11,6 @@ public class ChatSystem {
     public ChatSystem() {
         
     }
-    
-    
 
     public static Network getNetwork() {
         return n0;
@@ -30,12 +30,12 @@ public class ChatSystem {
        n0 = new Network();
       // g0 = new GUI();
        c0 = new Controler();
-       GUI_SEB gui = new GUI_SEB();
-       gui.setVisible(true);
+      GUI_SEB gui = new GUI_SEB();
+      gui.setVisible(true);
        
        
        
-       
+      // n0.getIps();
        
        
     }
