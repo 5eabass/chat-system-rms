@@ -33,7 +33,9 @@ public class ChatSystem {
       GUI_SEB gui = new GUI_SEB();
       gui.setVisible(true);
        
-       
+     
+      
+      c0.performHelloOk("jack","102.123.1.1");
        
       // n0.getIps();
        

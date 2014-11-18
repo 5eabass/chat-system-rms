@@ -2,6 +2,7 @@ package chatsystem;
 import chatsystem.*;
 import java.awt.CardLayout;
 import interfaces.*;
+import javax.swing.DefaultListModel;
 /**
  *
  * @author seb
@@ -9,8 +10,8 @@ import interfaces.*;
 public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{   
     /**
      * Creates new form EntryFrame
-     */
-    
+     */ 
+    private static DefaultListModel listModel ; 
     public GUI_SEB() {
         initComponents();
     }
@@ -116,11 +117,6 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
 
         userlistLabel.setText("Connected user");
 
-        connectedList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         listPanel.setViewportView(connectedList);
 
         nameInfoLabel.setText("My name :");
@@ -201,16 +197,19 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
         // TODO add your handling code here:
         ChatSystem.getControler().createLocalInfo(usernameArea.getText());
+        listModel = new DefaultListModel();
+        connectedList.setModel(listModel);
+        connectedList.validate();
         ChatSystem.getControler().performConnect(usernameArea.getText());
         this.usernameLabel.setText(usernameArea.getText());
-        this.receivedMessageArea.setText("your adress ip is : " + ChatSystem.getControler().getModel().getLocalInfo().getAdress()+"\n");
+        this.receivedMessageArea.setText("your adress ip is : " + ChatSystem.getControler().getModel().getLocalAdress()+"\n");
         this.EntryPanel.setVisible(false);
         this.UsagePanel.setVisible(true);
     }//GEN-LAST:event_connectButtonActionPerformed
     
     
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        ChatSystem.getControler().performSendMessage(sendMessageArea.getText(),"remotename");
+        //ChatSystem.getControler().performSendMessage(sendMessageArea.getText(),"remotename");
         // il faut changer le "remoteName"
     }//GEN-LAST:event_sendButtonActionPerformed
 
@@ -251,28 +250,31 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
     // toutes les fonctions à implémenter ! 
     
     @Override
-    public void addUser(String remoteName) {
-       // connectedList.add le name ;
-        connectedList.validate();
+    // appelé quand on recoit un hello ou hellook , il faut ajouter le nom a la list
+    public void addUser(String remoteName) {   
+        listModel.addElement(remoteName);
+        connectedList.revalidate();
     }
 
     @Override
     public void processTextMessage(String message, String remoteName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        receivedMessageArea.setText("from " + remoteName + " : " + message +"\n");
     }
 
     @Override
     public void notifyTransmitted() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        receivedMessageArea.setText("File Transmitted ! "+"\n");
     }
 
     @Override
     public void notifyNotTransmitted() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        receivedMessageArea.setText("File transmission failed !"+"\n");
     }
 
     @Override
+    // appelé par le ctrl quand on recoit un goodbye il faut supprimer le nom de la liste
     public void deleteUser(String remoteName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        listModel.removeElement(remoteName);
+        connectedList.revalidate();
     }
 }

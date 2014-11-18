@@ -4,7 +4,7 @@ package chatsystem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import interfaces.*;
-import java.util.ArrayList;
+import java.util.*;
 import model.*;
 
 public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
@@ -56,8 +56,9 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
 
     @Override
     // appelé quand on recoit un HelloOK 
-    public void performHelloOk(String username) {
+    public void performHelloOk(String username, String remoteIp) {
             
+          model.getRemoteTable().put(username, remoteIp);
           ChatSystem.getGUI().addUser(username);  
     }
 
@@ -86,6 +87,7 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
     @Override
     // appelé quand on recoit un GOODBYE
     public void performGoodbye(String remoteName) {
+        model.getRemoteTable().remove(model.getRemoteTable().containsKey(remoteName));
         ChatSystem.getGUI().deleteUser(remoteName);
     }
 
@@ -99,8 +101,9 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
     
     // pour créer les infos locales
     
+        @SuppressWarnings("Convert2Diamond")
     public void createLocalInfo(String username){
-        model = new DataStored(new ArrayList<UserCouple>(),new UserCouple(username,ChatSystem.getNetwork().getIP()));
+        model = new DataStored(username,ChatSystem.getNetwork().getIP());
     }
     
     
