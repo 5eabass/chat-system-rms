@@ -6,6 +6,7 @@ public class ChatSystem {
 
     private static Network n0;
     private static GUI g0;
+    private static GUI_SEB g1;
     private static Controler c0;
     
     public ChatSystem() {
@@ -16,8 +17,8 @@ public class ChatSystem {
         return n0;
     }
 
-    public static GUI getGUI() {
-        return g0;
+    public static GUI_SEB getGUI() {
+        return g1;
     }
 
     public static Controler getControler() {

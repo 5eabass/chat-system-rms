@@ -113,10 +113,7 @@ public class GUI extends JFrame implements CtrlToGUI{
     public void deleteUser(String remoteName) {
     // update de la liste : list.delete(remoteName) ;
     }
-    
-    
-    
-    
+     
     
     
 }

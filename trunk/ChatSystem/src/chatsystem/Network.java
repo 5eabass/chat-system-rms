@@ -98,14 +98,14 @@ public class Network implements CtrlToNetwork{
     @Override
     // appelé quand on répond à un hello
     public void sendHello(String u) {
-        System.out.println("DEBUG *** NETWORK : sendHello , localName = " + u + "***");
+        System.out.println("DEBUG *** NETWORK : sendHello , localName = " + u + " ***");
         Hello helloMessage = new Hello(u);
     }
 
     @Override
     //appelé quand on se connect
     public void sendHelloOk(String localName) {
-         System.out.println("DEBUG *** NETWORK : sendHelloOK , localName = " + localName + "***");
+         System.out.println("DEBUG *** NETWORK : sendHelloOK , localName = " + localName + " ***");
     }
 
     @Override
@@ -119,7 +119,7 @@ public class Network implements CtrlToNetwork{
     @Override
     // appelé quand on veut envoyer un fichier
     public void processSendFile() {
-        System.out.println("DEBUG *** NETWORK : processSendFile <= ask to send a file***");
+        System.out.println("DEBUG *** NETWORK : processSendFile <= ask to send a file ***");
     }
     
      @Override
