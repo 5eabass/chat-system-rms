@@ -100,7 +100,7 @@
                 </Property>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="rows" type="int" value="5"/>
-                <Property name="text" type="java.lang.String" value="       BIENVENUE sur Chat System&#xa;&#xa;Cette nouvelle application te permet&#xa;de communiquer avec des amis en &#xa;Peer-to-Peer, tu peux sois envoyer &#xa;des message soit envoyer des fichiers&#xa;sous leur accord.&#xa;Pour te connecter il te suffit de rentrer&#xa;un nom &#xa;"/>
+                <Property name="text" type="java.lang.String" value="       BIENVENUE sur Chat System&#xa;&#xa;Cette nouvelle application vous permet&#xa;de communiquer avec des amis en &#xa;Peer-to-Peer, vous pouvez soit envoyer &#xa;des message soit envoyer des fichiers&#xa;sous l&apos;accord du destinataire.&#xa;Pour vous connecter il vous suffit de &#xa;rentrer un nom &#xa;"/>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
                   <Color id="Curseur par d&#xe9;faut"/>
                 </Property>

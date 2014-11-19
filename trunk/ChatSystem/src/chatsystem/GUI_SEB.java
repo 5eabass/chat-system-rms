@@ -99,7 +99,7 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
         jTextArea1.setBackground(new java.awt.Color(204, 204, 204));
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setText("       BIENVENUE sur Chat System\n\nCette nouvelle application te permet\nde communiquer avec des amis en \nPeer-to-Peer, tu peux sois envoyer \ndes message soit envoyer des fichiers\nsous leur accord.\nPour te connecter il te suffit de rentrer\nun nom \n");
+        jTextArea1.setText("       BIENVENUE sur Chat System\n\nCette nouvelle application vous permet\nde communiquer avec des amis en \nPeer-to-Peer, vous pouvez soit envoyer \ndes message soit envoyer des fichiers\nsous l'accord du destinataire.\nPour vous connecter il vous suffit de \nrentrer un nom \n");
         jTextArea1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane1.setViewportView(jTextArea1);
 
