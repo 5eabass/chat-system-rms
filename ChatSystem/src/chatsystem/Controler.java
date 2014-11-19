@@ -57,13 +57,13 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
         model.getRemoteTable().put(remoteName,remoteIp);
         System.out.println("DEBUG *** CTRL : la table des remote users est : " + model.toString()+ " ***");
         ChatSystem.getGUI().addUser(remoteName);
-        ChatSystem.getNetwork().sendHelloOk("localname"); // a changer localname par notre nom
+        ChatSystem.getNetwork().sendHelloOk(getModel().getLocalName()); // a changer localname par notre nom
     }
     
     @Override
     // appelé quand on recoit un HelloOK
     public void performHelloOk(String username, String remoteIp) {
-        System.out.println("DEBUG *** CTRL : performHelloOK <= when we receive HelloOK***");
+        System.out.println("DEBUG *** CTRL : performHelloOK <= when we receive HelloOK ***");
         model.getRemoteTable().put(username, remoteIp);
         System.out.println("DEBUG *** CTRL : la table des remote users est : " + model.toString()+ " ***");
         ChatSystem.getGUI().addUser(username);
@@ -125,6 +125,12 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
     // appelé quand on se connect au chatsystem
     public void performConnect(String username) {
         System.out.println("DEBUG *** CTRL : performConnect <= when we connect to chatsystem ***");
+        
+        ////////// pour test avec un utilisateur distant
+        getModel().getRemoteTable().put("jack","192?168?1?0");
+        /////////
+        
+        
         ChatSystem.getNetwork().sendHello(username);
     }
     
@@ -132,15 +138,7 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
     // appelé quand on envoie un message
     public void performSendMessage(String message, String remoteName) {
         System.out.println("DEBUG *** CTRL : performSendMessage , remote : " + remoteName + " <= when we send a message ***");
-        
-        // cas au tout début quand aucun receiver est selectionné le message
-        // ne peut pas etre envoyé envoie erreur sur screen
-        if (model.getRemoteTable().containsKey(remoteName) == false){
-            System.out.println("no such remote user");
-            //ChatSystem.getGUI().erreurReceiver();
-        }else{
-            ChatSystem.getNetwork().processSendMessage(message, remoteName);
-        }
+        ChatSystem.getNetwork().processSendMessage(message, remoteName);
     }
     
     @Override
