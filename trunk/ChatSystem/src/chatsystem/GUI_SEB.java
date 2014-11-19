@@ -195,7 +195,7 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
     }//GEN-LAST:event_usernameAreaActionPerformed
 
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
-        // TODO add your handling code here:
+        System.out.println("DEBUG *** GUI : pressed CONNECT ***"); 
         ChatSystem.getControler().createLocalInfo(usernameArea.getText());
         listModel = new DefaultListModel();
         connectedList.setModel(listModel);
@@ -209,20 +209,21 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
     
     
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
+        System.out.println("DEBUG *** GUI : pressed SEND ***");    
         //ChatSystem.getControler().performSendMessage(sendMessageArea.getText(),"remotename");
         // il faut changer le "remoteName"
     }//GEN-LAST:event_sendButtonActionPerformed
 
     private void fileChooseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooseButtonActionPerformed
-        // TODO add your handling code here:
-        System.err.println("NOT IMPLEMENTED");
+        System.out.println("DEBUG *** GUI : pressed FILE ***");
+        ChatSystem.getControler().performSendFile();
     }//GEN-LAST:event_fileChooseButtonActionPerformed
 
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
+        System.out.println("DEBUG *** GUI : pressed DISCONNECT ***");
         ChatSystem.getControler().performDisconnect(usernameLabel.getText());
         this.UsagePanel.setVisible(false);
         this.EntryPanel.setVisible(true);
-        
     }//GEN-LAST:event_disconnectButtonActionPerformed
 
    
@@ -252,28 +253,36 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
     @Override
     // appelé quand on recoit un hello ou hellook , il faut ajouter le nom a la list
     public void addUser(String remoteName) {   
+        System.out.println("DEBUG *** GUI : addUser <= when we receive a hello ***"); 
         listModel.addElement(remoteName);
         connectedList.revalidate();
     }
 
     @Override
+    // appelé quand on recoit un message
     public void processTextMessage(String message, String remoteName) {
+        System.out.println("DEBUG *** GUI : processTextMessage <= when we receive a message ***");
         receivedMessageArea.setText("from " + remoteName + " : " + message +"\n");
     }
 
     @Override
+    // appelé quand le fichier est bien recu
     public void notifyTransmitted() {
+        System.out.println("DEBUG *** GUI : notifyTransmitted <= when we have successfully received the file ***");
         receivedMessageArea.setText("File Transmitted ! "+"\n");
     }
 
     @Override
+    // appelé quand le fichier n'a pas été recu 
     public void notifyNotTransmitted() {
+        System.out.println("DEBUG *** GUI : notifyNotTransmitted <= when we haven't received the file ***");
         receivedMessageArea.setText("File transmission failed !"+"\n");
     }
 
     @Override
     // appelé par le ctrl quand on recoit un goodbye il faut supprimer le nom de la liste
     public void deleteUser(String remoteName) {
+        System.out.println("DEBUG *** GUI : deleteUser <= when we receive a goodBye ***");
         listModel.removeElement(remoteName);
         connectedList.revalidate();
     }
