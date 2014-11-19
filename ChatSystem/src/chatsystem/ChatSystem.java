@@ -26,19 +26,16 @@ public class ChatSystem {
     
     
     public static void main(String[] args) {
-       
-       n0 = new Network();
-      // g0 = new GUI();
-       c0 = new Controler();
-      GUI_SEB gui = new GUI_SEB();
-      gui.setVisible(true);
-       
-     
-      
-      c0.performHelloOk("jack","102.123.1.1");
-       
-      // n0.getIps();
-       
+        
+        n0 = new Network();
+        // g0 = new GUI();
+        c0 = new Controler();
+        GUI_SEB gui = new GUI_SEB();
+        gui.setVisible(true);
+
+
+       // System.out.println(n0.getIP());
+
        
     }
     

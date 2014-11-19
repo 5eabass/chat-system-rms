@@ -96,42 +96,55 @@ public class Network implements CtrlToNetwork{
     */
     
     @Override
+    // appelé quand on répond à un hello
     public void sendHello(String u) {
+        System.out.println("DEBUG *** NETWORK : sendHello , localName = " + u + "***");
         Hello helloMessage = new Hello(u);
     }
 
     @Override
-    public void sendHelloOk(String username) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    //appelé quand on se connect
+    public void sendHelloOk(String localName) {
+         System.out.println("DEBUG *** NETWORK : sendHelloOK , localName = " + localName + "***");
     }
 
     @Override
     // appelé quand on envoie un message
-    public void processTextMessage(String message ,String remoteName) {
+    public void processSendMessage(String message ,String remoteName) {
        // a coder:la liste des receiver en global et la modifier ici 
        // TextMessage m = new TextMessage(message, "localname", receivers);
-    
+         System.out.println("DEBUG *** NETWORK : processTextMessage , remoteName = " + remoteName + " message = " + message + " ***"); 
     }
     
     @Override
+    // appelé quand on veut envoyer un fichier
+    public void processSendFile() {
+        System.out.println("DEBUG *** NETWORK : processSendFile <= ask to send a file***");
+    }
+    
+     @Override
+    //appelé quand on refuse le transfer
     public void performRefuseTransfer() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("DEBUG *** NETWORK : performRefuseTransfer <= send that we refuse ***");
     }
 
     @Override
+    //appelé quand on accepte le transfer
     public void performAcceptTransfer() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         System.out.println("DEBUG *** NETWORK : performAcceptTransfer <= send that we accepte ***");
     }
 
     @Override
     // appelé quand on disconnect par le ctrl
-    public void sendGoodbye(String localName) {
-        System.out.println("GOODBYE");
+    public void sendGoodbye(String localName) {    
+         System.out.println("DEBUG *** NETWORK : sendGOODBYE , localName = " + localName + " ***");
     }
     
     /*
      * FIN FROM CTRL
     */
+
+    
     
     
     
