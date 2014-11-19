@@ -2,20 +2,23 @@ package chatsystem;
 import chatsystem.*;
 import java.awt.CardLayout;
 import interfaces.*;
+import static java.awt.Color.*;
 import javax.swing.DefaultListModel;
+import javax.swing.text.AttributeSet;
 /**
  *
  * @author seb
  */
-public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{   
+public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
     /**
      * Creates new form EntryFrame
-     */ 
-    private static DefaultListModel listModel ; 
+     */
+    private static DefaultListModel listModel ;
     public GUI_SEB() {
         initComponents();
+        UsagePanel.setVisible(false);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,9 +31,11 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
         EntryPanel = new javax.swing.JPanel();
         connectButton = new javax.swing.JButton();
         usernameArea = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         UsagePanel = new javax.swing.JPanel();
         receivedMessagePanel = new javax.swing.JScrollPane();
-        receivedMessageArea = new javax.swing.JEditorPane();
+        receivedMessageArea = new javax.swing.JTextPane();
         sendMessagePanel = new javax.swing.JScrollPane();
         sendMessageArea = new javax.swing.JTextArea();
         sendButton = new javax.swing.JButton();
@@ -41,11 +46,14 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
         connectedList = new javax.swing.JList();
         nameInfoLabel = new javax.swing.JLabel();
         usernameLabel = new javax.swing.JLabel();
+        receiverTextField = new javax.swing.JTextField();
+        toLabel = new javax.swing.JLabel();
+        messageLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new javax.swing.OverlayLayout(getContentPane()));
 
-        EntryPanel.setPreferredSize(new java.awt.Dimension(200, 100));
+        EntryPanel.setPreferredSize(new java.awt.Dimension(538, 503));
 
         connectButton.setText("CONNECT");
         connectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -62,6 +70,14 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
             }
         });
 
+        jTextArea1.setEditable(false);
+        jTextArea1.setBackground(new java.awt.Color(204, 204, 204));
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("       BIENVENUE sur Chat System\n\nCette nouvelle application te permet\nde communiquer avec des amis en \nPeer-to-Peer, tu peux sois envoyer \ndes message soit envoyer des fichiers\nsous leur accord.\nPour te connecter il te suffit de rentrer\nun nom \n");
+        jTextArea1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jScrollPane1.setViewportView(jTextArea1);
+
         javax.swing.GroupLayout EntryPanelLayout = new javax.swing.GroupLayout(EntryPanel);
         EntryPanel.setLayout(EntryPanelLayout);
         EntryPanelLayout.setHorizontalGroup(
@@ -69,29 +85,37 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
             .addGroup(EntryPanelLayout.createSequentialGroup()
                 .addGroup(EntryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(EntryPanelLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addGap(229, 229, 229)
                         .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(EntryPanelLayout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(215, 215, 215)
                         .addComponent(connectButton)))
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EntryPanelLayout.createSequentialGroup()
+                .addGap(0, 141, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(139, 139, 139))
         );
         EntryPanelLayout.setVerticalGroup(
             EntryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(EntryPanelLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(52, 52, 52)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(connectButton)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(209, Short.MAX_VALUE))
         );
 
         getContentPane().add(EntryPanel);
 
+        receivedMessageArea.setEditable(false);
         receivedMessagePanel.setViewportView(receivedMessageArea);
 
         sendMessageArea.setColumns(20);
         sendMessageArea.setRows(5);
+        sendMessageArea.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         sendMessagePanel.setViewportView(sendMessageArea);
 
         sendButton.setText("SEND");
@@ -117,11 +141,22 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
 
         userlistLabel.setText("Connected user");
 
+        connectedList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                connectedListValueChanged(evt);
+            }
+        });
         listPanel.setViewportView(connectedList);
 
         nameInfoLabel.setText("My name :");
 
         usernameLabel.setText("username");
+
+        receiverTextField.setEditable(false);
+
+        toLabel.setText("To :");
+
+        messageLabel.setText("Message :");
 
         javax.swing.GroupLayout UsagePanelLayout = new javax.swing.GroupLayout(UsagePanel);
         UsagePanel.setLayout(UsagePanelLayout);
@@ -131,103 +166,131 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
                 .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(UsagePanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(disconnectButton)
-                            .addComponent(listPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addComponent(userlistLabel))
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(nameInfoLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(usernameLabel)))
+                        .addComponent(usernameLabel))
+                    .addGroup(UsagePanelLayout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(userlistLabel))
+                    .addGroup(UsagePanelLayout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(UsagePanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(receivedMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addComponent(sendMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(fileChooseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(3, 3, 3)
+                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(messageLabel)
+                            .addGroup(UsagePanelLayout.createSequentialGroup()
+                                .addComponent(sendMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(fileChooseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(sendButton))))))
                 .addGap(12, 12, 12))
+            .addGroup(UsagePanelLayout.createSequentialGroup()
+                .addGap(144, 144, 144)
+                .addComponent(toLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(receiverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         UsagePanelLayout.setVerticalGroup(
             UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(UsagePanelLayout.createSequentialGroup()
-                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(receivedMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(UsagePanelLayout.createSequentialGroup()
                         .addGap(39, 39, 39)
                         .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(nameInfoLabel)
                             .addComponent(usernameLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(85, 85, 85)
                         .addComponent(userlistLabel)
                         .addGap(18, 18, 18)
-                        .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE))
                     .addGroup(UsagePanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(receivedMessagePanel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(UsagePanelLayout.createSequentialGroup()
+                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(receiverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(toLabel))
+                        .addGap(1, 1, 1)
+                        .addComponent(messageLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(UsagePanelLayout.createSequentialGroup()
                                 .addComponent(sendButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(fileChooseButton))
-                            .addComponent(sendMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(disconnectButton)))
-                .addContainerGap())
+                            .addComponent(sendMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9))
         );
 
         getContentPane().add(UsagePanel);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void usernameAreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameAreaActionPerformed
-
-    }//GEN-LAST:event_usernameAreaActionPerformed
-
+        
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
-        System.out.println("DEBUG *** GUI : pressed CONNECT ***"); 
+        System.out.println("DEBUG *** GUI : pressed CONNECT ***");
         ChatSystem.getControler().createLocalInfo(usernameArea.getText());
         listModel = new DefaultListModel();
         connectedList.setModel(listModel);
         connectedList.validate();
         ChatSystem.getControler().performConnect(usernameArea.getText());
-        this.usernameLabel.setText(usernameArea.getText());
+        this.usernameLabel.setText(ChatSystem.getControler().getModel().getLocalName());
         this.receivedMessageArea.setText("your adress ip is : " + ChatSystem.getControler().getModel().getLocalAdress()+"\n");
         this.EntryPanel.setVisible(false);
         this.UsagePanel.setVisible(true);
+        
     }//GEN-LAST:event_connectButtonActionPerformed
     
     
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        System.out.println("DEBUG *** GUI : pressed SEND ***");    
-        //ChatSystem.getControler().performSendMessage(sendMessageArea.getText(),"remotename");
+        System.out.println("DEBUG *** GUI : pressed SEND ***");
+        ChatSystem.getControler().performSendMessage(sendMessageArea.getText(),ChatSystem.getControler().getModel().getReceiverName());
         // il faut changer le "remoteName"
     }//GEN-LAST:event_sendButtonActionPerformed
-
+    
     private void fileChooseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooseButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed FILE ***");
         ChatSystem.getControler().performSendFile();
     }//GEN-LAST:event_fileChooseButtonActionPerformed
-
+    
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed DISCONNECT ***");
         ChatSystem.getControler().performDisconnect(usernameLabel.getText());
         this.UsagePanel.setVisible(false);
         this.EntryPanel.setVisible(true);
     }//GEN-LAST:event_disconnectButtonActionPerformed
+    
+    // quand on selectionne un receiver
+    private void connectedListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_connectedListValueChanged
+        System.out.println("DEBUG *** GUI : selected a receiver ***");
+        ChatSystem.getControler().getModel().setReceiverName((String)(connectedList.getSelectedValue()));
+        receiverTextField.setText((String)(connectedList.getSelectedValue()));
+    }//GEN-LAST:event_connectedListValueChanged
 
-   
+    private void usernameAreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameAreaActionPerformed
 
+    }//GEN-LAST:event_usernameAreaActionPerformed
+    
+    
+    
+    
+    
+    
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel EntryPanel;
     private javax.swing.JPanel UsagePanel;
@@ -235,55 +298,69 @@ public class GUI_SEB extends javax.swing.JFrame implements CtrlToGUI{
     private javax.swing.JList connectedList;
     private javax.swing.JButton disconnectButton;
     private javax.swing.JButton fileChooseButton;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JScrollPane listPanel;
+    private javax.swing.JLabel messageLabel;
     private javax.swing.JLabel nameInfoLabel;
-    private javax.swing.JEditorPane receivedMessageArea;
+    private javax.swing.JTextPane receivedMessageArea;
     private javax.swing.JScrollPane receivedMessagePanel;
+    private javax.swing.JTextField receiverTextField;
     private javax.swing.JButton sendButton;
     private javax.swing.JTextArea sendMessageArea;
     private javax.swing.JScrollPane sendMessagePanel;
+    private javax.swing.JLabel toLabel;
     private javax.swing.JLabel userlistLabel;
     private javax.swing.JTextField usernameArea;
     private javax.swing.JLabel usernameLabel;
     // End of variables declaration//GEN-END:variables
-
     
-    // toutes les fonctions à implémenter ! 
+    
+    // toutes les fonctions à implémenter !
     
     @Override
     // appelé quand on recoit un hello ou hellook , il faut ajouter le nom a la list
-    public void addUser(String remoteName) {   
-        System.out.println("DEBUG *** GUI : addUser <= when we receive a hello ***"); 
+    public void addUser(String remoteName) {
+        System.out.println("DEBUG *** GUI : addUser <= when we receive a hello ***");
         listModel.addElement(remoteName);
         connectedList.revalidate();
     }
-
+    
     @Override
     // appelé quand on recoit un message
     public void processTextMessage(String message, String remoteName) {
         System.out.println("DEBUG *** GUI : processTextMessage <= when we receive a message ***");
         receivedMessageArea.setText("from " + remoteName + " : " + message +"\n");
     }
-
+    
     @Override
     // appelé quand le fichier est bien recu
     public void notifyTransmitted() {
         System.out.println("DEBUG *** GUI : notifyTransmitted <= when we have successfully received the file ***");
         receivedMessageArea.setText("File Transmitted ! "+"\n");
     }
-
+    
     @Override
-    // appelé quand le fichier n'a pas été recu 
+    // appelé quand le fichier n'a pas été recu
     public void notifyNotTransmitted() {
         System.out.println("DEBUG *** GUI : notifyNotTransmitted <= when we haven't received the file ***");
         receivedMessageArea.setText("File transmission failed !"+"\n");
     }
-
+    
     @Override
     // appelé par le ctrl quand on recoit un goodbye il faut supprimer le nom de la liste
     public void deleteUser(String remoteName) {
         System.out.println("DEBUG *** GUI : deleteUser <= when we receive a goodBye ***");
         listModel.removeElement(remoteName);
         connectedList.revalidate();
+    }  
+   /*
+    CAS ERREUR dans selection receiver
+    */
+    public void erreurReceiver(){
+        System.out.println("DEBUG *** GUI : erreurReceiver <= when we didn't choose any receiver ***");
+        receivedMessageArea.setForeground(red);
+        receivedMessageArea.setText("Erreur : selectionnez un utilisateur distant");
+        receivedMessageArea.setForeground(black);
     }
 }

@@ -9,16 +9,13 @@ public class DataStored {
     private HashMap<String,String> remoteTable; // info des remotes users
     // hashmap : <name , @ip>
     private String localName ; // info de l'utilisateur qui s'initialise à la connection
-    private String localAdress ;
-    private String receiverName ; /* champ utilisé pour enregistré le destinataire de notre message
-                                   via le gui 
-                                   */  
+    private String localAdress ; 
+    private String receiverName;
     
     public DataStored(String localName,String localAdress) {
         this.remoteTable = new HashMap<String,String>();
         this.localName = localName;
         this.localAdress = localAdress;
-        this.receiverName = new String();
     }
 
     public HashMap<String,String> getRemoteTable() {
@@ -50,6 +47,6 @@ public class DataStored {
     }
     
     
-    
+            
     
 }
