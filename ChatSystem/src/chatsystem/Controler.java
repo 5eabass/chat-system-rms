@@ -1,10 +1,8 @@
 package chatsystem;
 
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import interfaces.*;
-import java.util.*;
 import model.*;
 
 public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {

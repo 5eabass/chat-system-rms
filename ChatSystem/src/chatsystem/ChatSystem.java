@@ -34,7 +34,6 @@ public class ChatSystem {
         GUI_SEB gui = new GUI_SEB();
         gui.setVisible(true);
 
-
        // System.out.println(n0.getIP());
 
        
