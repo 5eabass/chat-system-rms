@@ -1,41 +1,12 @@
 package chatsystem;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import interfaces.*;
-import model.*;
 
-public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
-    private DataStored model;
-    
-    public DataStored getModel() {
-        return model;
-    }
-    
+public class Controler implements NetworkToCtrl , GUIToCtrl {
     public Controler() {
+
     }
-    
-    /*
-    * pour le GUI de rémi
-    */
-    
-    
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // Listener menu
-        if(e.getActionCommand().equals("Connexion")) {
-            System.out.println("! Connexion layout displayed");
-            //  ChatSystem.getGUI().activeLogin();
-        }
-        if(e.getActionCommand().equals("Enter the chat")) {
-            System.out.println("> Enter the chat button pressed");
-            //  performHello(ChatSystem.getGUI().getUsername());
-        }
-    }
-    
-    
-    
-    
+         
     /*
     * ICI toutes les methodes à implémenter au fur et à mesure
     * il faut rajouter les arguments si nécessaire des fonctions et les return
@@ -52,18 +23,18 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
     // appelé quand on recoit un Hello
     public void performHello(String remoteName, String remoteIp) {
         System.out.println("DEBUG *** CTRL : performHello <= when we receive a Hello ***");
-        model.getRemoteTable().put(remoteName,remoteIp);
-        System.out.println("DEBUG *** CTRL : la table des remote users est : " + model.toString()+ " ***");
+        ChatSystem.getModel().getRemoteTable().put(remoteName,remoteIp);
+        System.out.println("DEBUG *** CTRL : la table des remote users est : " + ChatSystem.getModel().toString()+ " ***");
         ChatSystem.getGUI().addUser(remoteName);
-        ChatSystem.getNetwork().sendHelloOk(getModel().getLocalName()); // a changer localname par notre nom
+        ChatSystem.getNetwork().sendHelloOk(ChatSystem.getModel().getLocalName()); // a changer localname par notre nom
     }
     
     @Override
     // appelé quand on recoit un HelloOK
     public void performHelloOk(String username, String remoteIp) {
         System.out.println("DEBUG *** CTRL : performHelloOK <= when we receive HelloOK ***");
-        model.getRemoteTable().put(username, remoteIp);
-        System.out.println("DEBUG *** CTRL : la table des remote users est : " + model.toString()+ " ***");
+        ChatSystem.getModel().getRemoteTable().put(username, remoteIp);
+        System.out.println("DEBUG *** CTRL : la table des remote users est : " + ChatSystem.getModel().toString()+ " ***");
         ChatSystem.getGUI().addUser(username);
     }
     
@@ -97,8 +68,8 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
     // appelé quand on recoit un GOODBYE
     public void performGoodbye(String remoteName) {
         System.out.println("DEBUG *** CTRL : performGoodbye <= when receiving goodbye ***");
-        model.getRemoteTable().remove(model.getRemoteTable().containsKey(remoteName));
-        System.out.println("DEBUG *** CTRL : la table des remote users est : " + model.toString()+ " ***");
+        ChatSystem.getModel().getRemoteTable().remove(remoteName);
+        System.out.println("DEBUG *** CTRL : la table des remote users est : " + ChatSystem.getModel().toString()+ " ***");
         ChatSystem.getGUI().deleteUser(remoteName);
     }
     
@@ -114,8 +85,9 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
     
     public void createLocalInfo(String username){
         System.out.println("DEBUG *** CTRL : createLocalInfo <= when we connect to chatsystem ***");
-        model = new DataStored(username,ChatSystem.getNetwork().getIP());
-        System.out.println("DEBUG *** CTRL : "+ model.getLocalName() + "/" + model.getLocalAdress()+ " ***");
+        ChatSystem.getModel().setLocalName(username);
+        ChatSystem.getModel().setLocalAdress(ChatSystem.getNetwork().getIP());
+        System.out.println("DEBUG *** CTRL : "+ ChatSystem.getModel().getLocalName() + "/" + ChatSystem.getModel().getLocalAdress()+ " ***");
     }
     
     
@@ -125,7 +97,7 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
         System.out.println("DEBUG *** CTRL : performConnect <= when we connect to chatsystem ***");
         
         ////////// pour test avec un utilisateur distant
-        getModel().getRemoteTable().put("jack","192?168?1?0");
+        ChatSystem.getModel().getRemoteTable().put("jack","192.168.1.0");
         /////////
         
         
@@ -163,6 +135,7 @@ public class Controler implements ActionListener, NetworkToCtrl , GUIToCtrl {
     public void performDisconnect(String localName) {
         System.out.println("DEBUG *** CTRL : performDisconnect <= when we disconnect ***");
         ChatSystem.getNetwork().sendGoodbye(localName);
+        ChatSystem.getModel().getRemoteTable().clear();    
     }
     
     /*

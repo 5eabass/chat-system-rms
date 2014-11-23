@@ -1,9 +1,8 @@
 package signals;
 
 import java.io.File;
-import java.io.Serializable;
 
-public class FileTransfer implements Serializable {
+public class FileTransfer extends Signal {
 	private File file;
 
 	public FileTransfer(File file) {

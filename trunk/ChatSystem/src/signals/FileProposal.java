@@ -1,9 +1,8 @@
 package signals;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class FileProposal implements Serializable {
+public class FileProposal extends Signal {
 	private String fileName;
 	private long size;
 	private String from;

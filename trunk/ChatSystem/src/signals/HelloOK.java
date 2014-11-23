@@ -1,8 +1,7 @@
 package signals;
 
-import java.io.Serializable;
 
-public class HelloOK implements Serializable {
+public class HelloOK extends Signal {
 	private String username;
 
 	public HelloOK(String username) {

@@ -13,10 +13,10 @@ public class DataStored {
     private String localAdress ;
     private String receiverName;
     
-    public DataStored(String localName,String localAdress) {
+    public DataStored() {
         this.remoteTable = new HashMap<String,String>();
-        this.localName = localName;
-        this.localAdress = localAdress;
+        //this.localName = localName;
+        //this.localAdress = localAdress;
     }
     
     public HashMap<String,String> getRemoteTable() {
