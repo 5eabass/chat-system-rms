@@ -2,18 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/Users/seb/cours/France/4A/Java/POO/ChatSystem/src/interfaces/CtrlToNetwork.java</file>
-            <file>file:/Users/seb/cours/France/4A/Java/POO/ChatSystem/src/interfaces/NetworkToCtrl.java</file>
-            <file>file:/Users/seb/cours/France/4A/Java/POO/ChatSystem/src/chatsystem/GUI_SEB.java</file>
-            <file>file:/Users/seb/cours/France/4A/Java/POO/ChatSystem/src/model/DataStored.java</file>
-            <file>file:/Users/seb/cours/France/4A/Java/POO/ChatSystem/src/interfaces/CtrlToGUI.java</file>
-            <file>file:/Users/seb/cours/France/4A/Java/POO/ChatSystem/src/chatsystem/Network.java</file>
-            <file>file:/Users/seb/cours/France/4A/Java/POO/ChatSystem/src/interfaces/RemoteSystem.java</file>
-            <file>file:/Users/seb/cours/France/4A/Java/POO/ChatSystem/src/interfaces/GUIToCtrl.java</file>
-            <file>file:/Users/seb/cours/France/4A/Java/POO/ChatSystem/src/chatsystem/ChatSystem.java</file>
-            <file>file:/Users/seb/cours/France/4A/Java/POO/ChatSystem/src/chatsystem/Controler.java</file>
-            <file>file:/Users/seb/cours/France/4A/Java/POO/ChatSystem/src/chatsystem/GUI.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

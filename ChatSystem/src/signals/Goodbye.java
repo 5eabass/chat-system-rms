@@ -1,8 +1,7 @@
 package signals;
 
-import java.io.Serializable;
 
-public class Goodbye implements Serializable {
+public class Goodbye extends Signal {
 	private String username;
 
 	public Goodbye(String username) {

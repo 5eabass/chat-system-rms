@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-public class TextMessage implements Serializable {
+public class TextMessage extends Signal {
 	private String message;
 	private String from;
 	private ArrayList<String> to;

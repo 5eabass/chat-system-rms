@@ -1,8 +1,7 @@
 package signals;
 
-import java.io.Serializable;
 
-public class Hello implements Serializable {
+public class Hello extends Signal {
 	private String username;
 
 	public Hello(String username) {
@@ -17,5 +16,4 @@ public class Hello implements Serializable {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
 }
