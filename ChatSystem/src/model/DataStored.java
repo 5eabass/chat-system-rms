@@ -7,19 +7,19 @@ import java.util.Map.Entry;
 */
 
 public class DataStored {
-    private HashMap<String,String> remoteTable; // info des remotes users
-    // hashmap : <name , @ip>
-    private String localName ; // info de l'utilisateur qui s'initialise à la connection
-    private String localAdress ;
+    private ArrayList<String> remoteTable; // info des remotes users table de nom@ip
+    private String localName ; // nom local user
+    private String localAdress ; // @ip local user
+    private String username; // nom@ip de l'utilisateur
     private String receiverName;
     
     public DataStored() {
-        this.remoteTable = new HashMap<String,String>();
+        this.remoteTable = new ArrayList<String>();
         //this.localName = localName;
         //this.localAdress = localAdress;
     }
     
-    public HashMap<String,String> getRemoteTable() {
+    public ArrayList<String> getRemoteTable() {
         return remoteTable;
     }
     
@@ -46,14 +46,42 @@ public class DataStored {
     public void setReceiverName(String receiverName) {
         this.receiverName = receiverName;
     }
-      
     
+    public String getUsername() {
+        return username;
+    }
+    
+    public void setUsername() {
+        this.username = this.localName+"@"+this.localAdress;
+    }
+    
+    //fonction qui permet de retrouver le nom a partir de la chaine nom@ip
+    public String getRemoteIp(String remoteString){
+        String remoteIp = "";
+        boolean found = false;
+        int i = 0;
+        while(i<remoteString.length()){
+            if(remoteString.charAt(i) == '@'){
+                found = true;
+            }
+            if (found){
+                remoteIp += remoteString.charAt(i);
+            }
+            i++;
+        }
+        if (!found){
+            System.err.println("name not found");
+        }
+        return remoteIp;
+    }
+    
+    @Override
     public String toString(){
         String table = new String();
-         for (Entry<String,String> e : remoteTable.entrySet()) {
-                table += e.getKey() + " / " + e.getValue() + "\n" ;
-            }
-         return table;
+        for (String e : remoteTable) {
+            table += e +  "\n" ;
+        }
+        return table;
     }
     
     

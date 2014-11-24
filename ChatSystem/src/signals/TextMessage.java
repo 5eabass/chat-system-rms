@@ -1,8 +1,5 @@
 package signals;
-
-import java.io.Serializable;
-import java.net.InetAddress;
-import java.util.ArrayList;
+import java.util.*;
 
 public class TextMessage extends Signal {
 	private String message;

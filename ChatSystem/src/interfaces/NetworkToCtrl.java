@@ -2,8 +2,8 @@ package interfaces;
 
 public interface NetworkToCtrl {
     
-    public void performHello(String remoteName, String ip);
-    public void performHelloOk(String remoteName, String ip);
+    public void performHello(String username);
+    public void performHelloOk(String remoteString);
     public void performTextMessage(String message , String remoteName);
     public void processTransmission();
     public void processFileQuery();
