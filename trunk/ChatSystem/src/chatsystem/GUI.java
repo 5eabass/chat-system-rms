@@ -21,7 +21,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
     /**
      * Creates new form EntryFrame
      */
-    private static DefaultListModel listModel ;
+    private static DefaultListModel listModel;
     private StyledDocument doc;
     private Style errorStyle, receiveStyle, sendStyle ;
     
@@ -195,20 +195,24 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(usernameLabel))
                     .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(userlistLabel))
+                        .addContainerGap()
+                        .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(UsagePanelLayout.createSequentialGroup()
                         .addGap(38, 38, 38)
-                        .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(53, 53, 53)
+                        .addComponent(userlistLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(receivedMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(UsagePanelLayout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(UsagePanelLayout.createSequentialGroup()
+                                .addComponent(toLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(receiverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(messageLabel)
                             .addGroup(UsagePanelLayout.createSequentialGroup()
                                 .addComponent(sendMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -217,12 +221,6 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
                                     .addComponent(fileChooseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(sendButton))))))
                 .addGap(12, 12, 12))
-            .addGroup(UsagePanelLayout.createSequentialGroup()
-                .addGap(144, 144, 144)
-                .addComponent(toLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(receiverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         UsagePanelLayout.setVerticalGroup(
             UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -271,11 +269,11 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
         listModel = new DefaultListModel();
         connectedList.setModel(listModel);
         connectedList.validate();
-        ChatSystem.getControler().performConnect(usernameArea.getText());
-        this.usernameLabel.setText(ChatSystem.getModel().getLocalName());
+        ChatSystem.getControler().performConnect();
+        this.usernameLabel.setText(ChatSystem.getModel().getUsername());
         
         try{
-            doc.insertString(doc.getLength(),"Welcome to the channel ! \nyour adress ip is : " + ChatSystem.getModel().getLocalAdress()+"\n",errorStyle);
+            doc.insertString(doc.getLength(),"Welcome to the chat ! \nyour adress ip is : " + ChatSystem.getModel().getLocalAdress()+"\n",errorStyle);
         }catch(BadLocationException e){
             System.err.println(e);
         }
@@ -283,7 +281,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
         this.EntryPanel.setVisible(false);
         
         /////////////////// simplement pour tester avec un remote user
-        listModel.addElement("jack");
+        listModel.addElement("jack@192.168.0.3");
         connectedList.revalidate();
         //////////////////
         
@@ -295,7 +293,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
         System.out.println("DEBUG *** GUI : pressed SEND ***");
         String remoteName = ChatSystem.getModel().getReceiverName(); // pour plus de clarté
         
-        if (ChatSystem.getModel().getRemoteTable().containsKey(remoteName) == false){
+        if (ChatSystem.getModel().getRemoteTable().contains(remoteName) == false){
             // cas ou le remoteName n'est pas dans notre table
             System.err.println("no such remote user");
             erreurReceiver();
@@ -399,7 +397,6 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
         }catch(BadLocationException e){
             System.err.println(e);
         }
-        
     }
     
     @Override

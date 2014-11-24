@@ -4,7 +4,7 @@ package chatsystem;
 import model.*;
 
 public class ChatSystem {
-
+    
     private static Network n0;
     private static GUI g0;
     private static Controler c0;
@@ -13,23 +13,23 @@ public class ChatSystem {
     public ChatSystem() {
         
     }
-
+    
     public static Network getNetwork() {
         return n0;
     }
-
+    
     public static GUI getGUI() {
         return g0;
     }
-
+    
     public static Controler getControler() {
         return c0;
     }
     
-    public static DataStored getModel(){    
+    public static DataStored getModel(){
         return model;
     }
-            
+    
     
     
     
@@ -43,7 +43,7 @@ public class ChatSystem {
         
         
         // test de certaines fonction
-        // System.out.println(n0.getIP());   
+        // System.out.println(n0.getIP());
         //model.setLocalAdress("192.168.1.2");
         //System.out.println(n0.getBroadcast());
         //System.out.println("hello");
