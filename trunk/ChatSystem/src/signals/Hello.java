@@ -1,6 +1,5 @@
 package signals;
 
-
 public class Hello extends Signal {
 	private String username;
 
@@ -16,4 +15,5 @@ public class Hello extends Signal {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	
 }

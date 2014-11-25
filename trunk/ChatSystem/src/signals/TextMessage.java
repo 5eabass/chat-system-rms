@@ -1,5 +1,6 @@
 package signals;
-import java.util.*;
+
+import java.util.ArrayList;
 
 public class TextMessage extends Signal {
 	private String message;

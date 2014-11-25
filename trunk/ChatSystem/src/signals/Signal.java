@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package signals;
 
 import java.io.ByteArrayInputStream;
@@ -7,19 +12,23 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+/**
+ *
+ * @author gb
+ */
 public abstract class Signal implements Serializable {
-
-       
     
-    public static byte[] toByteArray(Signal s) throws SignalTooBigException, IOException {
+    public final static int MAX_SIZE = 1024;
+    
+    public static byte[] toByteArray(Signal signal) throws SignalTooBigException, IOException {
 
-        byte[] result = new byte[1024];
+        byte[] result = new byte[MAX_SIZE];
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         
-        oos.writeObject(s);
+        oos.writeObject(signal);
         
-        if (baos.size() > 1024) {
+        if (baos.size() > MAX_SIZE) {
             throw new SignalTooBigException("Signal too big");
         }
         
