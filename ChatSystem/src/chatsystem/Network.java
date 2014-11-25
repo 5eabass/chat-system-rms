@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.net.DatagramSocket;
 
 public class Network implements CtrlToNetwork {
     
@@ -15,6 +16,8 @@ public class Network implements CtrlToNetwork {
     private UDPserver udpServer;
     private UDPsender udpSender;
     //private UDP_Server UDPclient;
+    private DatagramSocket socket;
+    private int port = 4444;
     
     public Network() {
         //openServer();
@@ -22,9 +25,15 @@ public class Network implements CtrlToNetwork {
     
     public void openServer() {
         // Start the listening UDP server on port 1313 and with 1024 bytes packets size
-        this.udpServer = new UDPserver(4446);
-        this.udpSender = new UDPsender(4444);
-        udpServer.start();
+        try{
+            socket = new DatagramSocket(port);
+            System.out.println("DEBUG *** UDPserver : socket created on port : " + port +" ***");
+            this.udpServer = new UDPserver(socket);
+            this.udpSender = new UDPsender(socket);
+            udpServer.start();
+        }catch(IOException e){
+            System.err.println(e);
+        }
     }
     // attention il me semble le thread client vient de l'entité emetrice
     /*

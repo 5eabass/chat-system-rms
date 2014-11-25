@@ -8,10 +8,10 @@ import java.net.InetAddress;
 
 public class UDPsender  {
     
-    private int sendingPort;
+    private DatagramSocket socket;
     
-    public UDPsender(int s) {
-        this.sendingPort = s;
+    public UDPsender(DatagramSocket s) {
+        this.socket=s;
     }
     
     public void send(Signal s,InetAddress adrIP) throws SignalTooBigException, IOException {
@@ -19,7 +19,6 @@ public class UDPsender  {
         try{
             System.out.println("DEBUG *** UDPsender : send ***");
             // on crée la socket udp
-            DatagramSocket socket = new DatagramSocket(sendingPort);
             // on sérialize
             byte[] buf = Signal.toByteArray(s);
             System.out.println("DEBUG *** UDPsender : signal to byte array = "+buf.toString()+"  ***");
@@ -30,7 +29,6 @@ public class UDPsender  {
             System.out.println("DEBUG *** UDPsender : message sent ***");
         }catch(SignalTooBigException e){
             System.err.println(e);
-        }
-        
+        }  
     }
 }
