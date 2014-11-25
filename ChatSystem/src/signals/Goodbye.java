@@ -1,6 +1,5 @@
 package signals;
 
-
 public class Goodbye extends Signal {
 	private String username;
 

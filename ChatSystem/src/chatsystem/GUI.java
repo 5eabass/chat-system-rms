@@ -1,35 +1,31 @@
 package chatsystem;
-import chatsystem.*;
-import java.awt.CardLayout;
+
 import interfaces.*;
 import java.awt.Color;
-import static java.awt.Color.*;
-import javax.imageio.IIOException;
 import javax.swing.DefaultListModel;
-import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+
 /**
  *
  * @author seb
  */
-public class GUI extends javax.swing.JFrame implements CtrlToGUI{
+public class GUI extends javax.swing.JFrame implements CtrlToGUI {
+
     /**
      * Creates new form EntryFrame
      */
     private static DefaultListModel listModel;
     private StyledDocument doc;
-    private Style errorStyle, receiveStyle, sendStyle ;
-    
+    private Style errorStyle, receiveStyle, sendStyle;
+
     public GUI() {
         initComponents();
         UsagePanel.setVisible(false);
         doc = receivedMessageArea.getStyledDocument();
-        
+
         // initialisation des styles de police utilisé
         // rouge pour une erreur
         // bleu pour un message recu
@@ -40,10 +36,9 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
         StyleConstants.setForeground(errorStyle, Color.RED);
         StyleConstants.setForeground(receiveStyle, Color.BLUE);
         StyleConstants.setForeground(sendStyle, Color.BLACK);
-        
-        
+
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -262,7 +257,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed CONNECT ***");
         ChatSystem.getControler().createLocalInfo(usernameArea.getText());
@@ -271,49 +266,50 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
         connectedList.validate();
         ChatSystem.getControler().performConnect();
         this.usernameLabel.setText(ChatSystem.getModel().getUsername());
-        
-        try{
-            doc.insertString(doc.getLength(),"Welcome to the chat ! \nyour adress ip is : " + ChatSystem.getModel().getLocalAdress()+"\n",errorStyle);
-        }catch(BadLocationException e){
+
+        try {
+            doc.insertString(doc.getLength(), "Welcome to the chat ! \nyour adress ip is : " + ChatSystem.getModel().getLocalAdress() + "\n", errorStyle);
+        } catch (BadLocationException e) {
             System.err.println(e);
         }
-        
+
         this.EntryPanel.setVisible(false);
-        
+
         /////////////////// simplement pour tester avec un remote user
         listModel.addElement("jack@192.168.0.3");
         connectedList.revalidate();
         //////////////////
-        
+
         this.UsagePanel.setVisible(true);
-        
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
     }//GEN-LAST:event_connectButtonActionPerformed
-    
+
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed SEND ***");
         String remoteName = ChatSystem.getModel().getReceiverName(); // pour plus de clarté
-        
-        if (ChatSystem.getModel().getRemoteTable().contains(remoteName) == false){
+
+        if (ChatSystem.getModel().getRemoteTable().contains(remoteName) == false) {
             // cas ou le remoteName n'est pas dans notre table
             System.err.println("no such remote user");
             erreurReceiver();
-        }else{
+        } else {
             // cas nominal on envoie la requete et on affiche dans notre boite de dialogue
-            try{
-                doc.insertString(doc.getLength(),"To " + remoteName + " : " + sendMessageArea.getText() +"\n",sendStyle);
-                ChatSystem.getControler().performSendMessage(sendMessageArea.getText(),remoteName);
-            }catch(BadLocationException e){
+            try {
+                doc.insertString(doc.getLength(), "To " + remoteName + " : " + sendMessageArea.getText() + "\n", sendStyle);
+                ChatSystem.getControler().performSendMessage(sendMessageArea.getText(), remoteName);
+            } catch (BadLocationException e) {
                 System.err.println(e);
             }
             sendMessageArea.setText("");
         }
     }//GEN-LAST:event_sendButtonActionPerformed
-    
+
     private void fileChooseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooseButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed FILE ***");
         ChatSystem.getControler().performSendFile();
     }//GEN-LAST:event_fileChooseButtonActionPerformed
-    
+
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed DISCONNECT ***");
         ChatSystem.getControler().performDisconnect(usernameLabel.getText());
@@ -321,25 +317,19 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
         this.UsagePanel.setVisible(false);
         this.EntryPanel.setVisible(true);
     }//GEN-LAST:event_disconnectButtonActionPerformed
-    
+
     // quand on selectionne un receiver
     private void connectedListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_connectedListValueChanged
         System.out.println("DEBUG *** GUI : selected a receiver ***");
-        ChatSystem.getModel().setReceiverName((String)(connectedList.getSelectedValue()));
-        receiverTextField.setText((String)(connectedList.getSelectedValue()));
+        ChatSystem.getModel().setReceiverName((String) (connectedList.getSelectedValue()));
+        receiverTextField.setText((String) (connectedList.getSelectedValue()));
     }//GEN-LAST:event_connectedListValueChanged
-    
+
     private void usernameAreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameAreaActionPerformed
-        
+
     }//GEN-LAST:event_usernameAreaActionPerformed
-    
-    
-    
-    
-    
-    
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel EntryPanel;
     private javax.swing.JPanel UsagePanel;
@@ -363,10 +353,8 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
     private javax.swing.JTextField usernameArea;
     private javax.swing.JLabel usernameLabel;
     // End of variables declaration//GEN-END:variables
-    
-    
+
     // toutes les fonctions à implémenter !
-    
     @Override
     // appelé quand on recoit un hello ou hellook , il faut ajouter le nom a la list
     public void addUser(String remoteName) {
@@ -374,61 +362,62 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI{
         listModel.addElement(remoteName);
         connectedList.revalidate();
     }
-    
+
     @Override
     // appelé quand on recoit un message
     public void processTextMessage(String message, String remoteName) {
         System.out.println("DEBUG *** GUI : processTextMessage <= when we receive a message ***");
-        try{
-            doc.insertString(doc.getLength(),"from " + remoteName + " : " + message +"\n",receiveStyle);
-        }catch(BadLocationException e){
+        try {
+            doc.insertString(doc.getLength(), "from " + remoteName + " : " + message + "\n", receiveStyle);
+        } catch (BadLocationException e) {
             System.err.println(e);
         }
-        
+        System.err.println("DEBUG *** GUI : processTextMessage = "+message+" ***");
     }
-    
+
     @Override
     // appelé quand le fichier est bien recu
     public void notifyTransmitted() {
         System.out.println("DEBUG *** GUI : notifyTransmitted <= when we have successfully received the file ***");
-        
-        try{
-            doc.insertString(doc.getLength(),"File Transmitted ! "+"\n",errorStyle);
-        }catch(BadLocationException e){
+
+        try {
+            doc.insertString(doc.getLength(), "File Transmitted ! " + "\n", errorStyle);
+        } catch (BadLocationException e) {
             System.err.println(e);
         }
     }
-    
+
     @Override
     // appelé quand le fichier n'a pas été recu
     public void notifyNotTransmitted() {
         System.out.println("DEBUG *** GUI : notifyNotTransmitted <= when we haven't received the file ***");
-        
-        try{
-            doc.insertString(doc.getLength(),"File failed to Transmit ! "+"\n",errorStyle);
-        }catch(BadLocationException e){
+
+        try {
+            doc.insertString(doc.getLength(), "File failed to Transmit ! " + "\n", errorStyle);
+        } catch (BadLocationException e) {
             System.err.println(e);
         }
     }
-    
+
     @Override
     // appelé par le ctrl quand on recoit un goodbye il faut supprimer le nom de la liste
     public void deleteUser(String remoteName) {
         System.out.println("DEBUG *** GUI : deleteUser <= when we receive a goodBye ***");
-        
+
         //on supprime l'élément de notre list(que l'utilisateur voit) et on met a jour la liste
         listModel.removeElement(remoteName);
         connectedList.revalidate();
     }
     /*
-    CAS ERREUR dans selection receiver
-    */
-    public void erreurReceiver(){
+     CAS ERREUR dans selection receiver
+     */
+
+    public void erreurReceiver() {
         System.out.println("DEBUG *** GUI : erreurReceiver <= when we didn't choose any receiver ***");
-        
-        try{
-            doc.insertString(doc.getLength(),"Erreur : selectionnez un utilisateur distant\n",errorStyle);
-        }catch(BadLocationException e){
+
+        try {
+            doc.insertString(doc.getLength(), "Erreur : selectionnez un utilisateur distant\n", errorStyle);
+        } catch (BadLocationException e) {
             System.err.println(e);
         }
     }

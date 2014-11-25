@@ -1,6 +1,5 @@
 package signals;
 
-
 public class HelloOK extends Signal {
 	private String username;
 
