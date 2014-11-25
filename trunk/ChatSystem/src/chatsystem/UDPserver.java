@@ -12,11 +12,10 @@ public class UDPserver extends Thread {
     
     private DatagramSocket serverSocket;
     private DatagramPacket receivePacket;
-    private int listeningPort,len;
+    private int len;
     
-    public UDPserver(int p) {
-        
-        this.listeningPort = p;
+    public UDPserver(DatagramSocket s) {
+        this.serverSocket= s;
         this.len = 1024;
     }
     
@@ -25,9 +24,6 @@ public class UDPserver extends Thread {
     public void run() {
         try{
             System.out.println("DEBUG *** UDPserver : run ***");
-            // création socket receiptrice
-            serverSocket = new DatagramSocket(listeningPort);
-            System.out.println("DEBUG *** UDPserver : socket created on port : "+ listeningPort +" ***");
             //initialisation buffer avec la taille
             byte[] buffer = new byte[len];
             // reception du datagram
