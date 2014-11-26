@@ -9,11 +9,9 @@ public class UDPserver extends Thread {
 
     private DatagramSocket serverSocket;
     private DatagramPacket receivePacket;
-    private int len;
 
     public UDPserver(DatagramSocket s) {
         this.serverSocket = s;
-        this.len = 1024;
     }
 
     @Override
@@ -22,10 +20,10 @@ public class UDPserver extends Thread {
         try {
             //initialisation buffer avec la taille
             System.out.println("DEBUG *** UDPserver : run ***");
-            byte[] buffer = new byte[len];
+            byte[] buffer = new byte[Signal.MAX_SIZE];
             // reception du datagram
             while (true) {
-                System.err.println("Waiting... ... ...");
+                System.out.println("Waiting... ... ...");
                 receivePacket = new DatagramPacket(buffer, buffer.length);
                 serverSocket.receive(receivePacket);
                 System.out.println("DEBUG *** UDPserver : received packet = " + receivePacket + " ***");
