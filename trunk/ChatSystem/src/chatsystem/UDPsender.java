@@ -27,8 +27,7 @@ public class UDPsender {
             DatagramPacket packet = new DatagramPacket(buf, buf.length, adrIP, port);
             // on envoie
             socket.send(packet);
-            System.out.println("DEBUG *** UDPsender : message sent ***");
-        System.err.println(adrIP);
+            System.out.println("DEBUG *** UDPsender : message sent "+adrIP+" ***");
         } catch (SignalTooBigException e) {
             System.err.println(e);
         }

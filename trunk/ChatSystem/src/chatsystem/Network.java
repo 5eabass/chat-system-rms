@@ -17,7 +17,8 @@ public class Network implements CtrlToNetwork {
     private UDPsender udpSender;
     //private UDP_Server UDPclient;
     private DatagramSocket socket;
-    private int port = 4444;
+    private int ports = 4445;
+    private int portd = 4444;
 
     public Network() {
     }
@@ -25,10 +26,10 @@ public class Network implements CtrlToNetwork {
     public void openServer() {
         // Start the listening UDP server on port 4444 and with 1024 bytes packets size
         try {
-            socket = new DatagramSocket(port);
-            System.out.println("DEBUG *** UDPserver : socket created on port : " + port + " ***");
+            socket = new DatagramSocket(portd);
             this.udpServer = new UDPserver(socket);
-            this.udpSender = new UDPsender(socket, port);
+            System.out.println("DEBUG *** UDPserver : socket created on port : " + portd + " ***");
+            this.udpSender = new UDPsender(socket, ports);
             udpServer.start();
         } catch (IOException e) {
             System.err.println(e);
@@ -51,7 +52,7 @@ public class Network implements CtrlToNetwork {
          System.err.println("no IP adress for local user");
          return null;
          }*/
-        return "10.42.0.64";
+        return "127.0.0.1";
     }
 
     // reconstruit l'adresse de broadcast quand on a l'adresse du réseau local
@@ -81,10 +82,11 @@ public class Network implements CtrlToNetwork {
     @Override
     // appelé quand on répond à un hello
     public void sendHello(String u) {
-        System.out.println("DEBUG *** NETWORK : sendHello , localName = " + u + " ***");
+        System.out.println("DEBUG *** NETWORK : sendHello , userName = " + u + " ***");
         Hello helloMessage = new Hello(u);
         try {
-            udpSender.send(helloMessage, InetAddress.getByName(getBroadcast()));
+            // a utiliser quand on est en réseaux !! InetAddress.getByName(getBroadcast())
+            udpSender.send(helloMessage, InetAddress.getByName("127.0.0.1"));
         } catch (IOException | SignalTooBigException ex) {
             System.err.println(ex);
         }
