@@ -23,17 +23,17 @@ public class UDPserver extends Thread {
             byte[] buffer = new byte[Signal.MAX_SIZE];
             // reception du datagram
             while (true) {
-                System.out.println("Waiting... ... ...");
                 receivePacket = new DatagramPacket(buffer, buffer.length);
                 serverSocket.receive(receivePacket);
                 System.out.println("DEBUG *** UDPserver : received packet = " + receivePacket + " ***");
                 ChatSystem.getNetwork().signalProcess(Signal.fromByteArray(buffer));
             }
-            } catch (IOException ex){
-            System.err.println(ex);
-        } catch(ClassNotFoundException ex) {           
+            } catch (IOException | ClassNotFoundException ex){
             System.err.println(ex);
         }
+        // envoie du signal au network qui le traite
+        // envoie du signal au network qui le traite
+        
        
         // envoie du signal au network qui le traite
 

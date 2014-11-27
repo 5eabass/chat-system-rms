@@ -8,101 +8,79 @@ import java.io.File;
 import java.util.ArrayList;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
+import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Network implements CtrlToNetwork {
 
-    //private String username;
     private UDPserver udpServer;
     private UDPsender udpSender;
+    private TCPserver tcpServer;
+    private TCPsender tcpsender;
     //private UDP_Server UDPclient;
     private DatagramSocket socket;
-    private int ports = 4445;
-    private int portd = 4444;
+    private int ports, portd;
+    private String ipAdress, bcAdress;
 
     public Network() {
-      
+        this.ports = 4445;
+        this.portd = 4444;
+        this.setIPs();
     }
+
     public void openServer() {
-        // Start the listening UDP server on port 4444 and with 1024 bytes packets size
         try {
             socket = new DatagramSocket(portd);
             this.udpServer = new UDPserver(socket);
             System.out.println("DEBUG *** UDPserver : socket created on port : " + portd + " ***");
             this.udpSender = new UDPsender(socket, ports);
             udpServer.start();
-            } catch (IOException e) {
+        } catch (IOException e) {
             System.err.println(e);
         }
-        
     }
-    // attention il me semble le thread client vient de l'entité emetrice
-    /*
-     public void openClient() {
-     // Start the listening UDP client on port 1314 and with 1024 bytes packets size
-    
-     this.UDPclient = new UDP_Server(1313, 1024);
-     UDPserver.start();
-     }*/
 
-    //appelé par le controler pour créer le localInfo
-    // permet de retrouver notre adresse ip 
-    public String getMyIP() {
-        /*try {
-         return InetAddress.getLocalHost().getHostAddress();
-         } catch (IOException e) {
-         System.err.println("no IP adress for local user");
-         return null;
-         }*/
-        return "127.0.0.1";
-    }
-    
-    public String getIP(){
+    public void setIPs() {
         boolean notFound = true;
         InetAddress addrIP = null;
-        try{
-            Enumeration ni = NetworkInterface.getNetworkInterfaces();
-            
-            while (ni.hasMoreElements() && notFound){
+        InetAddress broadcast = null;
+        try {
+            Enumeration<NetworkInterface> ni = NetworkInterface.getNetworkInterfaces();
+            while (ni.hasMoreElements() && notFound) {
 
                 NetworkInterface i = (NetworkInterface) ni.nextElement();
-                if ((i.getName().equals("eth0")) || (i.getName().equals("wlan0"))){                    
-                for (Enumeration en = i.getInetAddresses(); en.hasMoreElements();){
-                    InetAddress addr = (InetAddress) en.nextElement();
-                    if(addr instanceof Inet4Address){
-                             addrIP = addr ;
-                             
+                if ((i.getName().equals("eth0")) || (i.getName().equals("wlan0"))) {
+                    List<InterfaceAddress> list = i.getInterfaceAddresses();
+                    Iterator<InterfaceAddress> it = list.iterator();
+                    for (Enumeration en = i.getInetAddresses(); en.hasMoreElements();) {
+                        InterfaceAddress ia = it.next();
+                        InetAddress addr = (InetAddress) en.nextElement();
+                        if (addr instanceof Inet4Address) {
+                            addrIP = addr;
+                            broadcast = ia.getBroadcast();
+                        }
                     }
                 }
-                }                                             
-            }      
-        }catch(IOException e){
+            }
+        } catch (IOException e) {
             System.err.println(e);
         }
-            return addrIP.getHostAddress();
+        this.ipAdress = addrIP.getHostAddress();
+        this.bcAdress = broadcast.getHostAddress();
+    }
 
-      }
+    public String getIP() {
+        return ipAdress;
+    }
 
-    // reconstruit l'adresse de broadcast quand on a l'adresse du réseau local
     public String getBroadcast() {
-        String local_ip = ChatSystem.getModel().getLocalAdress();
-        String broadcastIP = "";
-        int cnt = 0;
-        int i = 0;
-
-        while (cnt != 3 && i < local_ip.length()) {
-            if (local_ip.charAt(i) == '.') {
-                cnt++;
-            }
-            broadcastIP += local_ip.charAt(i);
-            i++;
-        }
-        //broadcastIP += "255";
-        return "255.255.255.255";
+        return bcAdress;
     }
 
     /*
@@ -118,10 +96,8 @@ public class Network implements CtrlToNetwork {
         Hello helloMessage = new Hello(u);
         try {
             // a utiliser quand on est en réseaux !!)
-            udpSender.send(helloMessage,InetAddress.getByName(getBroadcast()));
-        } catch (IOException ex){
-            System.err.println(ex);
-        } catch(SignalTooBigException ex) {           
+            udpSender.send(helloMessage, InetAddress.getByName(getBroadcast()));
+        } catch (IOException | SignalTooBigException ex) {
             System.err.println(ex);
         }
     }
@@ -131,12 +107,10 @@ public class Network implements CtrlToNetwork {
     public void sendHelloOk(String username) {
         System.out.println("DEBUG *** NETWORK : sendHelloOK , username = " + username + " ***");
         HelloOK helloOKmessage = new HelloOK(username);
-        
+
         try {
             udpSender.send(helloOKmessage, InetAddress.getByName(ChatSystem.getModel().getRemoteIp(ChatSystem.getModel().getReceiverName())));
-        } catch (IOException ex) {
-            System.err.println(ex);
-        } catch (SignalTooBigException ex) {
+        } catch (IOException | SignalTooBigException ex) {
             System.err.println(ex);
         }
     }
@@ -145,24 +119,21 @@ public class Network implements CtrlToNetwork {
     // appelé quand on envoie un message
     public void processSendMessage(String message, String remoteName) {
         System.out.println("DEBUG *** NETWORK : processSendMessage , remoteName = " + remoteName + " message = " + message + " ***");
-        ArrayList<String> receiverList = new ArrayList<String>(1);
+        ArrayList<String> receiverList = new ArrayList<String>();
         receiverList.add(remoteName);
         TextMessage m = new TextMessage(message, ChatSystem.getModel().getUsername(), receiverList);
-        System.out.println(ChatSystem.getModel().getRemoteIp(remoteName));
         try {
             udpSender.send(m, InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)));
         } catch (UnknownHostException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex){
-            System.err.println(ex);
-        } catch(SignalTooBigException ex) {           
+        } catch (IOException | SignalTooBigException ex) {
             System.err.println(ex);
         }
     }
 
     @Override
     // appelé quand on veut envoyer un fichier
-    public void processSendFile(File file,long size,String remoteName) {
+    public void processSendFile(File file, long size, String remoteName) {
         System.out.println("DEBUG *** NETWORK : processSendFile <= ask to send a file ***");
     }
 
@@ -182,15 +153,12 @@ public class Network implements CtrlToNetwork {
     // appelé quand on se disconnect
     public void sendGoodbye(String username) {
         System.out.println("DEBUG *** NETWORK : sendGOODBYE , localName = " + username + " ***");
-        
         Goodbye gb = new Goodbye(username);
         try {
             udpSender.send(gb, InetAddress.getByName(getBroadcast()));
         } catch (UnknownHostException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex){
-            System.err.println(ex);
-        } catch(SignalTooBigException ex) {           
+        } catch (IOException | SignalTooBigException ex) {
             System.err.println(ex);
         }
     }
