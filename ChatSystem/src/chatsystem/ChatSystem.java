@@ -1,5 +1,8 @@
 package chatsystem;
 
+import static java.lang.Thread.sleep;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.*;
 
 public class ChatSystem {
@@ -37,11 +40,15 @@ public class ChatSystem {
         c0 = new Controler();
         g0.setVisible(true);
 
-        // test de certaines fonction
-        // System.out.println(n0.getIP());
-        //model.setLocalAdress("192.168.1.2");
-        //System.out.println(n0.getBroadcast());
-        //System.out.println("hello");
+        while(true) {
+            try {
+                sleep(2000);
+                System.out.print("... ");
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ChatSystem.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
     }
 
 }
