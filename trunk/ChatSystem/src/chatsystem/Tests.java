@@ -33,10 +33,10 @@ public class Tests {
 
     public void envoi_fichier() {
         // Envoi d'un fichier ? 
-        ChatSystem.getNetwork().processSendFile();
+      //  ChatSystem.getNetwork().processSendFile();
         // Test avec un fichier très lourd – la taille max est – elle dépassée ? 
-        ChatSystem.getNetwork().processSendFile();
+      //  ChatSystem.getNetwork().processSendFile();
         // Test de différents formats (.avi/.jpeg /.pdf etc)
-        ChatSystem.getNetwork().processSendFile();
+      //  ChatSystem.getNetwork().processSendFile();
     }
 }

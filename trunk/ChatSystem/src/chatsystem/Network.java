@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import signals.*;
 import interfaces.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.net.DatagramSocket;
+import java.net.Inet4Address;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,8 +25,8 @@ public class Network implements CtrlToNetwork {
     private int portd = 4444;
 
     public Network() {
+      
     }
-
     public void openServer() {
         // Start the listening UDP server on port 4444 and with 1024 bytes packets size
         try {
@@ -31,9 +35,10 @@ public class Network implements CtrlToNetwork {
             System.out.println("DEBUG *** UDPserver : socket created on port : " + portd + " ***");
             this.udpSender = new UDPsender(socket, ports);
             udpServer.start();
-        } catch (IOException e) {
+            } catch (IOException e) {
             System.err.println(e);
         }
+        
     }
     // attention il me semble le thread client vient de l'entité emetrice
     /*
@@ -45,7 +50,8 @@ public class Network implements CtrlToNetwork {
      }*/
 
     //appelé par le controler pour créer le localInfo
-    public String getIP() {
+    // permet de retrouver notre adresse ip 
+    public String getMyIP() {
         /*try {
          return InetAddress.getLocalHost().getHostAddress();
          } catch (IOException e) {
@@ -54,6 +60,32 @@ public class Network implements CtrlToNetwork {
          }*/
         return "127.0.0.1";
     }
+    
+    public String getIP(){
+        boolean notFound = true;
+        InetAddress addrIP = null;
+        try{
+            Enumeration ni = NetworkInterface.getNetworkInterfaces();
+            
+            while (ni.hasMoreElements() && notFound){
+
+                NetworkInterface i = (NetworkInterface) ni.nextElement();
+                if ((i.getName().equals("eth0")) || (i.getName().equals("wlan0"))){                    
+                for (Enumeration en = i.getInetAddresses(); en.hasMoreElements();){
+                    InetAddress addr = (InetAddress) en.nextElement();
+                    if(addr instanceof Inet4Address){
+                             addrIP = addr ;
+                             
+                    }
+                }
+                }                                             
+            }      
+        }catch(IOException e){
+            System.err.println(e);
+        }
+            return addrIP.getHostAddress();
+
+      }
 
     // reconstruit l'adresse de broadcast quand on a l'adresse du réseau local
     public String getBroadcast() {
@@ -69,8 +101,8 @@ public class Network implements CtrlToNetwork {
             broadcastIP += local_ip.charAt(i);
             i++;
         }
-        broadcastIP += "255";
-        return broadcastIP;
+        //broadcastIP += "255";
+        return "255.255.255.255";
     }
 
     /*
@@ -85,9 +117,11 @@ public class Network implements CtrlToNetwork {
         System.out.println("DEBUG *** NETWORK : sendHello , userName = " + u + " ***");
         Hello helloMessage = new Hello(u);
         try {
-            // a utiliser quand on est en réseaux !! InetAddress.getByName(getBroadcast())
-            udpSender.send(helloMessage, InetAddress.getByName("127.0.0.1"));
-        } catch (IOException | SignalTooBigException ex) {
+            // a utiliser quand on est en réseaux !!)
+            udpSender.send(helloMessage,InetAddress.getByName(getBroadcast()));
+        } catch (IOException ex){
+            System.err.println(ex);
+        } catch(SignalTooBigException ex) {           
             System.err.println(ex);
         }
     }
@@ -119,14 +153,16 @@ public class Network implements CtrlToNetwork {
             udpSender.send(m, InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)));
         } catch (UnknownHostException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SignalTooBigException | IOException ex) {
-            Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex){
+            System.err.println(ex);
+        } catch(SignalTooBigException ex) {           
+            System.err.println(ex);
         }
     }
 
     @Override
     // appelé quand on veut envoyer un fichier
-    public void processSendFile() {
+    public void processSendFile(File file,long size,String remoteName) {
         System.out.println("DEBUG *** NETWORK : processSendFile <= ask to send a file ***");
     }
 
@@ -143,9 +179,20 @@ public class Network implements CtrlToNetwork {
     }
 
     @Override
-    // appelé quand on disconnect par le ctrl
+    // appelé quand on se disconnect
     public void sendGoodbye(String username) {
         System.out.println("DEBUG *** NETWORK : sendGOODBYE , localName = " + username + " ***");
+        
+        Goodbye gb = new Goodbye(username);
+        try {
+            udpSender.send(gb, InetAddress.getByName(getBroadcast()));
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex){
+            System.err.println(ex);
+        } catch(SignalTooBigException ex) {           
+            System.err.println(ex);
+        }
     }
 
     /*

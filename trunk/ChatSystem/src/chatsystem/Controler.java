@@ -1,6 +1,7 @@
 package chatsystem;
 
 import interfaces.*;
+import java.io.File;
 
 public class Controler implements NetworkToCtrl, GUIToCtrl {
     
@@ -23,7 +24,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         
         System.out.println("DEBUG *** CTRL : performHello <= when we receive a Hello ***");
         // si le hello vient pas de nous (broadcast) ou si l'utilisateur n'est pas déjà dans la table on ajoute
-        if ((username != ChatSystem.getModel().getUsername()) && (!ChatSystem.getModel().getRemoteTable().contains(username)) ){
+        if ((!username.equals(ChatSystem.getModel().getUsername())) && (!ChatSystem.getModel().getRemoteTable().contains(username)) ){
             System.out.println("DEBUG *** CTRL : ajout du remote user : " + username + " ***");
             ChatSystem.getModel().getRemoteTable().add(username);      
             System.out.println("DEBUG *** CTRL : la table des remoteusers est : " + ChatSystem.getModel().toString() + " ***");
@@ -87,9 +88,11 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     /*
     * FIN DU FROM NETWORK
     */
+    
     /*
     * FROM GUI
     */
+    @Override
 // pour créer les infos locales
     public void createLocalInfo(String localName) {
         System.out.println("DEBUG *** CTRL : createLocalInfo <= when we connect to chatsystem ***");
@@ -119,9 +122,9 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     
     @Override
 // appelé quand on envoie un fichié
-    public void performSendFile() {
+    public void performSendFile(File file,String remoteName) {
         System.out.println("DEBUG *** CTRL : performSendFile <= when we send file ***");
-        
+        ChatSystem.getNetwork().processSendFile(file,file.length(),remoteName);
     }
     
     @Override
@@ -138,9 +141,9 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     
     @Override
 // appelé quand on fait un disconnect
-    public void performDisconnect(String localName) {
+    public void performDisconnect(String userName) {
         System.out.println("DEBUG *** CTRL : performDisconnect <= when we disconnect ***");
-        ChatSystem.getNetwork().sendGoodbye(localName);
+        ChatSystem.getNetwork().sendGoodbye(userName);
         ChatSystem.getModel().getRemoteTable().clear();
     }
     

@@ -58,7 +58,7 @@ public class DataStored {
     //fonction qui permet de retrouver le nom a partir de la chaine nom@ip
     public String getRemoteIp(String remoteString) {
         String remoteIp[] = remoteString.split("@");
-        return remoteIp[1];
+        return remoteIp[1]; 
     }
 
     @Override

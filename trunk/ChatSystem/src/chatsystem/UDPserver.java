@@ -29,9 +29,12 @@ public class UDPserver extends Thread {
                 System.out.println("DEBUG *** UDPserver : received packet = " + receivePacket + " ***");
                 ChatSystem.getNetwork().signalProcess(Signal.fromByteArray(buffer));
             }
-        } catch (IOException | ClassNotFoundException ex) {
+            } catch (IOException ex){
+            System.err.println(ex);
+        } catch(ClassNotFoundException ex) {           
             System.err.println(ex);
         }
+       
         // envoie du signal au network qui le traite
 
         // envoie du signal au network qui le traite
