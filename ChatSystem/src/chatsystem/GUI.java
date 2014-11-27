@@ -2,6 +2,7 @@ package chatsystem;
 
 import interfaces.*;
 import java.awt.Color;
+import java.io.File;
 import javax.swing.DefaultListModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
@@ -19,7 +20,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
      */
     private static DefaultListModel listModel;
     private StyledDocument doc;
-    private Style errorStyle, receiveStyle, sendStyle;
+    private Style chatSystemStyle, receiveStyle, sendStyle;
 
     public GUI() {
         initComponents();
@@ -30,10 +31,10 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         // rouge pour une erreur
         // bleu pour un message recu
         // noir pour les messages envoyé
-        errorStyle = receivedMessageArea.addStyle("errorStyle", null);
+        chatSystemStyle = receivedMessageArea.addStyle("chatSystemStyle", null);
         receiveStyle = receivedMessageArea.addStyle("fromStyle", null);
         sendStyle = receivedMessageArea.addStyle("toStyle", null);
-        StyleConstants.setForeground(errorStyle, Color.RED);
+        StyleConstants.setForeground(chatSystemStyle, Color.RED);
         StyleConstants.setForeground(receiveStyle, Color.BLUE);
         StyleConstants.setForeground(sendStyle, Color.BLACK);
 
@@ -265,7 +266,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         this.usernameLabel.setText(ChatSystem.getModel().getUsername());
 
         try {
-            doc.insertString(doc.getLength(), "Welcome to the chat ! \nyour adress ip is : " + ChatSystem.getModel().getLocalAdress() + "\n", errorStyle);
+            doc.insertString(doc.getLength(), "Welcome to the chat ! \nyour adress ip is : " + ChatSystem.getModel().getLocalAdress() + "\n", chatSystemStyle);
         } catch (BadLocationException e) {
             System.err.println(e);
         }
@@ -304,8 +305,10 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     }//GEN-LAST:event_sendButtonActionPerformed
 
     private void fileChooseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooseButtonActionPerformed
-        System.out.println("DEBUG *** GUI : pressed FILE ***");
-        ChatSystem.getControler().performSendFile();
+        System.out.println("DEBUG *** GUI : pressed FILE ***");    
+        String fileName = ""; // on doit mettre a la place la selection du fichier ...
+        File file = new File(fileName);
+        //ChatSystem.getControler().performSendFile(file,);
     }//GEN-LAST:event_fileChooseButtonActionPerformed
 
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
@@ -358,6 +361,13 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     // appelé quand on recoit un hello ou hellook , il faut ajouter le nom a la list
     public void addUser(String remoteName) {
         System.out.println("DEBUG *** GUI : addUser <= when we receive a hello ***");
+        
+        try {
+            doc.insertString(doc.getLength(), remoteName + " is now connected !\n", chatSystemStyle);
+        } catch (BadLocationException e) {
+            System.err.println(e);
+        }
+        
         listModel.addElement(remoteName);
         connectedList.revalidate();
     }
@@ -380,7 +390,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         System.out.println("DEBUG *** GUI : notifyTransmitted <= when we have successfully received the file ***");
 
         try {
-            doc.insertString(doc.getLength(), "File Transmitted ! " + "\n", errorStyle);
+            doc.insertString(doc.getLength(), "File Transmitted ! " + "\n", chatSystemStyle);
         } catch (BadLocationException e) {
             System.err.println(e);
         }
@@ -392,7 +402,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         System.out.println("DEBUG *** GUI : notifyNotTransmitted <= when we haven't received the file ***");
 
         try {
-            doc.insertString(doc.getLength(), "File failed to Transmit ! " + "\n", errorStyle);
+            doc.insertString(doc.getLength(), "File failed to Transmit ! " + "\n", chatSystemStyle);
         } catch (BadLocationException e) {
             System.err.println(e);
         }
@@ -404,6 +414,12 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         System.out.println("DEBUG *** GUI : deleteUser <= when we receive a goodBye ***");
 
         //on supprime l'élément de notre list(que l'utilisateur voit) et on met a jour la liste
+        try {
+            doc.insertString(doc.getLength(), remoteName + " is now disconnected !\n", chatSystemStyle);
+        } catch (BadLocationException e) {
+            System.err.println(e);
+        }
+                             
         listModel.removeElement(remoteName);
         connectedList.revalidate();
     }
@@ -415,7 +431,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         System.out.println("DEBUG *** GUI : erreurReceiver <= when we didn't choose any receiver ***");
 
         try {
-            doc.insertString(doc.getLength(), "Erreur : selectionnez un utilisateur distant\n", errorStyle);
+            doc.insertString(doc.getLength(), "Erreur : selectionnez un utilisateur distant\n", chatSystemStyle);
         } catch (BadLocationException e) {
             System.err.println(e);
         }
