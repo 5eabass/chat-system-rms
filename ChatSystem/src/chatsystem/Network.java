@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import signals.*;
 import interfaces.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
@@ -22,9 +24,11 @@ public class Network implements CtrlToNetwork {
     private UDPserver udpServer;
     private UDPsender udpSender;
     private TCPserver tcpServer;
-    private TCPsender tcpsender;
+    private TCPsender tcpSender;
     //private UDP_Server UDPclient;
     private DatagramSocket socket;
+    BufferedWriter writer;
+    OutputStreamWriter out;
     private int ports, portd;
     private String ipAdress, bcAdress;
 
@@ -34,7 +38,7 @@ public class Network implements CtrlToNetwork {
         this.setIPs();
     }
 
-    public void openServer() {
+    public void openUDP() {
         try {
             socket = new DatagramSocket(portd);
             this.udpServer = new UDPserver(socket);
@@ -44,6 +48,10 @@ public class Network implements CtrlToNetwork {
         } catch (IOException e) {
             System.err.println(e);
         }
+    }
+
+    public void openTCP() {
+        // this.tcpSender = new TCPsender();
     }
 
     public void setIPs() {
