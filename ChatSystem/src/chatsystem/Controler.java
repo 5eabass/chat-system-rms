@@ -26,7 +26,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         // si le hello vient pas de nous (broadcast) ou si l'utilisateur n'est pas déjà dans la table on ajoute
         if ((!username.equals(ChatSystem.getModel().getUsername())) && (!ChatSystem.getModel().getRemoteTable().contains(username)) ){
             System.out.println("DEBUG *** CTRL : ajout du remote user : " + username + " ***");
-            ChatSystem.getModel().getRemoteTable().add(username);      
+            ChatSystem.getModel().getRemoteTable().add(username);
             System.out.println("DEBUG *** CTRL : la table des remoteusers est : " + ChatSystem.getModel().toString() + " ***");
             ChatSystem.getGUI().addUser(username);
             ChatSystem.getModel().setReceiverName(username);
@@ -95,9 +95,18 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     @Override
 // pour créer les infos locales
     public void createLocalInfo(String localName) {
+        String ips = ChatSystem.getNetwork().getIPs();
         System.out.println("DEBUG *** CTRL : createLocalInfo <= when we connect to chatsystem ***");
         ChatSystem.getModel().setLocalName(localName);
-        ChatSystem.getModel().setLocalAdress(ChatSystem.getNetwork().getIP());
+        System.out.println("DEBUG *** CTRL : localName set : " + localName + " ***");
+        if(!ips.equals("")){
+            String arrayIP[] = ips.split("@");
+            ChatSystem.getModel().setLocalAdress(arrayIP[0]);
+            ChatSystem.getModel().setAdresseBroadcast(arrayIP[1]);
+            System.out.println("DEBUG *** CTRL : ip set :  ***");
+        }
+        //ChatSystem.getModel().setLocalAdress();
+        // ChatSystem.getModel().setAdresseBroadcast();
         ChatSystem.getModel().setUsername();
         System.out.println("DEBUG *** CTRL : " + ChatSystem.getModel().getLocalName() + "/" + ChatSystem.getModel().getLocalAdress() + " ***");
     }
@@ -105,7 +114,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     @Override
 // appelé quand on se connect au chatsystem
     public void performConnect() {
-        System.out.println("DEBUG *** CTRL : performConnect <= when we connect to chatsystem ***");      
+        System.out.println("DEBUG *** CTRL : performConnect <= when we connect to chatsystem ***");
         ////////// pour test avec un utilisateur dans la table
         ChatSystem.getModel().getRemoteTable().add("jack@192.168.0.3");
         /////////

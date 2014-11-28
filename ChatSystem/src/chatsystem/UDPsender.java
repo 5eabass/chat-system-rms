@@ -7,15 +7,15 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class UDPsender {
-
+    
     private DatagramSocket socket;
     private int port;
-
+    
     public UDPsender(DatagramSocket s, int p) {
         this.socket = s;
         this.port = p;
     }
-
+    
     public void send(Signal s, InetAddress adrIP) throws SignalTooBigException, IOException {
         try {
             System.out.println("DEBUG *** UDPsender : send ***");
