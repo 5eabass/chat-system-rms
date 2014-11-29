@@ -3,7 +3,7 @@ package chatsystem;
 import interfaces.*;
 import java.awt.Color;
 import java.io.File;
-import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -18,17 +18,17 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     /**
      * Creates new form EntryFrame
      */
-    private static DefaultListModel listModel;
     private StyledDocument doc;
     private Style chatSystemStyle, receiveStyle, sendStyle;
+    private File file;
     
     public GUI() {
         initComponents();
-        UsagePanel.setVisible(false);
+        this.UsagePanel.setVisible(false);
         doc = receivedMessageArea.getStyledDocument();
         
         // initialisation des styles de police utilisé
-        // rouge pour une erreur
+        // rouge pour le System
         // bleu pour un message recu
         // noir pour les messages envoyé
         chatSystemStyle = receivedMessageArea.addStyle("chatSystemStyle", null);
@@ -49,11 +49,12 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        EntryPanel = new javax.swing.JPanel();
-        connectButton = new javax.swing.JButton();
-        usernameArea = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        QueryFrame = new javax.swing.JInternalFrame();
+        yesButton = new javax.swing.JButton();
+        noButton = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        fileInfoTextArea = new javax.swing.JTextArea();
+        questionLabel = new javax.swing.JLabel();
         UsagePanel = new javax.swing.JPanel();
         receivedMessagePanel = new javax.swing.JScrollPane();
         receivedMessageArea = new javax.swing.JTextPane();
@@ -70,63 +71,74 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         receiverTextField = new javax.swing.JTextField();
         toLabel = new javax.swing.JLabel();
         messageLabel = new javax.swing.JLabel();
+        EntryFrame = new javax.swing.JInternalFrame();
+        connectButton = new javax.swing.JButton();
+        usernameArea = new javax.swing.JTextField();
+        presentationLabel = new javax.swing.JLabel();
+        proprietaryLabel = new javax.swing.JLabel();
+
+        QueryFrame.setVisible(true);
+
+        yesButton.setText("yes");
+        yesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yesButtonActionPerformed(evt);
+            }
+        });
+
+        noButton.setText("no");
+        noButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                noButtonActionPerformed(evt);
+            }
+        });
+
+        fileInfoTextArea.setEditable(false);
+        fileInfoTextArea.setBackground(new java.awt.Color(238, 238, 238));
+        fileInfoTextArea.setColumns(20);
+        fileInfoTextArea.setRows(5);
+        fileInfoTextArea.setBorder(new javax.swing.border.MatteBorder(null));
+        jScrollPane3.setViewportView(fileInfoTextArea);
+
+        questionLabel.setText("   Do you accept to receive this file ?");
+
+        javax.swing.GroupLayout QueryFrameLayout = new javax.swing.GroupLayout(QueryFrame.getContentPane());
+        QueryFrame.getContentPane().setLayout(QueryFrameLayout);
+        QueryFrameLayout.setHorizontalGroup(
+            QueryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(QueryFrameLayout.createSequentialGroup()
+                .addGroup(QueryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(QueryFrameLayout.createSequentialGroup()
+                        .addGap(78, 78, 78)
+                        .addComponent(yesButton)
+                        .addGap(43, 43, 43)
+                        .addComponent(noButton))
+                    .addGroup(QueryFrameLayout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(questionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 51, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, QueryFrameLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        QueryFrameLayout.setVerticalGroup(
+            QueryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(QueryFrameLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(questionLabel)
+                .addGap(12, 12, 12)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(QueryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(yesButton)
+                    .addComponent(noButton))
+                .addGap(0, 34, Short.MAX_VALUE))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new javax.swing.OverlayLayout(getContentPane()));
 
-        EntryPanel.setPreferredSize(new java.awt.Dimension(538, 503));
-
-        connectButton.setText("CONNECT");
-        connectButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                connectButtonActionPerformed(evt);
-            }
-        });
-
-        usernameArea.setText("username");
-        usernameArea.setSelectedTextColor(new java.awt.Color(153, 153, 255));
-        usernameArea.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                usernameAreaActionPerformed(evt);
-            }
-        });
-
-        jTextArea1.setEditable(false);
-        jTextArea1.setBackground(new java.awt.Color(204, 204, 204));
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setText("       BIENVENUE sur Chat System\n\nCette nouvelle application vous permet\nde communiquer avec des amis en \nPeer-to-Peer, vous pouvez soit envoyer \ndes message soit envoyer des fichiers\nsous l'accord du destinataire.\nPour vous connecter il vous suffit de \nrentrer un nom \n");
-        jTextArea1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jScrollPane1.setViewportView(jTextArea1);
-
-        javax.swing.GroupLayout EntryPanelLayout = new javax.swing.GroupLayout(EntryPanel);
-        EntryPanel.setLayout(EntryPanelLayout);
-        EntryPanelLayout.setHorizontalGroup(
-            EntryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EntryPanelLayout.createSequentialGroup()
-                .addGap(0, 173, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(139, 139, 139))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EntryPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(EntryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(connectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(usernameArea))
-                .addGap(218, 218, 218))
-        );
-        EntryPanelLayout.setVerticalGroup(
-            EntryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(EntryPanelLayout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(connectButton)
-                .addContainerGap(196, Short.MAX_VALUE))
-        );
-
-        getContentPane().add(EntryPanel);
+        UsagePanel.setPreferredSize(new java.awt.Dimension(650, 447));
 
         receivedMessageArea.setEditable(false);
         receivedMessagePanel.setViewportView(receivedMessageArea);
@@ -180,7 +192,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         UsagePanel.setLayout(UsagePanelLayout);
         UsagePanelLayout.setHorizontalGroup(
             UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, UsagePanelLayout.createSequentialGroup()
+            .addGroup(UsagePanelLayout.createSequentialGroup()
                 .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(UsagePanelLayout.createSequentialGroup()
                         .addContainerGap()
@@ -188,51 +200,53 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(usernameLabel))
                     .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addGap(68, 68, 68)
-                        .addComponent(userlistLabel))
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(receivedMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(23, 23, 23)
+                        .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(UsagePanelLayout.createSequentialGroup()
+                        .addGap(58, 58, 58)
+                        .addComponent(userlistLabel)))
+                .addGap(29, 29, 29)
+                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(UsagePanelLayout.createSequentialGroup()
+                        .addComponent(messageLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, UsagePanelLayout.createSequentialGroup()
+                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(UsagePanelLayout.createSequentialGroup()
+                                .addGap(0, 21, Short.MAX_VALUE)
+                                .addComponent(receiverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(sendMessagePanel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                            .addComponent(fileChooseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(6, 6, 6))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, UsagePanelLayout.createSequentialGroup()
+                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, UsagePanelLayout.createSequentialGroup()
                                 .addComponent(toLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(receiverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(messageLabel)
-                            .addGroup(UsagePanelLayout.createSequentialGroup()
-                                .addComponent(sendMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(fileChooseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(sendButton))))))
-                .addGap(12, 12, 12))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(receivedMessagePanel, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(12, 12, 12))))
         );
         UsagePanelLayout.setVerticalGroup(
             UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(UsagePanelLayout.createSequentialGroup()
-                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addGap(39, 39, 39)
                         .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(nameInfoLabel)
                             .addComponent(usernameLabel))
                         .addGap(43, 43, 43)
                         .addComponent(userlistLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE))
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(receivedMessagePanel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(receivedMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(UsagePanelLayout.createSequentialGroup()
                         .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -244,14 +258,82 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
                         .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(UsagePanelLayout.createSequentialGroup()
                                 .addComponent(sendButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(fileChooseButton))
-                            .addComponent(sendMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9))
+                            .addGroup(UsagePanelLayout.createSequentialGroup()
+                                .addComponent(sendMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addContainerGap())))
+                    .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        getContentPane().add(UsagePanel);
+        EntryFrame.setVisible(true);
+
+        connectButton.setText("CONNECT");
+        connectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connectButtonActionPerformed(evt);
+            }
+        });
+
+        usernameArea.setText("username");
+        usernameArea.setSelectedTextColor(new java.awt.Color(153, 153, 255));
+
+        presentationLabel.setText("Welcome to the ChatSystem !");
+
+        proprietaryLabel.setText("©RMS");
+
+        javax.swing.GroupLayout EntryFrameLayout = new javax.swing.GroupLayout(EntryFrame.getContentPane());
+        EntryFrame.getContentPane().setLayout(EntryFrameLayout);
+        EntryFrameLayout.setHorizontalGroup(
+            EntryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(EntryFrameLayout.createSequentialGroup()
+                .addGroup(EntryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(EntryFrameLayout.createSequentialGroup()
+                        .addGap(92, 92, 92)
+                        .addGroup(EntryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(connectButton)))
+                    .addGroup(EntryFrameLayout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(presentationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(50, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EntryFrameLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(proprietaryLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        EntryFrameLayout.setVerticalGroup(
+            EntryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EntryFrameLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(presentationLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(connectButton)
+                .addGap(24, 24, 24)
+                .addComponent(proprietaryLabel))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(UsagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(EntryFrame, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(UsagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(EntryFrame, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -259,8 +341,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed CONNECT ***");
         ChatSystem.getControler().createLocalInfo(usernameArea.getText());
-        listModel = new DefaultListModel();
-        connectedList.setModel(listModel);
+        connectedList.setModel(ChatSystem.getModel().getRemoteTable());
         connectedList.validate();
         ChatSystem.getControler().performConnect();
         this.usernameLabel.setText(ChatSystem.getModel().getUsername());
@@ -271,14 +352,9 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             System.err.println(e);
         }
         
-        this.EntryPanel.setVisible(false);
-        
-        /////////////////// simplement pour tester avec un remoteuser
-        listModel.addElement("jack@192.168.0.3");
-        connectedList.revalidate();
-        //////////////////
-        
+        this.EntryFrame.setVisible(false);
         this.UsagePanel.setVisible(true);
+        
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         
     }//GEN-LAST:event_connectButtonActionPerformed
@@ -295,8 +371,14 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             // cas nominal on envoie la requete et on affiche dans notre boite de dialogue
             try {
                 doc.insertString(doc.getLength(), "To " + remoteName + " : " + sendMessageArea.getText() + "\n", sendStyle);
-                System.out.println("DEBUG *** GUI : message transmitted to ctrl : " + sendMessageArea.getText() + " ***");
-                ChatSystem.getControler().performSendMessage(sendMessageArea.getText(), remoteName);
+                if(sendMessageArea.getText().contains("File :")){
+                    System.out.println("DEBUG *** GUI : File transmitted to ctrl : " + sendMessageArea.getText() + " ***");
+                    ChatSystem.getControler().performSendFile(file, remoteName);
+                    file = null;
+                }else{
+                    System.out.println("DEBUG *** GUI : message transmitted to ctrl : " + sendMessageArea.getText() + " ***");
+                    ChatSystem.getControler().performSendMessage(sendMessageArea.getText(), remoteName);
+                }
             } catch (BadLocationException e) {
                 System.err.println(e);
             }
@@ -306,9 +388,13 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     
     private void fileChooseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooseButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed FILE ***");
-        String fileName = ""; // on doit mettre a la place la selection du fichier ...
-        File file = new File(fileName);
-        //ChatSystem.getControler().performSendFile(file,);
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        file = chooser.getSelectedFile();
+        sendMessageArea.setText("File : " + file.getAbsolutePath());
+        
+        
+        
     }//GEN-LAST:event_fileChooseButtonActionPerformed
     
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
@@ -316,8 +402,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         ChatSystem.getControler().performDisconnect(usernameLabel.getText());
         receivedMessageArea.setText("");
         this.UsagePanel.setVisible(false);
-        listModel.clear();
-        this.EntryPanel.setVisible(true);
+        this.EntryFrame.setVisible(true);
     }//GEN-LAST:event_disconnectButtonActionPerformed
     
     // quand on selectionne un receiver
@@ -327,23 +412,38 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         receiverTextField.setText((String) (connectedList.getSelectedValue()));
     }//GEN-LAST:event_connectedListValueChanged
     
-    private void usernameAreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameAreaActionPerformed
-        
-    }//GEN-LAST:event_usernameAreaActionPerformed
+    /*
+    *for internal frame : queryFrame
+    */
+    
+    private void yesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yesButtonActionPerformed
+        ChatSystem.getControler().processAcceptTransfer();
+        QueryFrame.setVisible(false);
+    }//GEN-LAST:event_yesButtonActionPerformed
+    
+    private void noButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noButtonActionPerformed
+        ChatSystem.getControler().processRefuseTransfer();
+        QueryFrame.setVisible(false);
+    }//GEN-LAST:event_noButtonActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel EntryPanel;
+    private javax.swing.JInternalFrame EntryFrame;
+    private javax.swing.JInternalFrame QueryFrame;
     private javax.swing.JPanel UsagePanel;
     private javax.swing.JButton connectButton;
     private javax.swing.JList connectedList;
     private javax.swing.JButton disconnectButton;
     private javax.swing.JButton fileChooseButton;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea fileInfoTextArea;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane listPanel;
     private javax.swing.JLabel messageLabel;
     private javax.swing.JLabel nameInfoLabel;
+    private javax.swing.JButton noButton;
+    private javax.swing.JLabel presentationLabel;
+    private javax.swing.JLabel proprietaryLabel;
+    private javax.swing.JLabel questionLabel;
     private javax.swing.JTextPane receivedMessageArea;
     private javax.swing.JScrollPane receivedMessagePanel;
     private javax.swing.JTextField receiverTextField;
@@ -354,6 +454,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     private javax.swing.JLabel userlistLabel;
     private javax.swing.JTextField usernameArea;
     private javax.swing.JLabel usernameLabel;
+    private javax.swing.JButton yesButton;
     // End of variables declaration//GEN-END:variables
     
     // toutes les fonctions à implémenter !
@@ -367,8 +468,6 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         } catch (BadLocationException e) {
             System.err.println(e);
         }
-        
-        listModel.addElement(remoteName);
         connectedList.revalidate();
     }
     
@@ -407,6 +506,12 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             System.err.println(e);
         }
     }
+    @Override
+    //appelé quand on nous demande si on accepte la reception d'un fichier
+    public void performFileQuery(String filename,long size,String remoteName){
+        fileInfoTextArea.setText("File : " +filename+"\n File size : "+size+"\n From : "+remoteName+"\n");
+        QueryFrame.setVisible(true);
+    }
     
     @Override
     // appelé par le ctrl quand on recoit un goodbye il faut supprimer le nom de la liste
@@ -420,7 +525,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             System.err.println(e);
         }
         
-        listModel.removeElement(remoteName);
+        //listModel.removeElement(remoteName);
         connectedList.revalidate();
     }
     /*

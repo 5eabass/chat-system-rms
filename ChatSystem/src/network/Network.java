@@ -1,5 +1,6 @@
-package chatsystem;
+package network;
 
+import chatsystem.ChatSystem;
 import java.io.IOException;
 import java.net.InetAddress;
 import signals.*;
@@ -167,7 +168,7 @@ public class Network implements CtrlToNetwork {
         try {
             udpSender.send(gb, InetAddress.getByName(ChatSystem.getModel().getAdresseBroadcast()));
         } catch (UnknownHostException ex) {
-            Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         } catch (IOException | SignalTooBigException ex) {
             System.err.println(ex);
         }
@@ -189,6 +190,10 @@ public class Network implements CtrlToNetwork {
             ChatSystem.getControler().performGoodbye(((Goodbye) s).getUsername());
         } else if (s instanceof TextMessage) {
             ChatSystem.getControler().performTextMessage(((TextMessage) s).getMessage(), ((TextMessage) s).getFrom());
+        }else if (s instanceof FileProposal){
+            ChatSystem.getControler().processFileQuery(((FileProposal) s).getFileName(),((FileProposal) s).getSize(),((FileProposal) s).getFrom());
+        }else if (s instanceof FileTransfer){
+            //
         }
     }
     

@@ -1,5 +1,6 @@
 package chatsystem;
 
+import network.Network;
 import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +40,8 @@ public class ChatSystem {
         g0 = new GUI();
         c0 = new Controler();
         g0.setVisible(true);
-
+        
+        // a quoi ca sert?
         while(true) {
             try {
                 sleep(2000);
