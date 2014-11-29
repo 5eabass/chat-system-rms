@@ -1,27 +1,30 @@
 package model;
 
 import chatsystem.ChatSystem;
+import java.io.File;
 import java.util.*;
+import javax.swing.DefaultListModel;
 /*
 * MODEL
 */
 
 public class DataStored {
     
-    private ArrayList<String> remoteTable; // info des remotes users table de nom@ip
+    private DefaultListModel<String> remoteTable; // info des remotes users table de nom@ip
     private String localName; // nom local user
     private String localAdress; // @ip local user
     private String username; // nom@ip de l'utilisateur
     private String receiverName;
     private String adresseBroadcast;
+    private File fileToSend ;
     
     public DataStored() {
-        this.remoteTable = new ArrayList<String>();
+        this.remoteTable = new DefaultListModel<String>();
         //this.localName = localName;
         //this.localAdress = localAdress;
     }
     
-    public ArrayList<String> getRemoteTable() {
+    public DefaultListModel getRemoteTable() {
         return remoteTable;
     }
     
@@ -70,12 +73,20 @@ public class DataStored {
         String remoteIp[] = remoteString.split("@");
         return remoteIp[1];
     }
-    
+
+    public File getFileToSend() {
+        return fileToSend;
+    }
+
+    public void setFileToSend(File fileToSend) {
+        this.fileToSend = fileToSend;
+    }
+             
     @Override
     public String toString() {
         String table = new String();
-        for (String e : remoteTable) {
-            table += e + "\n";
+        for (int i=0; i<remoteTable.getSize();i++) {
+            table += remoteTable.elementAt(i) + "\n";
         }
         return table;
     }

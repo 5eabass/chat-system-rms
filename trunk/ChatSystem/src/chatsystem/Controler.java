@@ -26,7 +26,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         // si le hello vient pas de nous (broadcast) ou si l'utilisateur n'est pas déjà dans la table on ajoute
         if ((!username.equals(ChatSystem.getModel().getUsername())) && (!ChatSystem.getModel().getRemoteTable().contains(username)) ){
             System.out.println("DEBUG *** CTRL : ajout du remote user : " + username + " ***");
-            ChatSystem.getModel().getRemoteTable().add(username);
+            ChatSystem.getModel().getRemoteTable().addElement(username);
             System.out.println("DEBUG *** CTRL : la table des remoteusers est : " + ChatSystem.getModel().toString() + " ***");
             ChatSystem.getGUI().addUser(username);
             ChatSystem.getModel().setReceiverName(username);
@@ -43,7 +43,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         // si l'utilisateur n'est pas déjà dans la table on ajoute
         if (!ChatSystem.getModel().getRemoteTable().contains(username)){
             System.out.println("DEBUG *** CTRL : ajout du remote user : " + username + " ***");
-            ChatSystem.getModel().getRemoteTable().add(username);
+            ChatSystem.getModel().getRemoteTable().addElement(username);
             System.out.println("DEBUG *** CTRL : la table des remote users est : " + ChatSystem.getModel().toString() + " ***");
             ChatSystem.getGUI().addUser(username);
         }else{
@@ -60,8 +60,9 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     
     @Override
 // appelé quand on est interrogé pour recevoir un fichier
-    public void processFileQuery() {
+    public void processFileQuery(String filename,long size, String remoteName) {
         System.out.println("DEBUG *** CTRL : processFileQuery <= when we're asked to accept/refuse a file receiption***");
+        ChatSystem.getGUI().performFileQuery(filename,size,remoteName);
     }
     
     @Override
@@ -80,7 +81,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
 // appelé quand on recoit un GOODBYE
     public void performGoodbye(String remoteName) {
         System.out.println("DEBUG *** CTRL : performGoodbye <= when receiving goodbye ***");
-        ChatSystem.getModel().getRemoteTable().remove(remoteName);
+        ChatSystem.getModel().getRemoteTable().removeElement(remoteName);
         System.out.println("DEBUG *** CTRL : la table des remote users est : " + ChatSystem.getModel().toString() + " ***");
         ChatSystem.getGUI().deleteUser(remoteName);
     }
@@ -116,7 +117,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     public void performConnect() {
         System.out.println("DEBUG *** CTRL : performConnect <= when we connect to chatsystem ***");
         ////////// pour test avec un utilisateur dans la table
-        ChatSystem.getModel().getRemoteTable().add("jack@192.168.0.3");
+        ChatSystem.getModel().getRemoteTable().addElement("jack@192.168.0.3");
         /////////
         ChatSystem.getNetwork().openUDP();
         ChatSystem.getNetwork().sendHello(ChatSystem.getModel().getUsername());
@@ -140,12 +141,14 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
 // appelé quand on accepte un transfer
     public void processAcceptTransfer() {
         System.out.println("DEBUG *** CTRL : processAcceptTransfer <= when we accept transfer ***");
+        ChatSystem.getNetwork().performAcceptTransfer();
     }
     
     @Override
 // appelé quand on refuse un transfer
     public void processRefuseTransfer() {
         System.out.println("DEBUG *** CTRL : processRefuseTransfer <= when we refuse transfer ***");
+        ChatSystem.getNetwork().performRefuseTransfer();
     }
     
     @Override

@@ -1,4 +1,4 @@
-package chatsystem;
+package network;
 
 import java.io.BufferedWriter;
 import java.io.DataInputStream;

@@ -1,4 +1,4 @@
-package chatsystem;
+package network;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class TCPsender extends Thread {
+public class TCPsender extends Thread {
 
     final int TAILLE_MAX = 5; // Taille max de fichier de 5 Mo 
     private Socket s0;
