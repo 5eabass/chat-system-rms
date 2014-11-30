@@ -5,14 +5,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import signals.*;
 import interfaces.*;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -22,12 +21,12 @@ import java.util.logging.Logger;
 
 public class Network implements CtrlToNetwork {
 
+    private DatagramSocket socket;
     private UDPserver udpServer;
     private UDPsender udpSender;
     private TCPserver tcpServer;
     private TCPsender tcpSender;
     private int ports, portd;
-    private String ipAdress, bcAdress;
 
     public Network() {
         this.ports = 4445;
@@ -36,11 +35,15 @@ public class Network implements CtrlToNetwork {
     }
 
     public void openUDP() {
-        // socket = new DatagramSocket(portd);
-        this.udpServer = new UDPserver(portd);
-        System.out.println("DEBUG *** Network : socket created on port : " + portd + " ***");
-        this.udpSender = new UDPsender(ports);
-        udpServer.start();
+        try {
+            socket = new DatagramSocket(portd);           
+            this.udpServer = new UDPserver(socket);
+            System.out.println("DEBUG *** Network : socket created on port : " + portd + " ***");
+            this.udpSender = new UDPsender(socket,ports);
+            udpServer.start();
+        } catch (SocketException ex) {
+            System.err.println(ex);
+        }
     }
 
     public void openTCP() {
@@ -75,8 +78,6 @@ public class Network implements CtrlToNetwork {
         }
         //this.ipAdress = addrIP.getHostAddress();
         //this.bcAdress = broadcast.getHostAddress();
-        //ChatSystem.getModel().setAdresseBroadcast(broadcast.toString());
-        //ChatSystem.getModel().setLocalAdress(broadcast.toString());
         if (addrIP == null) {
             System.err.println("DEBUG *** Network setIP : could not find any localIP ***");
             return "";
@@ -144,7 +145,7 @@ public class Network implements CtrlToNetwork {
             this.tcpSender = new TCPsender(InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)),ports);
             this.tcpSender.start();
             // File proposal
-            this.tcpSender.FileProposal(remoteName, size, ipAdress, receiverList);
+            this.tcpSender.FileProposal(remoteName, size, ChatSystem.getModel().getLocalAdress(), receiverList);
             // File transfer
             this.tcpSender.send(new FileTransfer(file));
         } catch (UnknownHostException ex) {
