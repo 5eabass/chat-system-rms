@@ -21,40 +21,33 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Network implements CtrlToNetwork {
-    
+
     private UDPserver udpServer;
     private UDPsender udpSender;
     private TCPserver tcpServer;
     private TCPsender tcpSender;
-    //private UDP_Server UDPclient;
-    private DatagramSocket socket;
-    BufferedWriter writer;
-    OutputStreamWriter out;
     private int ports, portd;
     private String ipAdress, bcAdress;
-    
+
     public Network() {
         this.ports = 4445;
         this.portd = 4444;
         //this.setIPs(); pas utile , on set les ip des qu'on connect
     }
-    
+
     public void openUDP() {
-        try {
-            socket = new DatagramSocket(portd);
-            this.udpServer = new UDPserver(socket);
-            System.out.println("DEBUG *** Network : socket created on port : " + portd + " ***");
-            this.udpSender = new UDPsender(socket, ports);
-            udpServer.start();
-        } catch (IOException e) {
-            System.err.println(e);
-        }
+        // socket = new DatagramSocket(portd);
+        this.udpServer = new UDPserver(portd);
+        System.out.println("DEBUG *** Network : socket created on port : " + portd + " ***");
+        this.udpSender = new UDPsender(ports);
+        udpServer.start();
     }
-    
+
     public void openTCP() {
-        // this.tcpSender = new TCPsender();
+        this.tcpServer = new TCPserver(portd, 5);
+        this.tcpServer.start();
     }
-    
+
     public String getIPs() {
         boolean notFound = true;
         InetAddress addrIP = null;
@@ -64,7 +57,7 @@ public class Network implements CtrlToNetwork {
             while (ni.hasMoreElements() && notFound) {
                 NetworkInterface i = (NetworkInterface) ni.nextElement();
                 if ((i.getName().equals("eth0")) || (i.getName().equals("wlan0") || (i.getName().equals("en1")))) { // a changer par eth0 sur ubuntu
-                    notFound = false ;
+                    notFound = false;
                     List<InterfaceAddress> list = i.getInterfaceAddresses();
                     Iterator<InterfaceAddress> it = list.iterator();
                     for (Enumeration en = i.getInetAddresses(); en.hasMoreElements();) {
@@ -84,22 +77,20 @@ public class Network implements CtrlToNetwork {
         //this.bcAdress = broadcast.getHostAddress();
         //ChatSystem.getModel().setAdresseBroadcast(broadcast.toString());
         //ChatSystem.getModel().setLocalAdress(broadcast.toString());
-        if(addrIP == null){
+        if (addrIP == null) {
             System.err.println("DEBUG *** Network setIP : could not find any localIP ***");
             return "";
-        }else{
-            return addrIP.getHostAddress()+'@'+broadcast.getHostAddress();
+        } else {
+            return addrIP.getHostAddress() + '@' + broadcast.getHostAddress();
         }
     }
-    
-    
-    
+
     /*
-    * ICI TOUTES LES FONCTIONS A IMPLEMENTER AU FUR ET A MESURE
-    */
+     * ICI TOUTES LES FONCTIONS A IMPLEMENTER AU FUR ET A MESURE
+     */
     /*
-    * FROM CONTROLER
-    */
+     * FROM CONTROLER
+     */
     @Override
     // appelé quand on répond à un hello
     public void sendHello(String u) {
@@ -112,20 +103,20 @@ public class Network implements CtrlToNetwork {
             System.err.println(ex);
         }
     }
-    
+
     @Override
     //appelé quand on a recu un hello
     public void sendHelloOk(String username) {
         System.out.println("DEBUG *** NETWORK : sendHelloOK , username = " + username + " ***");
         HelloOK helloOKmessage = new HelloOK(username);
-        
+
         try {
             udpSender.send(helloOKmessage, InetAddress.getByName(ChatSystem.getModel().getRemoteIp(ChatSystem.getModel().getReceiverName())));
         } catch (IOException | SignalTooBigException ex) {
             System.err.println(ex);
         }
     }
-    
+
     @Override
     // appelé quand on envoie un message
     public void processSendMessage(String message, String remoteName) {
@@ -141,25 +132,38 @@ public class Network implements CtrlToNetwork {
             System.err.println(ex);
         }
     }
-    
+
     @Override
     // appelé quand on veut envoyer un fichier
     public void processSendFile(File file, long size, String remoteName) {
         System.out.println("DEBUG *** NETWORK : processSendFile <= ask to send a file ***");
+        ArrayList<String> receiverList = new ArrayList<String>();
+        receiverList.add(remoteName);
+        try {
+            // Connection establishement
+            this.tcpSender = new TCPsender(InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)),ports);
+            this.tcpSender.start();
+            // File proposal
+            this.tcpSender.FileProposal(remoteName, size, ipAdress, receiverList);
+            // File transfer
+            this.tcpSender.send(new FileTransfer(file));
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     @Override
     //appelé quand on refuse le transfer
     public void performRefuseTransfer() {
         System.out.println("DEBUG *** NETWORK : performRefuseTransfer <= send that we refuse ***");
     }
-    
+
     @Override
     //appelé quand on accepte le transfer
     public void performAcceptTransfer() {
         System.out.println("DEBUG *** NETWORK : performAcceptTransfer <= send that we accepte ***");
     }
-    
+
     @Override
     // appelé quand on se disconnect
     public void sendGoodbye(String username) {
@@ -173,13 +177,13 @@ public class Network implements CtrlToNetwork {
             System.err.println(ex);
         }
     }
-    
+
     /*
-    * FIN FROM CTRL
-    */
+     * FIN FROM CTRL
+     */
     /*
-    * Fonction qui recoit les signaux de l'udp server et envoie au ctrl les actions a faire
-    */
+     * Fonction qui recoit les signaux de l'udp server et envoie au ctrl les actions a faire
+     */
     // traitement du signal
     public void signalProcess(Signal s) { // a modifier
         if (s instanceof Hello) {
@@ -190,11 +194,15 @@ public class Network implements CtrlToNetwork {
             ChatSystem.getControler().performGoodbye(((Goodbye) s).getUsername());
         } else if (s instanceof TextMessage) {
             ChatSystem.getControler().performTextMessage(((TextMessage) s).getMessage(), ((TextMessage) s).getFrom());
-        }else if (s instanceof FileProposal){
-            ChatSystem.getControler().processFileQuery(((FileProposal) s).getFileName(),((FileProposal) s).getSize(),((FileProposal) s).getFrom());
-        }else if (s instanceof FileTransfer){
+        } else if (s instanceof FileProposal) {
+            ChatSystem.getControler().processFileQuery(((FileProposal) s).getFileName(), ((FileProposal) s).getSize(), ((FileProposal) s).getFrom());
+        } else if (s instanceof FileTransfer) {
             //
+        } else if (s instanceof FileTransferOK) {
+            this.tcpSender.FileTransfer(((FileTransfer) s).getFile());
+        } else if (s instanceof FileTransferNOK) {
+            this.tcpSender.ConnectionTearDown();
         }
     }
-    
+
 }

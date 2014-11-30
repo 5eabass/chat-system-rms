@@ -120,6 +120,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         ChatSystem.getModel().getRemoteTable().addElement("jack@192.168.0.3");
         /////////
         ChatSystem.getNetwork().openUDP();
+        ChatSystem.getNetwork().openTCP();
         ChatSystem.getNetwork().sendHello(ChatSystem.getModel().getUsername());
     }
     

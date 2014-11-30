@@ -5,15 +5,22 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UDPsender {
     
     private DatagramSocket socket;
     private int port;
     
-    public UDPsender(DatagramSocket s, int p) {
-        this.socket = s;
+    public UDPsender(int p) {
         this.port = p;
+        try {
+            this.socket = new DatagramSocket(port);
+        } catch (SocketException ex) {
+            Logger.getLogger(UDPsender.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void send(Signal s, InetAddress adrIP) throws SignalTooBigException, IOException {
