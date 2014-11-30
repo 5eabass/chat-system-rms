@@ -11,17 +11,11 @@ import signals.*;
 
 public class UDPserver extends Thread {
     
-    private DatagramSocket serverSocket;
     private DatagramPacket receivePacket;
-    private int port;
+    private DatagramSocket serverSocket;
     
-    public UDPserver(int p) {
-        this.port = p;
-        try {
-            this.serverSocket = new DatagramSocket(port);
-        } catch (SocketException ex) {
-            Logger.getLogger(UDPserver.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public UDPserver(DatagramSocket s) {
+            this.serverSocket = s;
     }
     
     @Override

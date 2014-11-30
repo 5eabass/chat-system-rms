@@ -21,11 +21,13 @@ class TCPreceiver extends Thread {
         for (;;) {
             try {
                 byte[] buffer = new byte[Signal.MAX_SIZE];
-                reader.read(buffer);
+           //     reader.read(buffer);
                 //envoie du signal au network
                 ChatSystem.getNetwork().signalProcess(Signal.fromByteArray(buffer));
             } catch (IOException ex) {
                 Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(TCPreceiver.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

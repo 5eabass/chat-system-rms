@@ -14,13 +14,9 @@ public class UDPsender {
     private DatagramSocket socket;
     private int port;
     
-    public UDPsender(int p) {
-        this.port = p;
-        try {
-            this.socket = new DatagramSocket(port);
-        } catch (SocketException ex) {
-            Logger.getLogger(UDPsender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public UDPsender(DatagramSocket s,int p) {
+        this.port = p;    
+        this.socket = s;
     }
     
     public void send(Signal s, InetAddress adrIP) throws SignalTooBigException, IOException {
