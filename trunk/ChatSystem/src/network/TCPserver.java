@@ -1,43 +1,46 @@
 package network;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import signals.Signal;
 
 public class TCPserver extends Thread {
 
-    private ServerSocket s0;
-    private int dPort;
+    private ServerSocket ss;
+    private Socket s0;
+    private BufferedReader reader;
+    // private BufferedWriter writer;
+    private InputStreamReader in;
+    private OutputStreamWriter out;
+    private TCPreceiver r0;
+    private int port, max_connexion;
 
-    public TCPserver(int p) {
-
-        try {
-            this.s0 = new ServerSocket(p);
-            this.dPort = p;
-        } catch (IOException ex) {
-            Logger.getLogger(TCPserver.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    public TCPserver(int p, int c) {
+        this.port = p;
+        this.max_connexion = c;
     }
 
+    @Override
     public void run() {
         try {
-            System.out.println("DEBUG *** TCPserver : run ***");
-            // reception des paquets
-            while (true) {
+            // Ouverture d'une entrée socket sur le port 1313, acceptant 5 flux
+            ss = new ServerSocket(port, max_connexion);
 
-                Socket client = s0.accept();
-                Connection c = new Connection(client);
-                System.out.println("DEBUG *** TCPserver : listening connection ***");
-                // ChatSystem.getNetwork().signalProcess(Signal.fromByteArray(buffer));
+            for (;;) {
+                // Acceptation d'un flux d'entrée socket
+                s0 = ss.accept();
+                in = new InputStreamReader(s0.getInputStream());
+                // out = new OutputStreamWriter(s0.getOutputStream());
+                // writer = new BufferedWriter(out);
+                reader = new BufferedReader(in);
+
+                r0 = new TCPreceiver(reader);
+                r0.start();
             }
-        } catch (IOException ex) {
-            System.err.println(ex);
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
 }
