@@ -10,7 +10,7 @@ import javax.swing.DefaultListModel;
 
 public class DataStored {
     
-    private DefaultListModel<String> remoteTable; // info des remotes users table de nom@ip
+    private DefaultListModel remoteTable; // info des remotes users table de nom@ip
     private String localName; // nom local user
     private String localAdress; // @ip local user
     private String username; // nom@ip de l'utilisateur
@@ -19,7 +19,7 @@ public class DataStored {
     private File fileToSend ;
     
     public DataStored() {
-        this.remoteTable = new DefaultListModel<String>();
+        this.remoteTable = new DefaultListModel();
         //this.localName = localName;
         //this.localAdress = localAdress;
     }
