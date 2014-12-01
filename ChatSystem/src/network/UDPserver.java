@@ -4,9 +4,6 @@ import chatsystem.ChatSystem;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.SocketException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import signals.*;
 
 public class UDPserver extends Thread {
@@ -33,9 +30,12 @@ public class UDPserver extends Thread {
                 //envoie du signal au network
                 ChatSystem.getNetwork().signalProcess(Signal.fromByteArray(buffer));
             }
-        } catch (IOException | ClassNotFoundException ex){
+        } catch (IOException ex){ 
+            System.err.println(ex);
+        }catch (ClassNotFoundException ex){
             System.err.println(ex);
         }
+        
         
     }
     

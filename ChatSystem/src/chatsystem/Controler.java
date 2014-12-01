@@ -32,7 +32,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
             ChatSystem.getModel().setReceiverName(username);
             ChatSystem.getNetwork().sendHelloOk(ChatSystem.getModel().getUsername());
         }else{
-            System.err.println("DEBUG *** CTRL : remoteUser deja dans table : " + username + " ***");
+            System.err.println("DEBUG *** CTRL : remoteUser deja dans table ou est le localuser : " + username + " ***");
         }
     }
     

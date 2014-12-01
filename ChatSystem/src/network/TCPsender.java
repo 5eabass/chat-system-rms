@@ -40,8 +40,10 @@ public class TCPsender extends Thread {
             this.writer.write(buf.toString());
             this.writer.newLine();
             this.writer.flush();
-        } catch (IOException | SignalTooBigException ex) {
-            Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex){
+            System.err.println(ex);
+        } catch(SignalTooBigException ex) {
+            System.err.println(ex);
         }
     }
 

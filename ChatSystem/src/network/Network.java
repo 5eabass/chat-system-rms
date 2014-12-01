@@ -1,6 +1,6 @@
 package network;
 
-import chatsystem.ChatSystem;
+import chatsystem.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import signals.*;
@@ -29,7 +29,7 @@ public class Network implements CtrlToNetwork {
     private int ports, portd;
 
     public Network() {
-        this.ports = 4445;
+        this.ports = 4444;
         this.portd = 4444;
         //this.setIPs(); pas utile , on set les ip des qu'on connect
     }
@@ -47,8 +47,8 @@ public class Network implements CtrlToNetwork {
     }
 
     public void openTCP() {
-        this.tcpServer = new TCPserver(portd, 5);
-        this.tcpServer.start();
+        //this.tcpServer = new TCPserver(portd, 5);
+       // this.tcpServer.start();
     }
 
     public String getIPs() {
@@ -100,9 +100,14 @@ public class Network implements CtrlToNetwork {
         try {
             // a utiliser quand on est en réseaux !!)
             udpSender.send(helloMessage, InetAddress.getByName(ChatSystem.getModel().getAdresseBroadcast()));
-        } catch (IOException | SignalTooBigException ex) {
+        } catch (IOException ex) {
+                
             System.err.println(ex);
         }
+            catch(SignalTooBigException ex) {
+                System.err.println(ex);
+            }
+        
     }
 
     @Override
@@ -113,9 +118,13 @@ public class Network implements CtrlToNetwork {
 
         try {
             udpSender.send(helloOKmessage, InetAddress.getByName(ChatSystem.getModel().getRemoteIp(ChatSystem.getModel().getReceiverName())));
-        } catch (IOException | SignalTooBigException ex) {
+        } catch (SignalTooBigException ex){
+             System.err.println(ex);
+        }catch( IOException ex){
             System.err.println(ex);
         }
+        
+       
     }
 
     @Override
@@ -129,9 +138,12 @@ public class Network implements CtrlToNetwork {
             udpSender.send(m, InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)));
         } catch (UnknownHostException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | SignalTooBigException ex) {
+        } catch (IOException ex){
+            System.err.println(ex);
+        } catch(SignalTooBigException ex) {
             System.err.println(ex);
         }
+        
     }
 
     @Override
@@ -174,7 +186,10 @@ public class Network implements CtrlToNetwork {
             udpSender.send(gb, InetAddress.getByName(ChatSystem.getModel().getAdresseBroadcast()));
         } catch (UnknownHostException ex) {
             System.err.println(ex);
-        } catch (IOException | SignalTooBigException ex) {
+        } catch (IOException ex){ 
+            System.err.println(ex);
+        }
+        catch (SignalTooBigException ex) {
             System.err.println(ex);
         }
     }
