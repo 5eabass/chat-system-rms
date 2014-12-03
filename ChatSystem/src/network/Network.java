@@ -20,37 +20,37 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Network implements CtrlToNetwork {
-    
+
     private DatagramSocket socket;
     private UDPserver udpServer;
     private UDPsender udpSender;
     private TCPserver tcpServer;
     private TCPsender tcpSender;
     private int ports, portd;
-    
+
     public Network() {
         this.ports = 4444;
         this.portd = 4444;
         //this.setIPs(); pas utile , on set les ip des qu'on connect
     }
-    
+
     public void openUDP() {
         try {
             socket = new DatagramSocket(portd);
             this.udpServer = new UDPserver(socket);
             System.out.println("DEBUG *** Network : socket created on port : " + portd + " ***");
-            this.udpSender = new UDPsender(socket,ports);
+            this.udpSender = new UDPsender(socket, ports);
             udpServer.start();
         } catch (SocketException ex) {
             System.err.println(ex);
         }
     }
-    
+
     public void openTCP() {
-        //this.tcpServer = new TCPserver(portd, 5);
-        // this.tcpServer.start();
+        this.tcpServer = new TCPserver(portd, 5);
+        this.tcpServer.start();
     }
-    
+
     public String getIPs() {
         boolean notFound = true;
         InetAddress addrIP = null;
@@ -85,13 +85,13 @@ public class Network implements CtrlToNetwork {
             return addrIP.getHostAddress() + '@' + broadcast.getHostAddress();
         }
     }
-    
+
     /*
-    * ICI TOUTES LES FONCTIONS A IMPLEMENTER AU FUR ET A MESURE
-    */
+     * ICI TOUTES LES FONCTIONS A IMPLEMENTER AU FUR ET A MESURE
+     */
     /*
-    * FROM CONTROLER
-    */
+     * FROM CONTROLER
+     */
     @Override
     // appelé quand on répond à un hello
     public void sendHello(String u) {
@@ -101,49 +101,47 @@ public class Network implements CtrlToNetwork {
             // a utiliser quand on est en réseaux !!)
             udpSender.send(helloMessage, InetAddress.getByName(ChatSystem.getModel().getAdresseBroadcast()));
         } catch (IOException ex) {
-            
+
+            System.err.println(ex);
+        } catch (SignalTooBigException ex) {
             System.err.println(ex);
         }
-        catch(SignalTooBigException ex) {
-            System.err.println(ex);
-        }
-        
+
     }
-    
+
     @Override
     //appelé quand on a recu un hello
     public void sendHelloOk(String localName, String remoteName) {
-        System.out.println("DEBUG *** NETWORK : sendHelloOK , username = " + localName + "to remoteName :" +remoteName+" ***");
+        System.out.println("DEBUG *** NETWORK : sendHelloOK , username = " + localName + "to remoteName :" + remoteName + " ***");
         HelloOK helloOKmessage = new HelloOK(localName);
-        
+
         try {
             udpSender.send(helloOKmessage, InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)));
-        } catch (SignalTooBigException ex){
+        } catch (SignalTooBigException ex) {
             System.err.println(ex);
-        }catch( IOException ex){
+        } catch (IOException ex) {
             System.err.println(ex);
         }
-        
-        
+
     }
-    
+
     @Override
     // appelé quand on envoie un message
     public void processSendMessage(String message, ArrayList<String> receivers) {
         System.out.println("DEBUG *** NETWORK : processSendMessage ,message : " + message + " ***");
         TextMessage m = new TextMessage(message, ChatSystem.getModel().getUsername(), receivers);
         try {
-            for (String s : receivers){
+            for (String s : receivers) {
                 udpSender.send(m, InetAddress.getByName(ChatSystem.getModel().getRemoteIp(s)));
-                System.out.println("DEBUG *** NETWORK : message sent to : "+s+" ***");
+                System.out.println("DEBUG *** NETWORK : message sent to : " + s + " ***");
             }
-        } catch (IOException ex){
+        } catch (IOException ex) {
             System.err.println(ex);
-        }catch (SignalTooBigException ex){
+        } catch (SignalTooBigException ex) {
             System.err.println(ex);
-        }     
+        }
     }
-    
+
     @Override
     // appelé quand on veut envoyer un fichier
     public void processSendFile(File file, long size, String remoteName) {
@@ -152,7 +150,7 @@ public class Network implements CtrlToNetwork {
         receiverList.add(remoteName);
         try {
             // Connection establishement
-            this.tcpSender = new TCPsender(InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)),ports);
+            this.tcpSender = new TCPsender(InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)), ports);
             this.tcpSender.start();
             // File proposal
             this.tcpSender.FileProposal(remoteName, size, ChatSystem.getModel().getLocalAdress(), receiverList);
@@ -162,19 +160,34 @@ public class Network implements CtrlToNetwork {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     //appelé quand on refuse le transfer
-    public void performRefuseTransfer() {
+    public void performRefuseTransfer(String remoteName) {
         System.out.println("DEBUG *** NETWORK : performRefuseTransfer <= send that we refuse ***");
+        try {
+            System.out.println("DEBUG *** NETWORK : performAcceptTransfer <= send that we accepte ***");
+            this.tcpSender = new TCPsender(InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)), ports);
+            this.tcpSender.start();
+            this.tcpSender.send(new FileTransferNOK());
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     @Override
     //appelé quand on accepte le transfer
-    public void performAcceptTransfer() {
-        System.out.println("DEBUG *** NETWORK : performAcceptTransfer <= send that we accepte ***");
+    public void performAcceptTransfer(String remoteName) {
+        try {
+            System.out.println("DEBUG *** NETWORK : performAcceptTransfer <= send that we accepte ***");
+            this.tcpSender = new TCPsender(InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)), ports);
+            this.tcpSender.start();
+            this.tcpSender.send(new FileTransferOK());
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     @Override
     // appelé quand on se disconnect
     public void sendGoodbye(String username) {
@@ -182,20 +195,22 @@ public class Network implements CtrlToNetwork {
         Goodbye gb = new Goodbye(username);
         try {
             udpSender.send(gb, InetAddress.getByName(ChatSystem.getModel().getAdresseBroadcast()));
-        } catch (IOException ex){
+            // Fermeture du socket UDP
+            udpServer.stop();
+            socket.close();
+        } catch (IOException ex) {
             System.err.println(ex);
-        }
-        catch (SignalTooBigException ex) {
+        } catch (SignalTooBigException ex) {
             System.err.println(ex);
         }
     }
-    
+
     /*
-    * FIN FROM CTRL
-    */
+     * FIN FROM CTRL
+     */
     /*
-    * Fonction qui recoit les signaux de l'udp server et envoie au ctrl les actions a faire
-    */
+     * Fonction qui recoit les signaux de l'udp server et envoie au ctrl les actions a faire
+     */
     // traitement du signal
     public void signalProcess(Signal s) { // a modifier
         if (s instanceof Hello) {
@@ -205,7 +220,7 @@ public class Network implements CtrlToNetwork {
         } else if (s instanceof Goodbye) {
             ChatSystem.getControler().performGoodbye(((Goodbye) s).getUsername());
         } else if (s instanceof TextMessage) {
-            ChatSystem.getControler().performTextMessage(((TextMessage) s).getMessage(), ((TextMessage) s).getFrom(), ((TextMessage) s).getTo() );
+            ChatSystem.getControler().performTextMessage(((TextMessage) s).getMessage(), ((TextMessage) s).getFrom(), ((TextMessage) s).getTo());
         } else if (s instanceof FileProposal) {
             ChatSystem.getControler().processFileQuery(((FileProposal) s).getFileName(), ((FileProposal) s).getSize(), ((FileProposal) s).getFrom());
         } else if (s instanceof FileTransfer) {
@@ -216,5 +231,5 @@ public class Network implements CtrlToNetwork {
             this.tcpSender.ConnectionTearDown();
         }
     }
-    
+
 }
