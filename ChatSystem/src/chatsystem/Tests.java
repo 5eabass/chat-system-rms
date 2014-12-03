@@ -20,7 +20,7 @@ public class Tests {
     }
 
     public void envoi_mess() {
-        // Envoi bien reçu ? 
+        /*// Envoi bien reçu ? 
         ChatSystem.getNetwork().processSendMessage("essai message", remotename1);
         // Test avec un message très long
         ChatSystem.getNetwork().processSendMessage("essai messageaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", remotename1);
@@ -28,7 +28,7 @@ public class Tests {
         ChatSystem.getNetwork().processSendMessage("essai message", remotename1);
         ChatSystem.getNetwork().processSendMessage("essai message", remotename2);
         ChatSystem.getNetwork().processSendMessage("essai message", remotename3);
-        
+        */
     }
 
     public void envoi_fichier() {
