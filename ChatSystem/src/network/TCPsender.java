@@ -1,8 +1,10 @@
 package network;
 
+import chatsystem.ChatSystem;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -21,6 +23,7 @@ public class TCPsender extends Thread {
     private BufferedWriter writer;
     private InetAddress addrIp;
     private int dPort;
+    private InputStream reader;
 
     public TCPsender(InetAddress a, int p) {
 
@@ -40,9 +43,16 @@ public class TCPsender extends Thread {
             this.writer.write(buf.toString());
             this.writer.newLine();
             this.writer.flush();
-        } catch (IOException ex){
+            // We are waiting to read a byte ack from the remote user
+            // ATTENTION A DEPLACER SINON FERME LA CONNECTION A CHAQUE ENVOI !
+            reader = s1.getInputStream();
+            byte[] buffer = new byte[1];
+            reader.read(buffer);
+            // Then we close the connection, means that the file as been well received
+            this.ConnectionTearDown();
+        } catch (IOException ex) {
             System.err.println(ex);
-        } catch(SignalTooBigException ex) {
+        } catch (SignalTooBigException ex) {
             System.err.println(ex);
         }
     }
@@ -58,17 +68,48 @@ public class TCPsender extends Thread {
         }
     }
 
-    public void FileProposal(String remoteName, long size, String ipAdress, ArrayList<String> receiverList) {        
-        FileProposal fp = new FileProposal(remoteName, size, ipAdress, receiverList);
-        this.send(fp);
-        System.out.println("DEBUG *** TCPsender : FileProposal signal sent ***");
+    public void FileProposal(String remoteName, long size, String ipAdress, ArrayList<String> receiverList) {
+        try {
+            FileProposal fp = new FileProposal(remoteName, size, ipAdress, receiverList);
+            byte[] buf = Signal.toByteArray(fp);
+            this.writer.write(buf.toString());
+            this.writer.newLine();
+            this.writer.flush();
+            System.out.println("DEBUG *** TCPsender : FileProposal signal sent ***");
+            reader = s1.getInputStream();
+            byte[] buffer = new byte[Signal.MAX_SIZE];
+            reader.read(buffer);
+            //envoie du signal au network
+            ChatSystem.getNetwork().signalProcess(Signal.fromByteArray(buffer));
+        } catch (IOException ex) {
+            Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SignalTooBigException ex) {
+            Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
-    public void FileTransfer(File f) {
-        this.send(new FileTransfer(f));
-        System.out.println("DEBUG *** TCPsender : Transfer accepted, FileTransfer signal sent ***");
+
+    public void FileTransfer(byte[] buff) {
+        try {
+            FileTransfer ft = new FileTransfer(buff);
+            byte[] buf = Signal.toByteArray(ft);
+            this.writer.write(buf.toString());
+            this.writer.newLine();
+            this.writer.flush();
+            System.out.println("DEBUG *** TCPsender : Transfer accepted, FileTransfer signal sent ***");
+            reader = s1.getInputStream();
+            byte[] buffer = new byte[1];
+            reader.read(buffer);
+            // Then we close the connection, means that the file as been well received
+            this.ConnectionTearDown();
+        } catch (IOException ex) {
+            Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SignalTooBigException ex) {
+            Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     public void ConnectionTearDown() {
         try {
             this.s1.close();
@@ -76,5 +117,9 @@ public class TCPsender extends Thread {
         } catch (IOException ex) {
             Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public String getRemoteName() {
+        return this.addrIp.getHostName();
     }
 }

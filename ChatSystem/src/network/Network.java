@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import signals.*;
 import interfaces.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
@@ -16,6 +18,7 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +28,7 @@ public class Network implements CtrlToNetwork {
     private UDPserver udpServer;
     private UDPsender udpSender;
     private TCPserver tcpServer;
-    private TCPsender tcpSender;
+    private Vector<TCPsender> tcpSender;
     private int ports, portd;
 
     public Network() {
@@ -144,19 +147,26 @@ public class Network implements CtrlToNetwork {
 
     @Override
     // appelé quand on veut envoyer un fichier
-    public void processSendFile(File file, long size, String remoteName) {
+    public void processSendFile(File file, long size, ArrayList<String> receivers) {
         System.out.println("DEBUG *** NETWORK : processSendFile <= ask to send a file ***");
-        ArrayList<String> receiverList = new ArrayList<String>();
-        receiverList.add(remoteName);
         try {
+            for (String s : receivers) {
             // Connection establishement
-            this.tcpSender = new TCPsender(InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)), ports);
-            this.tcpSender.start();
-            // File proposal
-            this.tcpSender.FileProposal(remoteName, size, ChatSystem.getModel().getLocalAdress(), receiverList);
-            // File transfer
-            this.tcpSender.send(new FileTransfer(file));
+                this.tcpSender.add(new TCPsender(InetAddress.getByName(ChatSystem.getModel().getRemoteIp(s)), ports));
+                this.tcpSender.lastElement().start();
+                // File proposal
+                this.tcpSender.lastElement().FileProposal(s, size, ChatSystem.getModel().getLocalAdress(), receivers);
+                // File transfer, conversion into bytearray for signal
+                byte[] buf = new byte[(int)size];
+                FileInputStream fis = new FileInputStream(file);
+                fis.read(buf);
+                this.tcpSender.lastElement().send(new FileTransfer(buf));
+            }
         } catch (UnknownHostException ex) {
+            Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -167,9 +177,9 @@ public class Network implements CtrlToNetwork {
         System.out.println("DEBUG *** NETWORK : performRefuseTransfer <= send that we refuse ***");
         try {
             System.out.println("DEBUG *** NETWORK : performAcceptTransfer <= send that we accepte ***");
-            this.tcpSender = new TCPsender(InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)), ports);
-            this.tcpSender.start();
-            this.tcpSender.send(new FileTransferNOK());
+            this.tcpSender.add(new TCPsender(InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)), ports));
+            this.tcpSender.lastElement().start();
+            this.tcpSender.lastElement().send(new FileTransferNOK());
         } catch (UnknownHostException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -179,10 +189,10 @@ public class Network implements CtrlToNetwork {
     //appelé quand on accepte le transfer
     public void performAcceptTransfer(String remoteName) {
         try {
-            System.out.println("DEBUG *** NETWORK : performAcceptTransfer <= send that we accepte ***");
-            this.tcpSender = new TCPsender(InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)), ports);
-            this.tcpSender.start();
-            this.tcpSender.send(new FileTransferOK());
+            System.out.println("DEBUG *** NETWORK : performAcceptTransfer <= send that we accept ***");
+            this.tcpSender.add(new TCPsender(InetAddress.getByName(ChatSystem.getModel().getRemoteIp(remoteName)), ports));
+            this.tcpSender.lastElement().start();
+            this.tcpSender.lastElement().send(new FileTransferOK());
         } catch (UnknownHostException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -224,11 +234,14 @@ public class Network implements CtrlToNetwork {
         } else if (s instanceof FileProposal) {
             ChatSystem.getControler().processFileQuery(((FileProposal) s).getFileName(), ((FileProposal) s).getSize(), ((FileProposal) s).getFrom());
         } else if (s instanceof FileTransfer) {
-            //
+            // create a file on our computer in a folder
         } else if (s instanceof FileTransferOK) {
-            this.tcpSender.FileTransfer(((FileTransfer) s).getFile());
+            this.tcpSender.lastElement().FileTransfer(((FileTransfer) s).getFile());
+            this.tcpSender.lastElement().ConnectionTearDown();
+            System.out.println("DEBUG *** NETWORK : FileTransfer granted, send and close when done ***");
         } else if (s instanceof FileTransferNOK) {
-            this.tcpSender.ConnectionTearDown();
+            this.tcpSender.lastElement().ConnectionTearDown();
+            System.out.println("DEBUG *** NETWORK : FileTransfer refused, close connection ***");
         }
     }
 

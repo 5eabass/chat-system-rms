@@ -133,7 +133,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     
     @Override
 // appelé quand on envoie un fichié
-    public void performSendFile(File file,String remoteName) {
+    public void performSendFile(File file,ArrayList<String> remoteName) {
         System.out.println("DEBUG *** CTRL : performSendFile <= when we send file ***");
         ChatSystem.getNetwork().processSendFile(file,file.length(),remoteName);
     }
