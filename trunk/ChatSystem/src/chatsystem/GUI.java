@@ -377,7 +377,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
                     doc.insertString(doc.getLength(), "To " + s + " : " + sendMessageArea.getText() + "\n", sendStyle);
                     if(sendMessageArea.getText().contains("File :")){
                         System.out.println("DEBUG *** GUI : File transmitted to ctrl : " + sendMessageArea.getText() + " ***");
-                        ChatSystem.getControler().performSendFile(file, s);
+                        ChatSystem.getControler().performSendFile(file, receiverList);
                         file = null;
                     }else{
                         System.out.println("DEBUG *** GUI : message transmitted to ctrl : " + sendMessageArea.getText() + " ***");
