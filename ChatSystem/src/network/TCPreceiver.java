@@ -2,17 +2,17 @@ package network;
 
 import chatsystem.ChatSystem;
 import chatsystem.Controler;
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import signals.Signal;
 
 class TCPreceiver extends Thread {
 
-    private final BufferedReader reader;
+    private final InputStream reader;
 
-    public TCPreceiver(BufferedReader r) {
+    public TCPreceiver(InputStream r) {
         this.reader = r;
     }
 
@@ -21,7 +21,7 @@ class TCPreceiver extends Thread {
         for (;;) {
             try {
                 byte[] buffer = new byte[Signal.MAX_SIZE];
-           //     reader.read(buffer);
+                reader.read(buffer);
                 //envoie du signal au network
                 ChatSystem.getNetwork().signalProcess(Signal.fromByteArray(buffer));
             } catch (IOException ex) {
