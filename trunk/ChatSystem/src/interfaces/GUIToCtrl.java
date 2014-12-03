@@ -8,8 +8,8 @@ public interface GUIToCtrl {
     public void performConnect();
     public void performSendMessage(String message, ArrayList<String> remoteName);
     public void performSendFile(File file,String remoteName);
-    public void processAcceptTransfer();
-    public void processRefuseTransfer();
+    public void processAcceptTransfer(String remoteName);
+    public void processRefuseTransfer(String remoteName);
     public void performDisconnect(String userName);
     
 }

@@ -140,16 +140,16 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     
     @Override
 // appelé quand on accepte un transfer
-    public void processAcceptTransfer() {
+    public void processAcceptTransfer(String remoteName) {
         System.out.println("DEBUG *** CTRL : processAcceptTransfer <= when we accept transfer ***");
-        ChatSystem.getNetwork().performAcceptTransfer();
+        ChatSystem.getNetwork().performAcceptTransfer(remoteName);
     }
     
     @Override
 // appelé quand on refuse un transfer
-    public void processRefuseTransfer() {
+    public void processRefuseTransfer(String remoteName) {
         System.out.println("DEBUG *** CTRL : processRefuseTransfer <= when we refuse transfer ***");
-        ChatSystem.getNetwork().performRefuseTransfer();
+        ChatSystem.getNetwork().performRefuseTransfer(remoteName);
     }
     
     @Override

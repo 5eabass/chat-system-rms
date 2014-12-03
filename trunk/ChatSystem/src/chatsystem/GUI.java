@@ -23,6 +23,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     private Style chatSystemStyle, receiveStyle, sendStyle;
     private File file;
     private ArrayList<String> receiverList;
+    private String remoteName;
     
     public GUI() {
         initComponents();
@@ -415,12 +416,12 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     */
     
     private void yesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yesButtonActionPerformed
-        ChatSystem.getControler().processAcceptTransfer();
+        ChatSystem.getControler().processAcceptTransfer(remoteName);
         QueryFrame.setVisible(false);
     }//GEN-LAST:event_yesButtonActionPerformed
     
     private void noButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noButtonActionPerformed
-        ChatSystem.getControler().processRefuseTransfer();
+        ChatSystem.getControler().processRefuseTransfer(remoteName);
         QueryFrame.setVisible(false);
     }//GEN-LAST:event_noButtonActionPerformed
     
