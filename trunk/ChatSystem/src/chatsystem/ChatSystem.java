@@ -45,7 +45,7 @@ public class ChatSystem {
         while(true) {
             try {
                 sleep(2000);
-                System.out.print("... ");
+                System.out.print("...\n");
             } catch (InterruptedException ex) {
                 Logger.getLogger(ChatSystem.class.getName()).log(Level.SEVERE, null, ex);
             }
