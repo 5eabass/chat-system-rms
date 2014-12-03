@@ -14,12 +14,13 @@ public class DataStored {
     private String localName; // nom local user
     private String localAdress; // @ip local user
     private String username; // nom@ip de l'utilisateur
-    private String receiverName;
+    private String receivers;
     private String adresseBroadcast;
     private File fileToSend ;
     
     public DataStored() {
         this.remoteTable = new DefaultListModel();
+        //this.receivers = new ArrayList<String>();
         //this.localName = localName;
         //this.localAdress = localAdress;
     }
@@ -44,12 +45,12 @@ public class DataStored {
         this.localAdress = adr;
     }
     
-    public String getReceiverName() {
-        return receiverName;
-    }
+    //public ArrayList<String> getReceivers() {
+    //    return receivers;
+    //}
     
-    public void setReceiverName(String receiverName) {
-        this.receiverName = receiverName;
+    public void setReceivers(ArrayList<String> receiverName) {
+        //this.receivers = receiverName;
     }
     
     public String getUsername() {
@@ -81,6 +82,7 @@ public class DataStored {
     public void setFileToSend(File fileToSend) {
         this.fileToSend = fileToSend;
     }
+    
              
     @Override
     public String toString() {

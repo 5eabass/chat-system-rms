@@ -2,6 +2,7 @@ package chatsystem;
 
 import interfaces.*;
 import java.io.File;
+import java.util.ArrayList;
 
 public class Controler implements NetworkToCtrl, GUIToCtrl {
     
@@ -29,8 +30,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
             ChatSystem.getModel().getRemoteTable().addElement(username);
             System.out.println("DEBUG *** CTRL : la table des remoteusers est : " + ChatSystem.getModel().toString() + " ***");
             ChatSystem.getGUI().addUser(username);
-            ChatSystem.getModel().setReceiverName(username);
-            ChatSystem.getNetwork().sendHelloOk(ChatSystem.getModel().getUsername());
+            ChatSystem.getNetwork().sendHelloOk(ChatSystem.getModel().getUsername(),username);
         }else{
             System.err.println("DEBUG *** CTRL : remoteUser deja dans table ou est le localuser : " + username + " ***");
         }
@@ -53,9 +53,9 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     
     @Override
 // appelé quand on recoit un message
-    public void performTextMessage(String message, String remoteName) {
+    public void performTextMessage(String message, String remoteName, ArrayList<String> to) {
         System.out.println("DEBUG *** CTRL : performTextMessage <= when we receive a message ***");
-        ChatSystem.getGUI().processTextMessage(message, remoteName);
+        ChatSystem.getGUI().processTextMessage(message, remoteName, to);
     }
     
     @Override
@@ -109,7 +109,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         //ChatSystem.getModel().setLocalAdress();
         // ChatSystem.getModel().setAdresseBroadcast();
         ChatSystem.getModel().setUsername();
-        System.out.println("DEBUG *** CTRL : " + ChatSystem.getModel().getLocalName() + "/" + ChatSystem.getModel().getLocalAdress() + " ***");
+        System.out.println("DEBUG *** CTRL : " + ChatSystem.getModel().getLocalName() + " // " + ChatSystem.getModel().getLocalAdress() + " ***");
     }
     
     @Override
@@ -126,8 +126,8 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     
     @Override
 // appelé quand on envoie un message
-    public void performSendMessage(String message, String remoteName) {
-        System.out.println("DEBUG *** CTRL : performSendMessage , remote : " + remoteName + " <= when we send a message ***");
+    public void performSendMessage(String message, ArrayList<String> remoteName) {
+        System.out.println("DEBUG *** CTRL : performSendMessage  <= when we send a message ***");
         ChatSystem.getNetwork().processSendMessage(message, remoteName);
     }
     

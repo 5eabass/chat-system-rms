@@ -3,6 +3,7 @@ package chatsystem;
 import interfaces.*;
 import java.awt.Color;
 import java.io.File;
+import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
@@ -21,6 +22,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     private StyledDocument doc;
     private Style chatSystemStyle, receiveStyle, sendStyle;
     private File file;
+    private ArrayList<String> receiverList;
     
     public GUI() {
         initComponents();
@@ -37,6 +39,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         StyleConstants.setForeground(chatSystemStyle, Color.RED);
         StyleConstants.setForeground(receiveStyle, Color.BLUE);
         StyleConstants.setForeground(sendStyle, Color.BLACK);
+        receiverList = new ArrayList<String>();
         
     }
     
@@ -171,9 +174,9 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
 
         userlistLabel.setText("Connected user");
 
-        connectedList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                connectedListValueChanged(evt);
+        connectedList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                connectedListMousePressed(evt);
             }
         });
         listPanel.setViewportView(connectedList);
@@ -217,15 +220,13 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
                         .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, UsagePanelLayout.createSequentialGroup()
                                 .addComponent(toLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(receiverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(receivedMessagePanel, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(12, 12, 12))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, UsagePanelLayout.createSequentialGroup()
-                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(UsagePanelLayout.createSequentialGroup()
-                                .addGap(0, 23, Short.MAX_VALUE)
-                                .addComponent(receiverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(sendMessagePanel))
+                        .addComponent(sendMessagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
@@ -363,28 +364,31 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed SEND ***");
-        String remoteName = ChatSystem.getModel().getReceiverName(); // pour plus de clarté
         
-        if (ChatSystem.getModel().getRemoteTable().contains(remoteName) == false) {
+        if (receiverTextField.getText().equals("")) {
             // cas ou le remoteName n'est pas dans notre table
             System.err.println("DEBUG *** GUI : no such remote user ***");
             erreurReceiver();
         } else {
             // cas nominal on envoie la requete et on affiche dans notre boite de dialogue
             try {
-                doc.insertString(doc.getLength(), "To " + remoteName + " : " + sendMessageArea.getText() + "\n", sendStyle);
-                if(sendMessageArea.getText().contains("File :")){
-                    System.out.println("DEBUG *** GUI : File transmitted to ctrl : " + sendMessageArea.getText() + " ***");
-                    ChatSystem.getControler().performSendFile(file, remoteName);
-                    file = null;
-                }else{
-                    System.out.println("DEBUG *** GUI : message transmitted to ctrl : " + sendMessageArea.getText() + " ***");
-                    ChatSystem.getControler().performSendMessage(sendMessageArea.getText(), remoteName);
+                for (String s : receiverList){
+                    doc.insertString(doc.getLength(), "To " + s + " : " + sendMessageArea.getText() + "\n", sendStyle);
+                    if(sendMessageArea.getText().contains("File :")){
+                        System.out.println("DEBUG *** GUI : File transmitted to ctrl : " + sendMessageArea.getText() + " ***");
+                        ChatSystem.getControler().performSendFile(file, s);
+                        file = null;
+                    }else{
+                        System.out.println("DEBUG *** GUI : message transmitted to ctrl : " + sendMessageArea.getText() + " ***");
+                        ChatSystem.getControler().performSendMessage(sendMessageArea.getText(), receiverList);
+                    }
                 }
             } catch (BadLocationException e) {
                 System.err.println(e);
             }
             sendMessageArea.setText("");
+            receiverTextField.setText("");
+            receiverList.clear();
         }
     }//GEN-LAST:event_sendButtonActionPerformed
     
@@ -394,25 +398,17 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         chooser.showOpenDialog(null);
         file = chooser.getSelectedFile();
         sendMessageArea.setText("File : " + file.getAbsolutePath());
-        
-        
-        
     }//GEN-LAST:event_fileChooseButtonActionPerformed
     
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed DISCONNECT ***");
         ChatSystem.getControler().performDisconnect(usernameLabel.getText());
         receivedMessageArea.setText("");
+        receiverTextField.setText("");
         this.UsagePanel.setVisible(false);
         this.EntryFrame.setVisible(true);
     }//GEN-LAST:event_disconnectButtonActionPerformed
     
-    // quand on selectionne un receiver
-    private void connectedListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_connectedListValueChanged
-        System.out.println("DEBUG *** GUI : selected a receiver ***");
-        ChatSystem.getModel().setReceiverName((String) (connectedList.getSelectedValue()));
-        receiverTextField.setText((String) (connectedList.getSelectedValue()));
-    }//GEN-LAST:event_connectedListValueChanged
     
     /*
     *for internal frame : queryFrame
@@ -427,6 +423,21 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         ChatSystem.getControler().processRefuseTransfer();
         QueryFrame.setVisible(false);
     }//GEN-LAST:event_noButtonActionPerformed
+    
+    private void connectedListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_connectedListMousePressed
+        // TODO add your handling code here:
+        System.out.println("DEBUG *** GUI : selected a receiver ***");
+        if(!receiverList.contains((String) connectedList.getSelectedValue())){
+            // si le user selectionné n'était pas déja selectionné
+            System.out.println("DEBUG *** GUI : add to receivers ***");
+            receiverList.add((String) connectedList.getSelectedValue());
+            receiverTextField.setText(receiverList.toString());
+        }else{
+            System.out.println("DEBUG *** GUI : delete from receivers ***");
+            receiverList.remove((String) connectedList.getSelectedValue());
+        }
+        receiverTextField.setText(arrayToString(receiverList));       
+    }//GEN-LAST:event_connectedListMousePressed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -475,10 +486,13 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     
     @Override
     // appelé quand on recoit un message
-    public void processTextMessage(String message, String remoteName) {
+    public void processTextMessage(String message, String remoteName,ArrayList<String> to) {
         System.out.println("DEBUG *** GUI : processTextMessage <= when we receive a message ***");
         try {
             doc.insertString(doc.getLength(), "from " + remoteName + " : " + message + "\n", receiveStyle);
+            if (to.size()>1){
+                doc.insertString(doc.getLength(),"(sent to : "+arrayToString(to)+")\n" , receiveStyle);
+            }
         } catch (BadLocationException e) {
             System.err.println(e);
         }
@@ -531,8 +545,20 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         connectedList.revalidate();
     }
     /*
-    CAS ERREUR dans selection receiver
+    fonction utiles dans selection receiver
     */
+    
+    public String arrayToString(ArrayList<String> a){
+        String result =new String();
+        for (String s : a){
+            if(!(s == null)){
+                result += s +",";
+            }
+        }
+        return result;
+    }
+    
+    
     
     public void erreurReceiver() {
         System.out.println("DEBUG *** GUI : erreurReceiver <= when we didn't choose any receiver ***");
