@@ -1,9 +1,9 @@
 package model;
 
-import chatsystem.ChatSystem;
 import java.io.File;
 import java.util.*;
 import javax.swing.DefaultListModel;
+import signals.FileProposal;
 /*
 * MODEL
 */
@@ -17,12 +17,21 @@ public class DataStored {
     private String receivers;
     private String adresseBroadcast;
     private File fileToSend ;
-    
+    private Vector<FileProposal> fileInfos;
+            
     public DataStored() {
         this.remoteTable = new DefaultListModel();
         //this.receivers = new ArrayList<String>();
         //this.localName = localName;
         //this.localAdress = localAdress;
+    }
+    
+    public void addFileProposal(FileProposal fp) {
+        this.fileInfos.add(fp);
+    }
+    
+    public FileProposal getFileProposal(int i) {
+        return this.fileInfos.elementAt(i);
     }
     
     public DefaultListModel getRemoteTable() {
