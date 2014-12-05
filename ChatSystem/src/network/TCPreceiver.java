@@ -4,16 +4,23 @@ import chatsystem.ChatSystem;
 import chatsystem.Controler;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import signals.Signal;
 
 class TCPreceiver extends Thread {
 
-    private final InputStream reader;
+    private Socket s0;
+    private InputStream reader;
 
-    public TCPreceiver(InputStream r) {
-        this.reader = r;
+    public TCPreceiver(Socket s) {
+        this.s0 = s;
+        try {
+            this.reader = s0.getInputStream();
+        } catch (IOException ex) {
+            Logger.getLogger(TCPreceiver.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -30,5 +37,9 @@ class TCPreceiver extends Thread {
                 Logger.getLogger(TCPreceiver.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public Socket getSocket() {
+        return s0;
     }
 }
