@@ -1,6 +1,7 @@
 package interfaces;
 
 import java.util.ArrayList;
+import signals.FileProposal;
 
 public interface CtrlToGUI {
     
@@ -8,7 +9,7 @@ public interface CtrlToGUI {
     public void processTextMessage(String message,String remoteName, ArrayList<String> to);
     public void notifyTransmitted();
     public void notifyNotTransmitted();
-    public void performFileQuery(String filename, long size, String remoteName);
+    public void performFileQuery(FileProposal fp);
     public void deleteUser(String remoteName);
     
 }

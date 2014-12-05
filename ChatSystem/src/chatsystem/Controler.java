@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import signals.FileProposal;
 
 public class Controler implements NetworkToCtrl, GUIToCtrl {
 
@@ -65,9 +66,9 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
 
     @Override
 // appelé quand on est interrogé pour recevoir un fichier
-    public void processFileQuery(String filename, long size, String remoteName) {
+    public void processFileQuery(FileProposal fp) {
         System.out.println("DEBUG *** CTRL : processFileQuery <= when we're asked to accept/refuse a file receiption***");
-        ChatSystem.getGUI().performFileQuery(filename, size, remoteName);
+        ChatSystem.getGUI().performFileQuery(fp);
     }
 
     @Override
@@ -78,12 +79,12 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
 
     @Override
 // appelé quand on recoit un fichier
-    public void processTransmission() {
+    public void processTransmission(byte[] buffer, FileProposal fp) {
         try {
             System.out.println("DEBUG *** CTRL : processTransmission <= when we receive a file ***");
-            File fileOut = new File(fileName);
+            File fileOut = new File("Downloads/"+fp.getFileName());
             FileOutputStream fos = new FileOutputStream(fileOut);
-            fos.write(object.getBytes()); 
+            fos.write(buffer); 
             fos.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,7 +135,6 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         ChatSystem.getModel().getRemoteTable().addElement("jack@192.168.0.3");
         /////////
         ChatSystem.getNetwork().openUDP();
-        ChatSystem.getNetwork().openTCP();
         ChatSystem.getNetwork().sendHello(ChatSystem.getModel().getUsername());
     }
 
@@ -149,22 +149,21 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
 // appelé quand on envoie un fichié
     public void performSendFile(File file, ArrayList<String> remoteName) {
         System.out.println("DEBUG *** CTRL : performSendFile <= when we send file ***");
-        ChatSystem.getNetwork().processSendFile(file, file.length(), remoteName);
+        ChatSystem.getNetwork().processSendProposal(file, file.length(), remoteName);
     }
 
     @Override
 // appelé quand on accepte un transfer
-    public void processAcceptTransfer(String remoteName) {
+    public void processAcceptTransfer(FileProposal fp) {
         System.out.println("DEBUG *** CTRL : processAcceptTransfer <= when we accept transfer ***");
-        ChatSystem.getNetwork().performAcceptTransfer(remoteName);
-        ChatSystem.getModel().getFileProposal(0);
+        ChatSystem.getNetwork().performAcceptTransfer(fp);
     }
 
     @Override
 // appelé quand on refuse un transfer
-    public void processRefuseTransfer(String remoteName) {
+    public void processRefuseTransfer(FileProposal fp) {
         System.out.println("DEBUG *** CTRL : processRefuseTransfer <= when we refuse transfer ***");
-        ChatSystem.getNetwork().performRefuseTransfer(remoteName);
+        ChatSystem.getNetwork().performRefuseTransfer(fp);
     }
 
     @Override

@@ -9,6 +9,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import signals.FileProposal;
 
 /**
  *
@@ -24,6 +25,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     private File file;
     private ArrayList<String> receiverList;
     private String remoteName;
+    private FileProposal fp;
     
     public GUI() {
         initComponents();
@@ -416,12 +418,12 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     */
     
     private void yesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yesButtonActionPerformed
-        ChatSystem.getControler().processAcceptTransfer(remoteName);
+        ChatSystem.getControler().processAcceptTransfer(fp);
         QueryFrame.setVisible(false);
     }//GEN-LAST:event_yesButtonActionPerformed
     
     private void noButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noButtonActionPerformed
-        ChatSystem.getControler().processRefuseTransfer(remoteName);
+        ChatSystem.getControler().processRefuseTransfer(fp);
         QueryFrame.setVisible(false);
     }//GEN-LAST:event_noButtonActionPerformed
     
@@ -525,8 +527,9 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     }
     @Override
     //appelé quand on nous demande si on accepte la reception d'un fichier
-    public void performFileQuery(String filename,long size,String remoteName){
-        fileInfoTextArea.setText("File : " +filename+"\n File size : "+size+"\n From : "+remoteName+"\n");
+    public void performFileQuery(FileProposal fp){
+        fileInfoTextArea.setText("File : " +fp.getFileName()+"\n File size : "+fp.getSize()+"\n From : "+fp.getFrom()+"\n");
+        this.fp = fp;
         QueryFrame.setVisible(true);
     }
     
