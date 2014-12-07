@@ -17,14 +17,14 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        try {
+      //  try {
         //    TCPserver server = new TCPserver(1234);
-            TCPsender sender = new TCPsender(InetAddress.getLocalHost(), 1234);
+          //  TCPsender sender = new TCPsender(InetAddress.getLocalHost(), 1234);
         //    sender.openClient();
          //   server.start();
-        } catch (IOException ex) {
-            Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
-        }
+     //   } catch (IOException ex) {
+      //      Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+      //  }
 
     }
 }

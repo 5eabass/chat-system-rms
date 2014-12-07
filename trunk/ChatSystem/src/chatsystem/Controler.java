@@ -68,6 +68,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
 // appelé quand on est interrogé pour recevoir un fichier
     public void processFileQuery(FileProposal fp) {
         System.out.println("DEBUG *** CTRL : processFileQuery <= when we're asked to accept/refuse a file receiption***");
+        ChatSystem.getModel().addFileProposal(fp);
         ChatSystem.getGUI().performFileQuery(fp);
     }
 
@@ -120,9 +121,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
             ChatSystem.getModel().setLocalAdress(arrayIP[0]);
             ChatSystem.getModel().setAdresseBroadcast(arrayIP[1]);
             System.out.println("DEBUG *** CTRL : ip set :  ***");
-        }
-        //ChatSystem.getModel().setLocalAdress();
-        // ChatSystem.getModel().setAdresseBroadcast();
+        }       
         ChatSystem.getModel().setUsername();
         System.out.println("DEBUG *** CTRL : " + ChatSystem.getModel().getLocalName() + " // " + ChatSystem.getModel().getLocalAdress() + " ***");
     }
@@ -154,16 +153,18 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
 
     @Override
 // appelé quand on accepte un transfer
-    public void processAcceptTransfer(FileProposal fp) {
-        System.out.println("DEBUG *** CTRL : processAcceptTransfer <= when we accept transfer ***");
-        ChatSystem.getNetwork().performAcceptTransfer(fp);
+    public void processAcceptTransfer(String f) {
+        System.out.println("DEBUG *** CTRL : processAcceptTransfer <= when we accept transfer ***");    
+        ChatSystem.getNetwork().performAcceptTransfer(ChatSystem.getModel().getFileProposal(f));
+        ChatSystem.getModel().removeFileProposal(f);
     }
 
     @Override
 // appelé quand on refuse un transfer
-    public void processRefuseTransfer(FileProposal fp) {
+    public void processRefuseTransfer(String f) {
         System.out.println("DEBUG *** CTRL : processRefuseTransfer <= when we refuse transfer ***");
-        ChatSystem.getNetwork().performRefuseTransfer(fp);
+        ChatSystem.getNetwork().performRefuseTransfer(ChatSystem.getModel().getFileProposal(f));
+        ChatSystem.getModel().removeFileProposal(f);
     }
 
     @Override
@@ -172,6 +173,8 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         System.out.println("DEBUG *** CTRL : performDisconnect <= when we disconnect ***");
         ChatSystem.getNetwork().sendGoodbye(userName);
         ChatSystem.getModel().getRemoteTable().clear();
+        ChatSystem.getModel().getFileStringProposed().clear();
+        ChatSystem.getModel().getFileProposed().clear();
     }
 
     /*
