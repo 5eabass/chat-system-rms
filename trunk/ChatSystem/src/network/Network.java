@@ -32,6 +32,8 @@ public class Network implements CtrlToNetwork {
     private Vector<FileProposal> proposalList; // file proposal we sent
 
     public Network() {
+        this.tcpSender = new Vector<TCPsender>();
+        this.tcpServer = new Vector<TCPserver>();
         this.proposalList = new Vector<FileProposal>();
         this.ports = 4444;
         this.portd = 4445;
@@ -169,7 +171,7 @@ public class Network implements CtrlToNetwork {
     public void performRefuseTransfer(FileProposal fp) {
          System.out.println("DEBUG *** NETWORK : performRefuseTransfer <= send that we refuse ***");
         try {     
-            InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fp.getFrom()));
+            InetAddress addrIp = InetAddress.getByName(fp.getFrom());
             udpSender.send(fp, addrIp);
         } catch (SignalTooBigException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
@@ -187,7 +189,7 @@ public class Network implements CtrlToNetwork {
         openTCP(fp);
         try {
             fp.setState(true);
-            InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fp.getFrom()));
+            InetAddress addrIp = InetAddress.getByName(fp.getFrom());
             udpSender.send(fp, addrIp);
         } catch (SignalTooBigException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
@@ -220,11 +222,11 @@ public class Network implements CtrlToNetwork {
     // Called when we receive a FileProposal answers
     public void processSendFile(FileProposal fp) {
         System.out.println("DEBUG *** NETWORK : processSendFile <= send the file ***");
-        if (this.proposalList.contains(fp)) {
-            this.proposalList.remove(fp);
+        //if (this.proposalList.contains(fp)) {
+           // this.proposalList.remove(fp);
             File file = ChatSystem.getModel().getFileToSend();
             try {
-                InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fp.getFrom()));
+                InetAddress addrIp = InetAddress.getByName(fp.getFrom());
                 Socket s1 = new Socket(addrIp, fp.getPort());
                 TCPsender tcpS = new TCPsender(s1, file, fp.getFrom(), fp.getSize());
                 this.tcpSender.add(tcpS);
@@ -233,7 +235,7 @@ public class Network implements CtrlToNetwork {
             } catch (IOException ex) {
                 System.err.println(ex);
             }
-        }
+        //}
     }                    
     
     /*

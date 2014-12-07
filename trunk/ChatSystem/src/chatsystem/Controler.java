@@ -81,11 +81,11 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     @Override
 // appelé quand on recoit un fichier
     public void processTransmission(byte[] buffer, FileProposal fp) {
+        System.out.println("DEBUG *** CTRL : processTransmission <= when we receive a file ***");
         try {
-            System.out.println("DEBUG *** CTRL : processTransmission <= when we receive a file ***");
-            File fileOut = new File("Downloads/"+fp.getFileName());
+            File fileOut = new File("downloads/" + fp.getFileName());
             FileOutputStream fos = new FileOutputStream(fileOut);
-            fos.write(buffer); 
+            fos.write(buffer);
             fos.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
@@ -121,7 +121,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
             ChatSystem.getModel().setLocalAdress(arrayIP[0]);
             ChatSystem.getModel().setAdresseBroadcast(arrayIP[1]);
             System.out.println("DEBUG *** CTRL : ip set :  ***");
-        }       
+        }
         ChatSystem.getModel().setUsername();
         System.out.println("DEBUG *** CTRL : " + ChatSystem.getModel().getLocalName() + " // " + ChatSystem.getModel().getLocalAdress() + " ***");
     }
@@ -154,7 +154,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     @Override
 // appelé quand on accepte un transfer
     public void processAcceptTransfer(String f) {
-        System.out.println("DEBUG *** CTRL : processAcceptTransfer <= when we accept transfer ***");    
+        System.out.println("DEBUG *** CTRL : processAcceptTransfer <= when we accept transfer ***");
         ChatSystem.getNetwork().performAcceptTransfer(ChatSystem.getModel().getFileProposal(f));
         ChatSystem.getModel().removeFileProposal(f);
     }

@@ -28,15 +28,14 @@ class TCPreceiver extends Thread {
 
     @Override
     public void run() {
-        for (;;) {
-            try {
-                byte[] buffer = new byte[Signal.MAX_SIZE];
-                reader.read(buffer);
-                ChatSystem.getControler().processTransmission(buffer, fileProposal);
-                reader.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        System.out.println("Receiver started ***************");
+        try {
+            byte[] buffer = new byte[Signal.MAX_SIZE];
+            reader.read(buffer);
+            ChatSystem.getControler().processTransmission(buffer, fileProposal);
+            reader.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

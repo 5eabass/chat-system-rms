@@ -14,6 +14,7 @@ public class TCPserver extends Thread {
     private FileProposal fileProposal;
 
     public TCPserver(FileProposal fp) {
+        this.rList = new Vector<TCPreceiver>();
         this.port = fp.getPort();
         this.fileProposal = fp;
         this.max_connexion = 1;
@@ -27,6 +28,7 @@ public class TCPserver extends Thread {
             for (;;) {
                 // Acceptation d'un flux d'entrée socket
                 s0 = ss.accept();
+                System.out.println("Connexion detected ***************");
                 rList.add(new TCPreceiver(s0, fileProposal));
                 rList.lastElement().start();
             }
