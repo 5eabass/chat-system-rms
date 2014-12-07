@@ -10,28 +10,39 @@ import signals.FileProposal;
 
 public class DataStored {
     
-    private DefaultListModel remoteTable; // info des remotes users table de nom@ip
+    private DefaultListModel remoteTable; // info des remotes users table de nom@ip  
+    private DefaultListModel fileStringProposed; // liste des file que l'utilisateur voit
     private String localName; // nom local user
     private String localAdress; // @ip local user
     private String username; // nom@ip de l'utilisateur
-    private String receivers;
-    private String adresseBroadcast;
-    private File fileToSend ;
-    private Vector<FileProposal> fileInfos;
+    private String adresseBroadcast; // @broadcast du reseau dans lequel on est
+    private File fileToSend ; // file qu'on send
+    private HashMap<String,FileProposal> fileProposed; // fileproposal enregistré 
+      
             
     public DataStored() {
         this.remoteTable = new DefaultListModel();
+        this.fileProposed = new HashMap<>();
+        this.fileStringProposed = new DefaultListModel();
         //this.receivers = new ArrayList<String>();
         //this.localName = localName;
         //this.localAdress = localAdress;
     }
     
     public void addFileProposal(FileProposal fp) {
-        this.fileInfos.add(fp);
+        String fsp = "From: "+ fp.getFrom() + " File Name: "+ fp.getFileName() + " Size: "+fp.getSize();
+        this.fileProposed.put(fsp,fp);
+        
+        this.fileStringProposed.addElement(fsp);
     }
     
-    public FileProposal getFileProposal(int i) {
-        return this.fileInfos.elementAt(i);
+    public void removeFileProposal(String fsp) {
+        this.fileProposed.remove(fsp);
+        this.fileStringProposed.removeElement(fsp);
+    }
+    
+    public FileProposal getFileProposal(String k) {
+        return this.fileProposed.get(k);
     }
     
     public DefaultListModel getRemoteTable() {
@@ -54,9 +65,6 @@ public class DataStored {
         this.localAdress = adr;
     }
     
-    //public ArrayList<String> getReceivers() {
-    //    return receivers;
-    //}
     
     public void setReceivers(ArrayList<String> receiverName) {
         //this.receivers = receiverName;
@@ -91,6 +99,24 @@ public class DataStored {
     public void setFileToSend(File fileToSend) {
         this.fileToSend = fileToSend;
     }
+
+    public DefaultListModel getFileStringProposed() {
+        return fileStringProposed;
+    }
+
+    public void setFileStringProposed(DefaultListModel fileStringProposed) {
+        this.fileStringProposed = fileStringProposed;
+    }
+
+    public HashMap<String, FileProposal> getFileProposed() {
+        return fileProposed;
+    }
+
+    public void setFileProposed(HashMap<String, FileProposal> fileProposed) {
+        this.fileProposed = fileProposed;
+    }
+    
+    
     
              
     @Override

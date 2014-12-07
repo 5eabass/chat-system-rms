@@ -9,8 +9,8 @@ public interface GUIToCtrl {
     public void performConnect();
     public void performSendMessage(String message, ArrayList<String> remoteName);
     public void performSendFile(File file, ArrayList<String> remoteName);
-    public void processAcceptTransfer(FileProposal fp);
-    public void processRefuseTransfer(FileProposal fp);
+    public void processAcceptTransfer(String fileToString);
+    public void processRefuseTransfer(String fileToString);
     public void performDisconnect(String userName);
     
 }

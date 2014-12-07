@@ -22,14 +22,12 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
      */
     private StyledDocument doc;
     private Style chatSystemStyle, receiveStyle, sendStyle;
-    private File file;
-    private ArrayList<String> receiverList;
-    private String remoteName;
-    private FileProposal fp;
+    private File file; // the file we propose
+    private ArrayList<String> receiverList; // receiverlist donné au ctrl
+    private String fileHandled;// file that we are handling
     
     public GUI() {
         initComponents();
-        this.UsagePanel.setVisible(false);
         doc = receivedMessageArea.getStyledDocument();
         
         // initialisation des styles de police utilisé
@@ -40,8 +38,8 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         receiveStyle = receivedMessageArea.addStyle("fromStyle", null);
         sendStyle = receivedMessageArea.addStyle("toStyle", null);
         StyleConstants.setForeground(chatSystemStyle, Color.RED);
-        StyleConstants.setForeground(receiveStyle, Color.BLUE);
-        StyleConstants.setForeground(sendStyle, Color.BLACK);
+        StyleConstants.setForeground(receiveStyle, Color.LIGHT_GRAY);
+        StyleConstants.setForeground(sendStyle, Color.WHITE);
         receiverList = new ArrayList<String>();
         
     }
@@ -55,104 +53,52 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        QueryFrame = new javax.swing.JInternalFrame();
-        yesButton = new javax.swing.JButton();
-        noButton = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        fileInfoTextArea = new javax.swing.JTextArea();
-        questionLabel = new javax.swing.JLabel();
+        usageFrame = new javax.swing.JFrame();
         UsagePanel = new javax.swing.JPanel();
         receivedMessagePanel = new javax.swing.JScrollPane();
         receivedMessageArea = new javax.swing.JTextPane();
-        sendMessagePanel = new javax.swing.JScrollPane();
-        sendMessageArea = new javax.swing.JTextArea();
         sendButton = new javax.swing.JButton();
-        fileChooseButton = new javax.swing.JButton();
-        disconnectButton = new javax.swing.JButton();
-        userlistLabel = new javax.swing.JLabel();
-        listPanel = new javax.swing.JScrollPane();
-        connectedList = new javax.swing.JList();
-        nameInfoLabel = new javax.swing.JLabel();
-        usernameLabel = new javax.swing.JLabel();
         receiverTextField = new javax.swing.JTextField();
         toLabel = new javax.swing.JLabel();
         messageLabel = new javax.swing.JLabel();
-        EntryFrame = new javax.swing.JInternalFrame();
-        connectButton = new javax.swing.JButton();
-        usernameArea = new javax.swing.JTextField();
+        sendMessagePanel = new javax.swing.JScrollPane();
+        sendMessageArea = new javax.swing.JTextArea();
+        showHideButton = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        userlistLabel = new javax.swing.JLabel();
+        listPanel = new javax.swing.JScrollPane();
+        connectedList = new javax.swing.JList();
+        menuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        proposeOption = new javax.swing.JMenuItem();
+        proposedOption = new javax.swing.JMenuItem();
+        userlistMenu = new javax.swing.JMenu();
+        showOption = new javax.swing.JMenuItem();
+        hideOption = new javax.swing.JMenuItem();
+        quitMenu = new javax.swing.JMenu();
+        queryDialog = new javax.swing.JDialog();
+        filePanel = new javax.swing.JPanel();
+        questionLabel = new javax.swing.JLabel();
+        noButton = new javax.swing.JButton();
+        yesButton = new javax.swing.JButton();
+        scrolFilepanel = new javax.swing.JScrollPane();
+        listFile = new javax.swing.JList();
+        entryPanel = new javax.swing.JPanel();
         presentationLabel = new javax.swing.JLabel();
+        usernameArea = new javax.swing.JTextField();
+        connectButton = new javax.swing.JButton();
         proprietaryLabel = new javax.swing.JLabel();
 
-        QueryFrame.setVisible(true);
+        usageFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        usageFrame.setSize(new java.awt.Dimension(620, 500));
 
-        yesButton.setText("yes");
-        yesButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                yesButtonActionPerformed(evt);
-            }
-        });
-
-        noButton.setText("no");
-        noButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                noButtonActionPerformed(evt);
-            }
-        });
-
-        fileInfoTextArea.setEditable(false);
-        fileInfoTextArea.setBackground(new java.awt.Color(238, 238, 238));
-        fileInfoTextArea.setColumns(20);
-        fileInfoTextArea.setRows(5);
-        fileInfoTextArea.setBorder(new javax.swing.border.MatteBorder(null));
-        jScrollPane3.setViewportView(fileInfoTextArea);
-
-        questionLabel.setText("   Do you accept to receive this file ?");
-
-        javax.swing.GroupLayout QueryFrameLayout = new javax.swing.GroupLayout(QueryFrame.getContentPane());
-        QueryFrame.getContentPane().setLayout(QueryFrameLayout);
-        QueryFrameLayout.setHorizontalGroup(
-            QueryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(QueryFrameLayout.createSequentialGroup()
-                .addGroup(QueryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(QueryFrameLayout.createSequentialGroup()
-                        .addGap(78, 78, 78)
-                        .addComponent(yesButton)
-                        .addGap(43, 43, 43)
-                        .addComponent(noButton))
-                    .addGroup(QueryFrameLayout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addComponent(questionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 51, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, QueryFrameLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        QueryFrameLayout.setVerticalGroup(
-            QueryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(QueryFrameLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(questionLabel)
-                .addGap(12, 12, 12)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(QueryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(yesButton)
-                    .addComponent(noButton))
-                .addGap(0, 34, Short.MAX_VALUE))
-        );
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
+        UsagePanel.setBackground(new java.awt.Color(51, 0, 0));
         UsagePanel.setPreferredSize(new java.awt.Dimension(650, 447));
 
         receivedMessageArea.setEditable(false);
+        receivedMessageArea.setBackground(new java.awt.Color(0, 0, 51));
+        receivedMessageArea.setForeground(new java.awt.Color(255, 255, 255));
         receivedMessagePanel.setViewportView(receivedMessageArea);
-
-        sendMessageArea.setColumns(20);
-        sendMessageArea.setRows(5);
-        sendMessageArea.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        sendMessagePanel.setViewportView(sendMessageArea);
 
         sendButton.setText("SEND");
         sendButton.addActionListener(new java.awt.event.ActionListener() {
@@ -161,22 +107,89 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             }
         });
 
-        fileChooseButton.setText("FILE");
-        fileChooseButton.addActionListener(new java.awt.event.ActionListener() {
+        receiverTextField.setEditable(false);
+        receiverTextField.setBackground(new java.awt.Color(0, 0, 51));
+        receiverTextField.setForeground(new java.awt.Color(255, 255, 255));
+        receiverTextField.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+
+        toLabel.setForeground(new java.awt.Color(255, 255, 255));
+        toLabel.setText("To :");
+
+        messageLabel.setForeground(new java.awt.Color(255, 255, 255));
+        messageLabel.setText("Message :");
+
+        sendMessageArea.setBackground(new java.awt.Color(0, 0, 51));
+        sendMessageArea.setColumns(20);
+        sendMessageArea.setForeground(new java.awt.Color(255, 255, 255));
+        sendMessageArea.setRows(5);
+        sendMessageArea.setCaretColor(new java.awt.Color(255, 255, 255));
+        sendMessageArea.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        sendMessagePanel.setViewportView(sendMessageArea);
+
+        showHideButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fileChooseButtonActionPerformed(evt);
+                showHideButtonActionPerformed(evt);
             }
         });
 
-        disconnectButton.setText("DISCONNECT");
-        disconnectButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                disconnectButtonActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout UsagePanelLayout = new javax.swing.GroupLayout(UsagePanel);
+        UsagePanel.setLayout(UsagePanelLayout);
+        UsagePanelLayout.setHorizontalGroup(
+            UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(UsagePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(UsagePanelLayout.createSequentialGroup()
+                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, UsagePanelLayout.createSequentialGroup()
+                                .addComponent(toLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(receiverTextField))
+                            .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(receivedMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, UsagePanelLayout.createSequentialGroup()
+                                    .addComponent(sendMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(sendButton))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(showHideButton, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(messageLabel))
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+        UsagePanelLayout.setVerticalGroup(
+            UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(UsagePanelLayout.createSequentialGroup()
+                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(UsagePanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(receivedMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(UsagePanelLayout.createSequentialGroup()
+                        .addGap(158, 158, 158)
+                        .addComponent(showHideButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(toLabel)
+                    .addComponent(receiverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(messageLabel)
+                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(UsagePanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(sendMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(UsagePanelLayout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(sendButton)))
+                .addGap(249, 249, 249))
+        );
 
+        jPanel1.setBackground(new java.awt.Color(51, 0, 0));
+
+        userlistLabel.setBackground(new java.awt.Color(51, 0, 0));
+        userlistLabel.setForeground(new java.awt.Color(255, 255, 255));
         userlistLabel.setText("Connected user");
 
+        connectedList.setBackground(new java.awt.Color(0, 0, 51));
+        connectedList.setForeground(new java.awt.Color(255, 255, 255));
         connectedList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 connectedListMousePressed(evt);
@@ -184,93 +197,183 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         });
         listPanel.setViewportView(connectedList);
 
-        nameInfoLabel.setText("My name :");
-
-        usernameLabel.setText("username");
-
-        receiverTextField.setEditable(false);
-
-        toLabel.setText("To :");
-
-        messageLabel.setText("Message :");
-
-        javax.swing.GroupLayout UsagePanelLayout = new javax.swing.GroupLayout(UsagePanel);
-        UsagePanel.setLayout(UsagePanelLayout);
-        UsagePanelLayout.setHorizontalGroup(
-            UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(UsagePanelLayout.createSequentialGroup()
-                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(nameInfoLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(usernameLabel))
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
                         .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addGap(58, 58, 58)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
                         .addComponent(userlistLabel)))
-                .addGap(29, 29, 29)
-                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addComponent(messageLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, UsagePanelLayout.createSequentialGroup()
-                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, UsagePanelLayout.createSequentialGroup()
-                                .addComponent(toLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(receiverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(receivedMessagePanel, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(12, 12, 12))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, UsagePanelLayout.createSequentialGroup()
-                        .addComponent(sendMessagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
-                            .addComponent(fileChooseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(6, 6, 6))))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
-        UsagePanelLayout.setVerticalGroup(
-            UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(UsagePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(nameInfoLabel)
-                            .addComponent(usernameLabel))
-                        .addGap(43, 43, 43)
-                        .addComponent(userlistLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(receivedMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(receiverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(toLabel))
-                        .addGap(1, 1, 1)
-                        .addComponent(messageLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(UsagePanelLayout.createSequentialGroup()
-                                .addComponent(sendButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fileChooseButton))
-                            .addGroup(UsagePanelLayout.createSequentialGroup()
-                                .addComponent(sendMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                .addContainerGap())))
-                    .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addComponent(userlistLabel)
+                .addGap(18, 18, 18)
+                .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(157, Short.MAX_VALUE))
         );
 
-        EntryFrame.setVisible(true);
+        fileMenu.setText("File");
+
+        proposeOption.setText("Propose a file ");
+        proposeOption.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                proposeOptionActionPerformed(evt);
+            }
+        });
+        fileMenu.add(proposeOption);
+
+        proposedOption.setText("Proposed file");
+        proposedOption.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                proposedOptionActionPerformed(evt);
+            }
+        });
+        fileMenu.add(proposedOption);
+
+        menuBar.add(fileMenu);
+
+        userlistMenu.setText("Userlist");
+
+        showOption.setText("Show userlist");
+        showOption.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showOptionActionPerformed(evt);
+            }
+        });
+        userlistMenu.add(showOption);
+
+        hideOption.setText("Hide userlist");
+        hideOption.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hideOptionActionPerformed(evt);
+            }
+        });
+        userlistMenu.add(hideOption);
+
+        menuBar.add(userlistMenu);
+
+        quitMenu.setText("Quit");
+        quitMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                quitMenuMousePressed(evt);
+            }
+        });
+        menuBar.add(quitMenu);
+
+        usageFrame.setJMenuBar(menuBar);
+
+        javax.swing.GroupLayout usageFrameLayout = new javax.swing.GroupLayout(usageFrame.getContentPane());
+        usageFrame.getContentPane().setLayout(usageFrameLayout);
+        usageFrameLayout.setHorizontalGroup(
+            usageFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(usageFrameLayout.createSequentialGroup()
+                .addComponent(UsagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        usageFrameLayout.setVerticalGroup(
+            usageFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(UsagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        queryDialog.setBackground(new java.awt.Color(255, 255, 255));
+        queryDialog.setSize(new java.awt.Dimension(524, 376));
+
+        filePanel.setBackground(new java.awt.Color(51, 0, 0));
+
+        questionLabel.setForeground(new java.awt.Color(255, 255, 255));
+        questionLabel.setText("   Do you accept to receive this file ?");
+
+        noButton.setText("no");
+        noButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                noButtonActionPerformed(evt);
+            }
+        });
+
+        yesButton.setText("yes");
+        yesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yesButtonActionPerformed(evt);
+            }
+        });
+
+        listFile.setBackground(new java.awt.Color(0, 0, 51));
+        listFile.setForeground(new java.awt.Color(255, 255, 255));
+        listFile.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                listFileMousePressed(evt);
+            }
+        });
+        scrolFilepanel.setViewportView(listFile);
+
+        javax.swing.GroupLayout filePanelLayout = new javax.swing.GroupLayout(filePanel);
+        filePanel.setLayout(filePanelLayout);
+        filePanelLayout.setHorizontalGroup(
+            filePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(filePanelLayout.createSequentialGroup()
+                .addGroup(filePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(filePanelLayout.createSequentialGroup()
+                        .addGap(158, 158, 158)
+                        .addComponent(yesButton)
+                        .addGap(60, 60, 60)
+                        .addComponent(noButton))
+                    .addGroup(filePanelLayout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(scrolFilepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(filePanelLayout.createSequentialGroup()
+                        .addGap(138, 138, 138)
+                        .addComponent(questionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(49, Short.MAX_VALUE))
+        );
+        filePanelLayout.setVerticalGroup(
+            filePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(filePanelLayout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE)
+                .addComponent(questionLabel)
+                .addGap(18, 18, 18)
+                .addComponent(scrolFilepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(filePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(yesButton)
+                    .addComponent(noButton))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout queryDialogLayout = new javax.swing.GroupLayout(queryDialog.getContentPane());
+        queryDialog.getContentPane().setLayout(queryDialogLayout);
+        queryDialogLayout.setHorizontalGroup(
+            queryDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(filePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        queryDialogLayout.setVerticalGroup(
+            queryDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(filePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        entryPanel.setBackground(new java.awt.Color(51, 0, 0));
+
+        presentationLabel.setBackground(new java.awt.Color(0, 0, 51));
+        presentationLabel.setFont(new java.awt.Font("Malayalam MN", 2, 18)); // NOI18N
+        presentationLabel.setForeground(new java.awt.Color(255, 255, 255));
+        presentationLabel.setText("Welcome to the ChatSystem !");
+
+        usernameArea.setBackground(new java.awt.Color(0, 0, 51));
+        usernameArea.setForeground(new java.awt.Color(255, 255, 255));
+        usernameArea.setText("username");
+        usernameArea.setSelectedTextColor(new java.awt.Color(153, 153, 255));
 
         connectButton.setText("CONNECT");
         connectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -279,66 +382,54 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             }
         });
 
-        usernameArea.setText("username");
-        usernameArea.setSelectedTextColor(new java.awt.Color(153, 153, 255));
-
-        presentationLabel.setText("Welcome to the ChatSystem !");
-
+        proprietaryLabel.setForeground(new java.awt.Color(255, 255, 255));
         proprietaryLabel.setText("©RMS");
 
-        javax.swing.GroupLayout EntryFrameLayout = new javax.swing.GroupLayout(EntryFrame.getContentPane());
-        EntryFrame.getContentPane().setLayout(EntryFrameLayout);
-        EntryFrameLayout.setHorizontalGroup(
-            EntryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(EntryFrameLayout.createSequentialGroup()
-                .addGroup(EntryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(EntryFrameLayout.createSequentialGroup()
-                        .addGap(92, 92, 92)
-                        .addGroup(EntryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(connectButton)))
-                    .addGroup(EntryFrameLayout.createSequentialGroup()
-                        .addGap(55, 55, 55)
-                        .addComponent(presentationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(50, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EntryFrameLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(proprietaryLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+        javax.swing.GroupLayout entryPanelLayout = new javax.swing.GroupLayout(entryPanel);
+        entryPanel.setLayout(entryPanelLayout);
+        entryPanelLayout.setHorizontalGroup(
+            entryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(entryPanelLayout.createSequentialGroup()
+                .addGroup(entryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, entryPanelLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(proprietaryLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(entryPanelLayout.createSequentialGroup()
+                        .addGroup(entryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(entryPanelLayout.createSequentialGroup()
+                                .addGap(22, 22, 22)
+                                .addComponent(presentationLabel))
+                            .addGroup(entryPanelLayout.createSequentialGroup()
+                                .addGap(91, 91, 91)
+                                .addGroup(entryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(connectButton)
+                                    .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 15, Short.MAX_VALUE)))
+                .addContainerGap())
         );
-        EntryFrameLayout.setVerticalGroup(
-            EntryFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EntryFrameLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
+        entryPanelLayout.setVerticalGroup(
+            entryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, entryPanelLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
                 .addComponent(presentationLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(connectButton)
-                .addGap(24, 24, 24)
-                .addComponent(proprietaryLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addComponent(proprietaryLabel)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(UsagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(EntryFrame, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addComponent(entryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(UsagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(EntryFrame, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addComponent(entryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -349,8 +440,8 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         ChatSystem.getControler().createLocalInfo(usernameArea.getText());
         connectedList.setModel(ChatSystem.getModel().getRemoteTable());
         connectedList.validate();
+        listFile.setModel(ChatSystem.getModel().getFileStringProposed());
         ChatSystem.getControler().performConnect();
-        this.usernameLabel.setText(ChatSystem.getModel().getUsername());
         
         try {
             doc.insertString(doc.getLength(), "Welcome to the chat ! \nyour adress ip is : " + ChatSystem.getModel().getLocalAdress() + "\n", chatSystemStyle);
@@ -358,74 +449,34 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             System.err.println(e);
         }
         
-        this.EntryFrame.setVisible(false);
-        this.UsagePanel.setVisible(true);
-        
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+        this.setVisible(false);
+        this.usageFrame.setVisible(true);                      
     }//GEN-LAST:event_connectButtonActionPerformed
-    
-    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        System.out.println("DEBUG *** GUI : pressed SEND ***");
-        
-        if (receiverTextField.getText().equals("")) {
-            // cas ou le remoteName n'est pas dans notre table
-            System.err.println("DEBUG *** GUI : no such remote user ***");
-            erreurReceiver();
-        } else {
-            // cas nominal on envoie la requete et on affiche dans notre boite de dialogue
-            try {
-                for (String s : receiverList){
-                    doc.insertString(doc.getLength(), "To " + s + " : " + sendMessageArea.getText() + "\n", sendStyle);
-                    if(sendMessageArea.getText().contains("File :")){
-                        System.out.println("DEBUG *** GUI : File transmitted to ctrl : " + sendMessageArea.getText() + " ***");
-                        ChatSystem.getControler().performSendFile(file, receiverList);
-                        file = null;
-                    }else{
-                        System.out.println("DEBUG *** GUI : message transmitted to ctrl : " + sendMessageArea.getText() + " ***");
-                        ChatSystem.getControler().performSendMessage(sendMessageArea.getText(), receiverList);
-                    }
-                }
-            } catch (BadLocationException e) {
-                System.err.println(e);
-            }
-            sendMessageArea.setText("");
-            receiverTextField.setText("");
-            receiverList.clear();
-        }
-    }//GEN-LAST:event_sendButtonActionPerformed
-    
-    private void fileChooseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooseButtonActionPerformed
-        System.out.println("DEBUG *** GUI : pressed FILE ***");
-        JFileChooser chooser = new JFileChooser();
-        chooser.showOpenDialog(null);
-        file = chooser.getSelectedFile();
-        sendMessageArea.setText("File : " + file.getAbsolutePath());
-    }//GEN-LAST:event_fileChooseButtonActionPerformed
-    
-    private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
-        System.out.println("DEBUG *** GUI : pressed DISCONNECT ***");
-        ChatSystem.getControler().performDisconnect(usernameLabel.getText());
-        receivedMessageArea.setText("");
-        receiverTextField.setText("");
-        this.UsagePanel.setVisible(false);
-        this.EntryFrame.setVisible(true);
-    }//GEN-LAST:event_disconnectButtonActionPerformed
-    
+                
     
     /*
-    *for internal frame : queryFrame
+    *for query Dialog 
     */
     
     private void yesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yesButtonActionPerformed
-        ChatSystem.getControler().processAcceptTransfer(fp);
-        QueryFrame.setVisible(false);
+               
+        System.out.println("DEBUG *** GUI : file accepted ***");
+        queryDialog.setVisible(false);
+        ChatSystem.getControler().processAcceptTransfer(fileHandled);
+        fileHandled = null;
     }//GEN-LAST:event_yesButtonActionPerformed
     
     private void noButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noButtonActionPerformed
-        ChatSystem.getControler().processRefuseTransfer(fp);
-        QueryFrame.setVisible(false);
+      
+        System.out.println("DEBUG *** GUI : file refused ***");
+        queryDialog.setVisible(false);
+        ChatSystem.getControler().processRefuseTransfer(fileHandled);
+        fileHandled = null;
     }//GEN-LAST:event_noButtonActionPerformed
+    
+    /*
+    *for Usage frame 
+    */
     
     private void connectedListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_connectedListMousePressed
         // TODO add your handling code here:
@@ -441,35 +492,128 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         }
         receiverTextField.setText(arrayToString(receiverList));       
     }//GEN-LAST:event_connectedListMousePressed
-    
+
+    private void proposedOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proposedOptionActionPerformed
+        // TODO add your handling code here:
+        queryDialog.setVisible(true);
+    }//GEN-LAST:event_proposedOptionActionPerformed
+
+    private void quitMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quitMenuMousePressed
+        // TODO add your handling code here:
+        System.out.println("DEBUG *** GUI : pressed DISCONNECT ***");
+        ChatSystem.getControler().performDisconnect(ChatSystem.getModel().getUsername());
+        receivedMessageArea.setText("");
+        receiverTextField.setText("");
+        usageFrame.setVisible(false);
+        this.setVisible(true);
+    }//GEN-LAST:event_quitMenuMousePressed
+
+    private void proposeOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proposeOptionActionPerformed
+        // TODO add your handling code here:
+        System.out.println("DEBUG *** GUI : pressed FILE ***");
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        file = chooser.getSelectedFile();
+        sendMessageArea.setText("File : " + file.getAbsolutePath());
+    }//GEN-LAST:event_proposeOptionActionPerformed
+
+    private void showOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showOptionActionPerformed
+        // TODO add your handling code here:
+        if (usageFrame.getWidth() < 700){
+            usageFrame.setSize(usageFrame.getWidth()+ 230,usageFrame.getHeight());          
+        }
+    }//GEN-LAST:event_showOptionActionPerformed
+
+    private void hideOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideOptionActionPerformed
+        // TODO add your handling code here:
+        if (usageFrame.getWidth() > 800){
+            usageFrame.setSize(usageFrame.getWidth()- 230,usageFrame.getHeight());          
+        }
+    }//GEN-LAST:event_hideOptionActionPerformed
+
+    private void showHideButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showHideButtonActionPerformed
+        // TODO add your handling code here:
+        if (usageFrame.getWidth() < 700){
+            usageFrame.setSize(usageFrame.getWidth()+ 230,usageFrame.getHeight());          
+        }else if(usageFrame.getWidth() > 800){
+            usageFrame.setSize(usageFrame.getWidth()- 230,usageFrame.getHeight());          
+        }
+    }//GEN-LAST:event_showHideButtonActionPerformed
+
+    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
+        // TODO add your handling code here:
+         System.out.println("DEBUG *** GUI : pressed SEND ***");
+        
+        if (receiverTextField.getText().equals("")) {
+            // cas ou le remoteName n'est pas dans notre table
+            System.err.println("DEBUG *** GUI : no such remote user ***");
+            erreurReceiver();
+        } else {
+            // cas nominal on envoie la requete et on affiche dans notre boite de dialogue
+            try {   
+                for (String s : receiverList){
+                    doc.insertString(doc.getLength(), "To " + s + " : " + sendMessageArea.getText() + "\n", sendStyle);
+                }
+                if(sendMessageArea.getText().contains("File :")){
+                        System.out.println("DEBUG *** GUI : File transmitted to ctrl : " + sendMessageArea.getText() + " ***");
+                        ChatSystem.getControler().performSendFile(file, receiverList);
+                        file = null;
+                    }else{
+                        System.out.println("DEBUG *** GUI : message transmitted to ctrl : " + sendMessageArea.getText() + " ***");
+                        ChatSystem.getControler().performSendMessage(sendMessageArea.getText(), receiverList);
+                    }               
+            } catch (BadLocationException e) {
+                System.err.println(e);
+            }
+            sendMessageArea.setText("");
+            receiverTextField.setText("");
+            receiverList.clear();
+        }
+    }//GEN-LAST:event_sendButtonActionPerformed
+
+    private void listFileMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listFileMousePressed
+        // TODO add your handling code here:
+        System.out.println("DEBUG *** GUI : selected a file ***");              
+         fileHandled = (String)listFile.getSelectedValue();     
+            
+    }//GEN-LAST:event_listFileMousePressed
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JInternalFrame EntryFrame;
-    private javax.swing.JInternalFrame QueryFrame;
     private javax.swing.JPanel UsagePanel;
     private javax.swing.JButton connectButton;
     private javax.swing.JList connectedList;
-    private javax.swing.JButton disconnectButton;
-    private javax.swing.JButton fileChooseButton;
-    private javax.swing.JTextArea fileInfoTextArea;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JPanel entryPanel;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JPanel filePanel;
+    private javax.swing.JMenuItem hideOption;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JList listFile;
     private javax.swing.JScrollPane listPanel;
+    private javax.swing.JMenuBar menuBar;
     private javax.swing.JLabel messageLabel;
-    private javax.swing.JLabel nameInfoLabel;
     private javax.swing.JButton noButton;
     private javax.swing.JLabel presentationLabel;
+    private javax.swing.JMenuItem proposeOption;
+    private javax.swing.JMenuItem proposedOption;
     private javax.swing.JLabel proprietaryLabel;
+    private javax.swing.JDialog queryDialog;
     private javax.swing.JLabel questionLabel;
+    private javax.swing.JMenu quitMenu;
     private javax.swing.JTextPane receivedMessageArea;
     private javax.swing.JScrollPane receivedMessagePanel;
     private javax.swing.JTextField receiverTextField;
+    private javax.swing.JScrollPane scrolFilepanel;
     private javax.swing.JButton sendButton;
     private javax.swing.JTextArea sendMessageArea;
     private javax.swing.JScrollPane sendMessagePanel;
+    private javax.swing.JButton showHideButton;
+    private javax.swing.JMenuItem showOption;
     private javax.swing.JLabel toLabel;
+    private javax.swing.JFrame usageFrame;
     private javax.swing.JLabel userlistLabel;
+    private javax.swing.JMenu userlistMenu;
     private javax.swing.JTextField usernameArea;
-    private javax.swing.JLabel usernameLabel;
     private javax.swing.JButton yesButton;
     // End of variables declaration//GEN-END:variables
     
@@ -528,9 +672,13 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     @Override
     //appelé quand on nous demande si on accepte la reception d'un fichier
     public void performFileQuery(FileProposal fp){
-        fileInfoTextArea.setText("File : " +fp.getFileName()+"\n File size : "+fp.getSize()+"\n From : "+fp.getFrom()+"\n");
-        this.fp = fp;
-        QueryFrame.setVisible(true);
+        //fileInfoTextArea.setText("File : " +fp.getFileName()+"\n File size : "+fp.getSize()+"\n From : "+fp.getFrom()+"\n");
+        try {
+            doc.insertString(doc.getLength(), "You received a knew file proposal !\n", chatSystemStyle);
+            listFile.revalidate();
+        } catch (BadLocationException e) {
+            System.err.println(e);
+        }
     }
     
     @Override
@@ -561,9 +709,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         }
         return result;
     }
-    
-    
-    
+        
     public void erreurReceiver() {
         System.out.println("DEBUG *** GUI : erreurReceiver <= when we didn't choose any receiver ***");
         
