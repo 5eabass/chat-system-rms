@@ -22,7 +22,7 @@ public class DataStored {
             
     public DataStored() {
         this.remoteTable = new DefaultListModel();
-        this.fileProposed = new HashMap<>();
+        this.fileProposed = new HashMap();
         this.fileStringProposed = new DefaultListModel();
         //this.receivers = new ArrayList<String>();
         //this.localName = localName;
