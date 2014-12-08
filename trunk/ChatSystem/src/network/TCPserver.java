@@ -11,12 +11,12 @@ public class TCPserver extends Thread {
     private Socket s0;
     private Vector<TCPreceiver> rList;
     private int port, max_connexion;
-    private FileProposal fileProposal;
+    private String fileName;
 
-    public TCPserver(FileProposal fp) {
+    public TCPserver(String fileName,int port) {
         this.rList = new Vector<TCPreceiver>();
-        this.port = fp.getPort();
-        this.fileProposal = fp;
+        this.port = port;
+        this.fileName = fileName;
         this.max_connexion = 1;
     }
 
@@ -29,7 +29,7 @@ public class TCPserver extends Thread {
                 // Acceptation d'un flux d'entrée socket
                 s0 = ss.accept();
                 System.out.println("Connexion detected ***************");
-                rList.add(new TCPreceiver(s0, fileProposal));
+                rList.add(new TCPreceiver(s0, fileName));
                 rList.lastElement().start();
             }
         } catch (Exception e) {

@@ -13,7 +13,6 @@ import signals.FileProposal;
 public class Controler implements NetworkToCtrl, GUIToCtrl {
 
     public Controler() {
-
     }
 
     /*
@@ -80,10 +79,10 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
 
     @Override
 // appelé quand on recoit un fichier
-    public void processTransmission(byte[] buffer, FileProposal fp) {
+    public void processTransmission(byte[] buffer, String fileName) {
         System.out.println("DEBUG *** CTRL : processTransmission <= when we receive a file ***");
         try {
-            File fileOut = new File("downloads/" + fp.getFileName());
+            File fileOut = new File("downloads/" + fileName);
             FileOutputStream fos = new FileOutputStream(fileOut);
             fos.write(buffer);
             fos.close();

@@ -14,11 +14,11 @@ class TCPreceiver extends Thread {
 
     private Socket s0;
     private InputStream reader;
-    private FileProposal fileProposal;
+    private String fileName;
 
-    public TCPreceiver(Socket s, FileProposal fp) {
+    public TCPreceiver(Socket s, String f) {
         this.s0 = s;
-        this.fileProposal = fp;
+        this.fileName = f;
         try {
             this.reader = s0.getInputStream();
         } catch (IOException ex) {
@@ -32,8 +32,10 @@ class TCPreceiver extends Thread {
         try {
             byte[] buffer = new byte[Signal.MAX_SIZE];
             reader.read(buffer);
-            ChatSystem.getControler().processTransmission(buffer, fileProposal);
+            //ajouter l'enregistrement du fichier qui etait fait par processTransmission
+            //ChatSystem.getControler().processTransmission(buffer, fileName);
             reader.close();
+            // appeler receipt pour notifier l'utilisateur comme quoi on a bien recu le fichier
         } catch (IOException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         }

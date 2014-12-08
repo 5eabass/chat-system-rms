@@ -43,6 +43,7 @@ public class TCPsender extends Thread {
         }
 
         connectionTearDown();
+        // appeler transmission ( chez ctrl) dire fichier bien recu par le remote
     }
 
     private void connectionEstablishement() {

@@ -28,7 +28,6 @@ public class Network implements CtrlToNetwork {
     private Vector<TCPsender> tcpSender;
     private Vector<TCPserver> tcpServer;
     private int ports, portd;
-
     private Vector<FileProposal> proposalList; // file proposal we sent
 
     public Network() {
@@ -36,7 +35,7 @@ public class Network implements CtrlToNetwork {
         this.tcpServer = new Vector<TCPserver>();
         this.proposalList = new Vector<FileProposal>();
         this.ports = 4444;
-        this.portd = 4445;
+        this.portd = 4444;
     }
 
     public void openUDP() {
@@ -51,8 +50,8 @@ public class Network implements CtrlToNetwork {
         }
     }
 
-    public void openTCP(FileProposal fp) {
-        this.tcpServer.add(new TCPserver(fp));
+    public void openTCP(String fileName,int port) {
+        this.tcpServer.add(new TCPserver(fileName,port));
         this.tcpServer.lastElement().start();
     }
 
@@ -152,7 +151,7 @@ public class Network implements CtrlToNetwork {
         ChatSystem.getModel().setFileToSend(file);
         for (String s : receivers) {
             try {
-                proposalList.add(new FileProposal(file.getName(), size, ChatSystem.getModel().getLocalAdress(), receivers, portd, false));
+                proposalList.add(new FileProposal(file.getName(), size, ChatSystem.getModel().getLocalAdress(), receivers));
                 InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(s));
                 udpSender.send(proposalList.lastElement(), addrIp);
             } catch (SignalTooBigException ex) {
@@ -164,13 +163,13 @@ public class Network implements CtrlToNetwork {
         }
     }
 
-    
-
     @Override
     //appelé quand on refuse le transfer
     public void performRefuseTransfer(FileProposal fp) {
-         System.out.println("DEBUG *** NETWORK : performRefuseTransfer <= send that we refuse ***");
-        try {     
+        System.out.println("DEBUG *** NETWORK : performRefuseTransfer <= send that we refuse ***");
+        FileTransferAccepted fta = new FileTransferAccepted(fp.getFileName(), ChatSystem.getModel().getUsername());
+
+        try {
             InetAddress addrIp = InetAddress.getByName(fp.getFrom());
             udpSender.send(fp, addrIp);
         } catch (SignalTooBigException ex) {
@@ -178,7 +177,7 @@ public class Network implements CtrlToNetwork {
         } catch (IOException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
     }
 
     @Override
@@ -186,11 +185,11 @@ public class Network implements CtrlToNetwork {
     public void performAcceptTransfer(FileProposal fp) {
         // Open a tcp Server
         System.out.println("DEBUG *** NETWORK : performAcceptTransfer <= send that we accept ***");
-        openTCP(fp);
+        FileTransferAccepted fta = new FileTransferAccepted(fp.getFileName(), ChatSystem.getModel().getUsername());
+        openTCP(fp.getFileName(),portd);
         try {
-            fp.setState(true);
-            InetAddress addrIp = InetAddress.getByName(fp.getFrom());
-            udpSender.send(fp, addrIp);
+            InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fp.getFrom()));
+            udpSender.send(fta, addrIp);
         } catch (SignalTooBigException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -218,50 +217,52 @@ public class Network implements CtrlToNetwork {
     /*
      * FIN FROM CTRL
      */
-    
     // Called when we receive a FileProposal answers
     public void processSendFile(FileProposal fp) {
         System.out.println("DEBUG *** NETWORK : processSendFile <= send the file ***");
         //if (this.proposalList.contains(fp)) {
-           // this.proposalList.remove(fp);
-            File file = ChatSystem.getModel().getFileToSend();
-            try {
-                InetAddress addrIp = InetAddress.getByName(fp.getFrom());
-                Socket s1 = new Socket(addrIp, fp.getPort());
-                TCPsender tcpS = new TCPsender(s1, file, fp.getFrom(), fp.getSize());
-                this.tcpSender.add(tcpS);
-                this.tcpSender.lastElement().start();
-                this.tcpSender.remove(tcpS);
-            } catch (IOException ex) {
-                System.err.println(ex);
-            }
+        // this.proposalList.remove(fp);
+        File file = ChatSystem.getModel().getFileToSend();
+        try {
+            InetAddress addrIp = InetAddress.getByName(fp.getFrom());
+            Socket s1 = new Socket(addrIp, portd);
+            TCPsender tcpS = new TCPsender(s1, file, fp.getFrom(), fp.getSize());
+            this.tcpSender.add(tcpS);
+            this.tcpSender.lastElement().start();
+            this.tcpSender.remove(tcpS);
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
         //}
-    }                    
-    
+    }
+
     /*
      * Fonction qui recoit les signaux de l'udp server et envoie au ctrl les actions a faire
      */
     // traitement du signal
     public void signalProcess(Signal s) { // a modifier
+         System.out.println("DEBUG *** NETWORK : signal processing ***");
         if (s instanceof Hello) {
+            System.out.println("DEBUG *** NETWORK : received Hello ***");
             ChatSystem.getControler().performHello(((Hello) s).getUsername());
         } else if (s instanceof HelloOK) {
+            System.out.println("DEBUG *** NETWORK : received HelloOk ***");
             ChatSystem.getControler().performHelloOk(((HelloOK) s).getUsername());
         } else if (s instanceof Goodbye) {
+            System.out.println("DEBUG *** NETWORK : received goodbye ***");
             ChatSystem.getControler().performGoodbye(((Goodbye) s).getUsername());
         } else if (s instanceof TextMessage) {
+            System.out.println("DEBUG *** NETWORK : received textMessage ***");
             ChatSystem.getControler().performTextMessage(((TextMessage) s).getMessage(), ((TextMessage) s).getFrom(), ((TextMessage) s).getTo());
         } else if (s instanceof FileProposal) {
-            if (((FileProposal) s).getState()) {
-                this.processSendFile(((FileProposal) s));
-            } else {
-                ChatSystem.getControler().processFileQuery(((FileProposal) s));
-               // ((FileProposal) s).getMessage(), ((FileProposal) s).getFrom(), ((FileProposal) s).get()
-               //ChatSystem.getControler().processFileQuery(((FileProposal) s).getFrom(),((FileProposal) s).getFileName(),((FileProposal) s).getSize());
-                   
-                // ChatSystem.getControler().processAcceptTransfer(((FileProposal) s));
-            }
-        }
+            System.out.println("DEBUG *** NETWORK : received a fileProposal ***");
+            ChatSystem.getControler().processFileQuery(((FileProposal) s));
+        } else if (s instanceof FileTransferAccepted) {
+            System.out.println("DEBUG *** NETWORK : transfer accepted ***");
+            this.processSendFile(((FileProposal) s));
+        }   else if(s instanceof FileTransferNotAccepted){
+             System.out.println("DEBUG *** NETWORK : transfer refused ***");
+             
+        }     
     }
-
 }
