@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import signals.Signal;
 
 public class TCPsender extends Thread {
 
@@ -25,8 +24,7 @@ public class TCPsender extends Thread {
         this.s1 = s;
         this.file = file;
         this.size = size;
-        this.buffer = new byte[(int)size];
-        System.err.println(size+"/"+file.length()+"/"+(int)size);
+        this.buffer = new byte[(int) size];
     }
 
     @Override
@@ -72,7 +70,7 @@ public class TCPsender extends Thread {
             Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
         System.out.println("DEBUG *** TCPsender : File sent ***");
     }
 
@@ -83,6 +81,6 @@ public class TCPsender extends Thread {
         } catch (IOException ex) {
             Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 }

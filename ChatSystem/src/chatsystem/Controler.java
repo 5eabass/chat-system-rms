@@ -87,6 +87,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
             fos.write(buffer);
             fos.flush();
             fos.close();
+            System.out.println("File size : "+fileOut.length()+"/"+buffer.length);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

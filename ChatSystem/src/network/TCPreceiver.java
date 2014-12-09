@@ -29,12 +29,19 @@ class TCPreceiver {
     public void receive() {
         System.out.println("Receiver started ***************");
         try {
+            int sizeRead = 0;
             byte[] buffer = new byte[size];
-            reader.read(buffer);
+            while(sizeRead < size) {
+                sizeRead += reader.read(buffer, sizeRead, (size-sizeRead));
+                System.out.println("Received : "+sizeRead+"/"+size+"\n");
+            }
             //ajouter l'enregistrement du fichier qui etait fait par processTransmission
             ChatSystem.getControler().processTransmission(buffer, fileName);
-            reader.close();
-            s0.close();
+            if (buffer == null) {
+                reader.close();
+                s0.close();
+                System.out.println("Close on my side ***************");
+            }
             // appeler receipt pour notifier l'utilisateur comme quoi on a bien recu le fichier
         } catch (IOException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
