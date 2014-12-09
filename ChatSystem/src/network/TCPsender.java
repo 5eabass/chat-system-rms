@@ -25,7 +25,7 @@ public class TCPsender extends Thread {
         this.s1 = s;
         this.file = file;
         this.size = size;
-        this.buffer = new byte[Signal.MAX_SIZE];
+        this.buffer = new byte[(int)size];
     }
 
     @Override
