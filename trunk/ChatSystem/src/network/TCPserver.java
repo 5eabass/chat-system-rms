@@ -9,7 +9,7 @@ public class TCPserver extends Thread {
     private ServerSocket ss;
     private Socket s0;
     private Vector<TCPreceiver> rList;
-    private int port, max_connexion,size;
+    private int port, max_connexion, size;
     private String fileName;
 
     public TCPserver(String fileName, int size, int port) {
@@ -29,11 +29,9 @@ public class TCPserver extends Thread {
                 s0 = ss.accept();
                 System.out.println("Connexion detected ***************");
                 rList.add(new TCPreceiver(s0, fileName, size));
-                rList.lastElement().start();
-                if (!rList.lastElement().isAlive()) {
-                    ss.close();
-                    break;
-                }
+                rList.lastElement().receive();
+                ss.close();
+                break;
             }
         } catch (Exception e) {
             System.out.println(e);
