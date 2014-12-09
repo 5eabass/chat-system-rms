@@ -36,12 +36,15 @@ public class TCPsender extends Thread {
 
         try {
             // Wainting for an ack from the remote server then close the connection
+            System.out.println("DEBUG *** TCPsender : waiting for the ack ***");
             reader.read(buffer);
+            System.out.println("DEBUG *** TCPsender : ack received closing ***");
+            connectionTearDown();
         } catch (IOException ex) {
             Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        connectionTearDown();
+        
         // appeler transmission ( chez ctrl) dire fichier bien recu par le remote
     }
 
@@ -64,26 +67,22 @@ public class TCPsender extends Thread {
             fis.read(buf);
             this.writer.write(buf);
             this.writer.flush();
+            fis.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                fis.close();
-            } catch (IOException ex) {
-                Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        } 
         System.out.println("DEBUG *** TCPsender : File sent ***");
     }
 
     public void connectionTearDown() {
         try {
             this.s1.close();
+            System.out.println("DEBUG *** TCPsender : Closing the connection ***");
         } catch (IOException ex) {
             Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("DEBUG *** TCPsender : Closing the connection ***");
+        
     }
 }
