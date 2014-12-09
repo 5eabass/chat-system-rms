@@ -218,15 +218,15 @@ public class Network implements CtrlToNetwork {
      * FIN FROM CTRL
      */
     // Called when we receive a FileProposal answers
-    public void processSendFile(FileProposal fp) {
+    public void processSendFile(FileTransferAccepted fa) {
         System.out.println("DEBUG *** NETWORK : processSendFile <= send the file ***");
         //if (this.proposalList.contains(fp)) {
         // this.proposalList.remove(fp);
         File file = ChatSystem.getModel().getFileToSend();
         try {
-            InetAddress addrIp = InetAddress.getByName(fp.getFrom());
+            InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fa.getRemoteUsername()));
             Socket s1 = new Socket(addrIp, portd);
-            TCPsender tcpS = new TCPsender(s1, file, fp.getFrom(), fp.getSize());
+            TCPsender tcpS = new TCPsender(s1, file, addrIp.getHostName(), file.length());
             this.tcpSender.add(tcpS);
             this.tcpSender.lastElement().start();
             this.tcpSender.remove(tcpS);
@@ -259,7 +259,7 @@ public class Network implements CtrlToNetwork {
             ChatSystem.getControler().processFileQuery(((FileProposal) s));
         } else if (s instanceof FileTransferAccepted) {
             System.out.println("DEBUG *** NETWORK : transfer accepted ***");
-            this.processSendFile(((FileProposal) s));
+            this.processSendFile(((FileTransferAccepted) s));
         }   else if(s instanceof FileTransferNotAccepted){
              System.out.println("DEBUG *** NETWORK : transfer refused ***");
              
