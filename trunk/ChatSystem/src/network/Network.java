@@ -147,10 +147,11 @@ public class Network implements CtrlToNetwork {
     @Override
     // Call when we send a file proposal
     public void processSendProposal(File file, long size, ArrayList<String> receivers) {
-        System.out.println("DEBUG *** NETWORK : processSendProposal <= ask to send a file ***");
+        System.out.println("DEBUG *** NETWORK : processSendProposal "+ file.getName() +" <= ask to send a file ***");
         ChatSystem.getModel().setFileToSend(file);
         for (String s : receivers) {
             try {
+                
                 proposalList.add(new FileProposal(file.getName(), size, ChatSystem.getModel().getUsername(), receivers));
                 InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(s));
                 udpSender.send(proposalList.lastElement(), addrIp);
@@ -217,12 +218,14 @@ public class Network implements CtrlToNetwork {
     /*
      * FIN FROM CTRL
      */
+    
     // Called when we receive a FileProposal answers
     public void processSendFile(FileTransferAccepted fa) {
         System.out.println("DEBUG *** NETWORK : processSendFile <= send the file ***");
         //if (this.proposalList.contains(fp)) {
         // this.proposalList.remove(fp);
         File file = ChatSystem.getModel().getFileToSend();
+        System.out.println("DEBUG *** NETWORK : sending " + file.getName() + " <= send the file ***");
         try {
             InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fa.getRemoteUsername()));
             Socket s1 = new Socket(addrIp, portd);
