@@ -14,9 +14,11 @@ class TCPreceiver extends Thread {
     private Socket s0;
     private InputStream reader;
     private String fileName;
+    private int size;
 
-    public TCPreceiver(Socket s, String f) {
+    public TCPreceiver(Socket s, String f, int size) {
         this.s0 = s;
+        this.size = size;
         this.fileName = f;
         try {
             this.reader = s0.getInputStream();
@@ -29,7 +31,7 @@ class TCPreceiver extends Thread {
     public void run() {
         System.out.println("Receiver started ***************");
         try {
-            byte[] buffer = new byte[Signal.MAX_SIZE];
+            byte[] buffer = new byte[size];
             reader.read(buffer);
             //ajouter l'enregistrement du fichier qui etait fait par processTransmission
             ChatSystem.getControler().processTransmission(buffer, fileName);

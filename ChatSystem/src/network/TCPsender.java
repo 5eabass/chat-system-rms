@@ -26,6 +26,7 @@ public class TCPsender extends Thread {
         this.file = file;
         this.size = size;
         this.buffer = new byte[(int)size];
+        System.err.println(size+"/"+file.length()+"/"+(int)size);
     }
 
     @Override

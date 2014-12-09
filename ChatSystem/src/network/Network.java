@@ -50,8 +50,8 @@ public class Network implements CtrlToNetwork {
         }
     }
 
-    public void openTCP(String fileName,int port) {
-        this.tcpServer.add(new TCPserver(fileName,port));
+    public void openTCP(String fileName,int size,int port) {
+        this.tcpServer.add(new TCPserver(fileName,size,port));
         this.tcpServer.lastElement().start();
     }
 
@@ -187,7 +187,7 @@ public class Network implements CtrlToNetwork {
         // Open a tcp Server
         System.out.println("DEBUG *** NETWORK : performAcceptTransfer <= send that we accept ***");
         FileTransferAccepted fta = new FileTransferAccepted(fp.getFileName(), ChatSystem.getModel().getUsername());
-        openTCP(fp.getFileName(),portd);
+        openTCP(fp.getFileName(),(int)fp.getSize(),portd);
         try {
             InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fp.getFrom()));
             udpSender.send(fta, addrIp);
