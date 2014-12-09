@@ -35,7 +35,7 @@ public class Network implements CtrlToNetwork {
         this.tcpServer = new Vector<TCPserver>();
         this.proposalList = new Vector<FileProposal>();
         this.ports = 4444;
-        this.portd = 4444;
+        this.portd = 4445;
     }
 
     public void openUDP() {

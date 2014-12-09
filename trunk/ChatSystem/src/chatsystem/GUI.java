@@ -21,7 +21,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
      * Creates new form EntryFrame
      */
     private StyledDocument doc;
-    private Style chatSystemStyle, receiveStyle, sendStyle;
+    private Style chatSystemStyle, errorStyle, receiveStyle, sendStyle;
     private File file; // the file we propose
     private ArrayList<String> receiverList; // receiverlist donné au ctrl
     private String fileHandled;// file that we are handling
@@ -37,9 +37,11 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         chatSystemStyle = receivedMessageArea.addStyle("chatSystemStyle", null);
         receiveStyle = receivedMessageArea.addStyle("fromStyle", null);
         sendStyle = receivedMessageArea.addStyle("toStyle", null);
-        StyleConstants.setForeground(chatSystemStyle, Color.RED);
-        StyleConstants.setForeground(receiveStyle, Color.LIGHT_GRAY);
-        StyleConstants.setForeground(sendStyle, Color.WHITE);
+        errorStyle = receivedMessageArea.addStyle("errStyle", null);
+        StyleConstants.setForeground(errorStyle, Color.RED);
+        StyleConstants.setForeground(chatSystemStyle,Color.GREEN);
+        StyleConstants.setForeground(receiveStyle, Color.YELLOW);
+        StyleConstants.setForeground(sendStyle, Color.ORANGE);
         receiverList = new ArrayList<String>();
         
     }
@@ -90,13 +92,13 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         proprietaryLabel = new javax.swing.JLabel();
 
         usageFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        usageFrame.setSize(new java.awt.Dimension(620, 500));
+        usageFrame.setSize(new java.awt.Dimension(620, 520));
 
-        UsagePanel.setBackground(new java.awt.Color(51, 0, 0));
+        UsagePanel.setBackground(new java.awt.Color(102, 102, 102));
         UsagePanel.setPreferredSize(new java.awt.Dimension(650, 447));
 
         receivedMessageArea.setEditable(false);
-        receivedMessageArea.setBackground(new java.awt.Color(0, 0, 51));
+        receivedMessageArea.setBackground(new java.awt.Color(51, 51, 51));
         receivedMessageArea.setForeground(new java.awt.Color(255, 255, 255));
         receivedMessagePanel.setViewportView(receivedMessageArea);
 
@@ -108,7 +110,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         });
 
         receiverTextField.setEditable(false);
-        receiverTextField.setBackground(new java.awt.Color(0, 0, 51));
+        receiverTextField.setBackground(new java.awt.Color(51, 51, 51));
         receiverTextField.setForeground(new java.awt.Color(255, 255, 255));
         receiverTextField.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
@@ -118,7 +120,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         messageLabel.setForeground(new java.awt.Color(255, 255, 255));
         messageLabel.setText("Message :");
 
-        sendMessageArea.setBackground(new java.awt.Color(0, 0, 51));
+        sendMessageArea.setBackground(new java.awt.Color(51, 51, 51));
         sendMessageArea.setColumns(20);
         sendMessageArea.setForeground(new java.awt.Color(255, 255, 255));
         sendMessageArea.setRows(5);
@@ -172,23 +174,20 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
                     .addComponent(receiverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(messageLabel)
-                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(sendMessagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(UsagePanelLayout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(sendButton)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(UsagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sendMessagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE))
                 .addGap(249, 249, 249))
         );
 
-        jPanel1.setBackground(new java.awt.Color(51, 0, 0));
+        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
 
         userlistLabel.setBackground(new java.awt.Color(51, 0, 0));
         userlistLabel.setForeground(new java.awt.Color(255, 255, 255));
         userlistLabel.setText("Connected user");
 
-        connectedList.setBackground(new java.awt.Color(0, 0, 51));
+        connectedList.setBackground(new java.awt.Color(51, 51, 51));
         connectedList.setForeground(new java.awt.Color(255, 255, 255));
         connectedList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -218,12 +217,12 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
                 .addComponent(userlistLabel)
                 .addGap(18, 18, 18)
                 .addComponent(listPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addContainerGap(177, Short.MAX_VALUE))
         );
 
         fileMenu.setText("File");
 
-        proposeOption.setText("Propose a file ");
+        proposeOption.setText("Send File");
         proposeOption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 proposeOptionActionPerformed(evt);
@@ -231,7 +230,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         });
         fileMenu.add(proposeOption);
 
-        proposedOption.setText("Proposed file");
+        proposedOption.setText("See Files");
         proposedOption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 proposedOptionActionPerformed(evt);
@@ -243,7 +242,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
 
         userlistMenu.setText("Userlist");
 
-        showOption.setText("Show userlist");
+        showOption.setText("Show");
         showOption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showOptionActionPerformed(evt);
@@ -251,7 +250,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         });
         userlistMenu.add(showOption);
 
-        hideOption.setText("Hide userlist");
+        hideOption.setText("Hide");
         hideOption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 hideOptionActionPerformed(evt);
@@ -282,14 +281,14 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         );
         usageFrameLayout.setVerticalGroup(
             usageFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(UsagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(UsagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 498, Short.MAX_VALUE)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         queryDialog.setBackground(new java.awt.Color(255, 255, 255));
-        queryDialog.setSize(new java.awt.Dimension(524, 376));
+        queryDialog.setSize(new java.awt.Dimension(524, 386));
 
-        filePanel.setBackground(new java.awt.Color(51, 0, 0));
+        filePanel.setBackground(new java.awt.Color(51, 51, 51));
 
         questionLabel.setForeground(new java.awt.Color(255, 255, 255));
         questionLabel.setText("   Do you accept to receive this file ?");
@@ -308,7 +307,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             }
         });
 
-        listFile.setBackground(new java.awt.Color(0, 0, 51));
+        listFile.setBackground(new java.awt.Color(0, 0, 0));
         listFile.setForeground(new java.awt.Color(255, 255, 255));
         listFile.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -339,7 +338,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         filePanelLayout.setVerticalGroup(
             filePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(filePanelLayout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
+                .addContainerGap(16, Short.MAX_VALUE)
                 .addComponent(questionLabel)
                 .addGap(18, 18, 18)
                 .addComponent(scrolFilepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -363,16 +362,17 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        entryPanel.setBackground(new java.awt.Color(51, 0, 0));
+        entryPanel.setBackground(new java.awt.Color(51, 51, 51));
 
         presentationLabel.setBackground(new java.awt.Color(0, 0, 51));
         presentationLabel.setFont(new java.awt.Font("Malayalam MN", 2, 18)); // NOI18N
         presentationLabel.setForeground(new java.awt.Color(255, 255, 255));
         presentationLabel.setText("Welcome to the ChatSystem !");
 
-        usernameArea.setBackground(new java.awt.Color(0, 0, 51));
+        usernameArea.setBackground(new java.awt.Color(0, 0, 0));
         usernameArea.setForeground(new java.awt.Color(255, 255, 255));
         usernameArea.setText("username");
+        usernameArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         usernameArea.setSelectedTextColor(new java.awt.Color(153, 153, 255));
 
         connectButton.setText("CONNECT");
@@ -416,7 +416,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
                 .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(connectButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addComponent(proprietaryLabel)
                 .addContainerGap())
         );
@@ -438,6 +438,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed CONNECT ***");
         ChatSystem.getControler().createLocalInfo(usernameArea.getText());
+        usageFrame.setTitle("Welcome "+usernameArea.getText());
         connectedList.setModel(ChatSystem.getModel().getRemoteTable());
         connectedList.validate();
         listFile.setModel(ChatSystem.getModel().getFileStringProposed());
@@ -714,7 +715,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         System.out.println("DEBUG *** GUI : erreurReceiver <= when we didn't choose any receiver ***");
         
         try {
-            doc.insertString(doc.getLength(), "Erreur : selectionnez un utilisateur distant\n", chatSystemStyle);
+            doc.insertString(doc.getLength(), "Erreur : selectionnez un utilisateur distant\n", errorStyle);
         } catch (BadLocationException e) {
             System.err.println(e);
         }
