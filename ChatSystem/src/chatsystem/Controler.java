@@ -85,6 +85,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
             File fileOut = new File("downloads/" + fileName);
             FileOutputStream fos = new FileOutputStream(fileOut);
             fos.write(buffer);
+            fos.flush();
             fos.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
