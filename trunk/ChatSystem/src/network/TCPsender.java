@@ -1,12 +1,11 @@
 package network;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,8 +14,7 @@ import signals.Signal;
 public class TCPsender extends Thread {
 
     private Socket s1;
-    private OutputStreamWriter out;
-    private BufferedWriter writer;
+    private OutputStream writer;
     private InputStream reader;
     private byte[] buffer;
     private long size;
@@ -48,8 +46,7 @@ public class TCPsender extends Thread {
 
     private void connectionEstablishement() {
         try {
-            out = new OutputStreamWriter(s1.getOutputStream());
-            writer = new BufferedWriter(out);
+            writer = s1.getOutputStream();
             reader = s1.getInputStream();
         } catch (IOException ex) {
             Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,8 +61,7 @@ public class TCPsender extends Thread {
             byte[] buf = new byte[(int) size];
             fis = new FileInputStream(file);
             fis.read(buf);
-            this.writer.write(buf.toString());
-            this.writer.newLine();
+            this.writer.write(buf);
             this.writer.flush();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
