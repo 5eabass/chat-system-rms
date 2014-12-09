@@ -35,7 +35,7 @@ public class Network implements CtrlToNetwork {
         this.tcpServer = new Vector<TCPserver>();
         this.proposalList = new Vector<FileProposal>();
         this.ports = 4444;
-        this.portd = 4445;
+        this.portd = 4444;
     }
 
     public void openUDP() {
@@ -151,7 +151,7 @@ public class Network implements CtrlToNetwork {
         ChatSystem.getModel().setFileToSend(file);
         for (String s : receivers) {
             try {
-                proposalList.add(new FileProposal(file.getName(), size, ChatSystem.getModel().getLocalAdress(), receivers));
+                proposalList.add(new FileProposal(file.getName(), size, ChatSystem.getModel().getUsername(), receivers));
                 InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(s));
                 udpSender.send(proposalList.lastElement(), addrIp);
             } catch (SignalTooBigException ex) {
@@ -170,7 +170,7 @@ public class Network implements CtrlToNetwork {
         FileTransferAccepted fta = new FileTransferAccepted(fp.getFileName(), ChatSystem.getModel().getUsername());
 
         try {
-            InetAddress addrIp = InetAddress.getByName(fp.getFrom());
+            InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fp.getFrom()));
             udpSender.send(fp, addrIp);
         } catch (SignalTooBigException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
