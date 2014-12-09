@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import signals.FileProposal;
 import signals.Signal;
 
 class TCPreceiver extends Thread {
@@ -33,8 +32,9 @@ class TCPreceiver extends Thread {
             byte[] buffer = new byte[Signal.MAX_SIZE];
             reader.read(buffer);
             //ajouter l'enregistrement du fichier qui etait fait par processTransmission
-            //ChatSystem.getControler().processTransmission(buffer, fileName);
+            ChatSystem.getControler().processTransmission(buffer, fileName);
             reader.close();
+            s0.close();            
             // appeler receipt pour notifier l'utilisateur comme quoi on a bien recu le fichier
         } catch (IOException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);

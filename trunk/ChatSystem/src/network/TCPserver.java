@@ -3,7 +3,6 @@ package network;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
-import signals.FileProposal;
 
 public class TCPserver extends Thread {
 
@@ -13,7 +12,7 @@ public class TCPserver extends Thread {
     private int port, max_connexion;
     private String fileName;
 
-    public TCPserver(String fileName,int port) {
+    public TCPserver(String fileName, int port) {
         this.rList = new Vector<TCPreceiver>();
         this.port = port;
         this.fileName = fileName;
@@ -24,13 +23,16 @@ public class TCPserver extends Thread {
     public void run() {
         try {
             ss = new ServerSocket(port, max_connexion);
-
             for (;;) {
                 // Acceptation d'un flux d'entrée socket
                 s0 = ss.accept();
                 System.out.println("Connexion detected ***************");
                 rList.add(new TCPreceiver(s0, fileName));
                 rList.lastElement().start();
+                if (!rList.lastElement().isAlive()) {
+                    ss.close();
+                    break;
+                }
             }
         } catch (Exception e) {
             System.out.println(e);
