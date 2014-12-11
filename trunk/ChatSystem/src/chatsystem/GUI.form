@@ -5,6 +5,7 @@
     <Container class="javax.swing.JFrame" name="usageFrame">
       <Properties>
         <Property name="defaultCloseOperation" type="int" value="3"/>
+        <Property name="resizable" type="boolean" value="false"/>
         <Property name="size" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[620, 520]"/>
         </Property>
@@ -267,20 +268,28 @@
                 <Property name="text" type="java.lang.String" value="File"/>
               </Properties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="proposeOption">
+                <MenuItem class="javax.swing.JMenuItem" name="proposeFile">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Send File"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="proposeOptionActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="proposeFileActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="proposedOption">
+                <MenuItem class="javax.swing.JMenuItem" name="proposedFile">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="See Files"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="proposedOptionActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="proposedFileActionPerformed"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="downloadedFile">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Downloads"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="downloadedFileActionPerformed"/>
                   </Events>
                 </MenuItem>
               </SubComponents>
@@ -290,20 +299,20 @@
                 <Property name="text" type="java.lang.String" value="Userlist"/>
               </Properties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="showOption">
+                <MenuItem class="javax.swing.JMenuItem" name="showList">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Show"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showOptionActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showListActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="hideOption">
+                <MenuItem class="javax.swing.JMenuItem" name="hideList">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Hide"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="hideOptionActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="hideListActionPerformed"/>
                   </Events>
                 </MenuItem>
               </SubComponents>
@@ -326,7 +335,7 @@
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
         <Property name="size" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[524, 386]"/>
+          <Dimension value="[524, 396]"/>
         </Property>
       </Properties>
 
