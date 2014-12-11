@@ -2,7 +2,9 @@ package chatsystem;
 
 import interfaces.*;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.text.BadLocationException;
@@ -11,39 +13,38 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import signals.FileProposal;
 
-/**
- *
- * @author seb
- */
 public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     
     /**
      * Creates new form EntryFrame
      */
-    private StyledDocument doc;
-    private Style chatSystemStyle, errorStyle, receiveStyle, sendStyle;
+    private StyledDocument doc; //for the text customization
+    private Style chatSystemStyle, errorStyle, receiveStyle, sendStyle; // different print style
     private File file; // the file we propose
-    private ArrayList<String> receiverList; // receiverlist donné au ctrl
-    private String fileHandled;// file that we are handling
+    private ArrayList<String> receiverList; // receiverlist given to ctrl
+    private String fileHandled;// file that we are handling ( accept receive or not)
     
     public GUI() {
         initComponents();
-        doc = receivedMessageArea.getStyledDocument();
         
-        // initialisation des styles de police utilisé
-        // rouge pour le System
-        // bleu pour un message recu
-        // noir pour les messages envoyé
+        doc = receivedMessageArea.getStyledDocument();
+        /*
+        * styles' initialization
+        * Green for System
+        * yellow for received message
+        * orange for sent message
+        * Red for error printed for user
+        */
         chatSystemStyle = receivedMessageArea.addStyle("chatSystemStyle", null);
         receiveStyle = receivedMessageArea.addStyle("fromStyle", null);
         sendStyle = receivedMessageArea.addStyle("toStyle", null);
         errorStyle = receivedMessageArea.addStyle("errStyle", null);
+        
         StyleConstants.setForeground(errorStyle, Color.RED);
         StyleConstants.setForeground(chatSystemStyle,Color.GREEN);
         StyleConstants.setForeground(receiveStyle, Color.YELLOW);
         StyleConstants.setForeground(sendStyle, Color.ORANGE);
         receiverList = new ArrayList<String>();
-        
     }
     
     /**
@@ -72,11 +73,12 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         connectedList = new javax.swing.JList();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        proposeOption = new javax.swing.JMenuItem();
-        proposedOption = new javax.swing.JMenuItem();
+        proposeFile = new javax.swing.JMenuItem();
+        proposedFile = new javax.swing.JMenuItem();
+        downloadedFile = new javax.swing.JMenuItem();
         userlistMenu = new javax.swing.JMenu();
-        showOption = new javax.swing.JMenuItem();
-        hideOption = new javax.swing.JMenuItem();
+        showList = new javax.swing.JMenuItem();
+        hideList = new javax.swing.JMenuItem();
         quitMenu = new javax.swing.JMenu();
         queryDialog = new javax.swing.JDialog();
         filePanel = new javax.swing.JPanel();
@@ -92,6 +94,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         proprietaryLabel = new javax.swing.JLabel();
 
         usageFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        usageFrame.setResizable(false);
         usageFrame.setSize(new java.awt.Dimension(620, 520));
 
         UsagePanel.setBackground(new java.awt.Color(102, 102, 102));
@@ -222,41 +225,49 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
 
         fileMenu.setText("File");
 
-        proposeOption.setText("Send File");
-        proposeOption.addActionListener(new java.awt.event.ActionListener() {
+        proposeFile.setText("Send File");
+        proposeFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                proposeOptionActionPerformed(evt);
+                proposeFileActionPerformed(evt);
             }
         });
-        fileMenu.add(proposeOption);
+        fileMenu.add(proposeFile);
 
-        proposedOption.setText("See Files");
-        proposedOption.addActionListener(new java.awt.event.ActionListener() {
+        proposedFile.setText("See Files");
+        proposedFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                proposedOptionActionPerformed(evt);
+                proposedFileActionPerformed(evt);
             }
         });
-        fileMenu.add(proposedOption);
+        fileMenu.add(proposedFile);
+
+        downloadedFile.setText("Downloads");
+        downloadedFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                downloadedFileActionPerformed(evt);
+            }
+        });
+        fileMenu.add(downloadedFile);
 
         menuBar.add(fileMenu);
 
         userlistMenu.setText("Userlist");
 
-        showOption.setText("Show");
-        showOption.addActionListener(new java.awt.event.ActionListener() {
+        showList.setText("Show");
+        showList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showOptionActionPerformed(evt);
+                showListActionPerformed(evt);
             }
         });
-        userlistMenu.add(showOption);
+        userlistMenu.add(showList);
 
-        hideOption.setText("Hide");
-        hideOption.addActionListener(new java.awt.event.ActionListener() {
+        hideList.setText("Hide");
+        hideList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hideOptionActionPerformed(evt);
+                hideListActionPerformed(evt);
             }
         });
-        userlistMenu.add(hideOption);
+        userlistMenu.add(hideList);
 
         menuBar.add(userlistMenu);
 
@@ -281,12 +292,12 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         );
         usageFrameLayout.setVerticalGroup(
             usageFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(UsagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 498, Short.MAX_VALUE)
+            .addComponent(UsagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         queryDialog.setBackground(new java.awt.Color(255, 255, 255));
-        queryDialog.setSize(new java.awt.Dimension(524, 386));
+        queryDialog.setSize(new java.awt.Dimension(524, 396));
 
         filePanel.setBackground(new java.awt.Color(51, 51, 51));
 
@@ -437,30 +448,32 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed CONNECT ***");
+        // create info thanks to the user input : name
         ChatSystem.getControler().createLocalInfo(usernameArea.getText());
         usageFrame.setTitle("Welcome "+usernameArea.getText());
+        // initialize the list of connected users
         connectedList.setModel(ChatSystem.getModel().getRemoteTable());
         connectedList.validate();
+        // initialize the list of proposed files
         listFile.setModel(ChatSystem.getModel().getFileStringProposed());
         ChatSystem.getControler().performConnect();
-        
+        // print to the chat the welcome message
         try {
             doc.insertString(doc.getLength(), "Welcome to the chat ! \nyour adress ip is : " + ChatSystem.getModel().getLocalAdress() + "\n", chatSystemStyle);
         } catch (BadLocationException e) {
             System.err.println(e);
         }
-        
+        // disable the entry frame and enable the main frame
         this.setVisible(false);
         this.usageFrame.setVisible(true);                      
     }//GEN-LAST:event_connectButtonActionPerformed
-                
+    
     
     /*
-    *for query Dialog 
+    *for query Dialog
     */
     
     private void yesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yesButtonActionPerformed
-               
         System.out.println("DEBUG *** GUI : file accepted ***");
         queryDialog.setVisible(false);
         ChatSystem.getControler().processAcceptTransfer(fileHandled);
@@ -468,7 +481,6 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     }//GEN-LAST:event_yesButtonActionPerformed
     
     private void noButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noButtonActionPerformed
-      
         System.out.println("DEBUG *** GUI : file refused ***");
         queryDialog.setVisible(false);
         ChatSystem.getControler().processRefuseTransfer(fileHandled);
@@ -476,31 +488,30 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     }//GEN-LAST:event_noButtonActionPerformed
     
     /*
-    *for Usage frame 
+    *for Usage frame
     */
     
     private void connectedListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_connectedListMousePressed
-        // TODO add your handling code here:
         System.out.println("DEBUG *** GUI : selected a receiver ***");
         if(!receiverList.contains((String) connectedList.getSelectedValue())){
-            // si le user selectionné n'était pas déja selectionné
+            // if the selected user hasn't been selected yet
             System.out.println("DEBUG *** GUI : add to receivers ***");
+            // we add it to receivers
             receiverList.add((String) connectedList.getSelectedValue());
             receiverTextField.setText(receiverList.toString());
         }else{
+            // else we delete it
             System.out.println("DEBUG *** GUI : delete from receivers ***");
             receiverList.remove((String) connectedList.getSelectedValue());
         }
         receiverTextField.setText(arrayToString(receiverList));       
     }//GEN-LAST:event_connectedListMousePressed
-
-    private void proposedOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proposedOptionActionPerformed
-        // TODO add your handling code here:
+    
+    private void proposedFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proposedFileActionPerformed
         queryDialog.setVisible(true);
-    }//GEN-LAST:event_proposedOptionActionPerformed
-
+    }//GEN-LAST:event_proposedFileActionPerformed
+    
     private void quitMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quitMenuMousePressed
-        // TODO add your handling code here:
         System.out.println("DEBUG *** GUI : pressed DISCONNECT ***");
         ChatSystem.getControler().performDisconnect(ChatSystem.getModel().getUsername());
         receivedMessageArea.setText("");
@@ -508,61 +519,61 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         usageFrame.setVisible(false);
         this.setVisible(true);
     }//GEN-LAST:event_quitMenuMousePressed
-
-    private void proposeOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proposeOptionActionPerformed
-        // TODO add your handling code here:
+    
+    private void proposeFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proposeFileActionPerformed
         System.out.println("DEBUG *** GUI : pressed FILE ***");
         JFileChooser chooser = new JFileChooser();
-        chooser.showOpenDialog(null);
-        file = chooser.getSelectedFile();
-        sendMessageArea.setText("File : " + file.getAbsolutePath());
-    }//GEN-LAST:event_proposeOptionActionPerformed
-
-    private void showOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showOptionActionPerformed
-        // TODO add your handling code here:
-        if (usageFrame.getWidth() < 700){
-            usageFrame.setSize(usageFrame.getWidth()+ 230,usageFrame.getHeight());          
+        int retValue = chooser.showOpenDialog(null);
+        
+        if (retValue == JFileChooser.APPROVE_OPTION){
+            file = chooser.getSelectedFile();
+            sendMessageArea.setText("File : " + file.getAbsolutePath());
         }
-    }//GEN-LAST:event_showOptionActionPerformed
-
-    private void hideOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideOptionActionPerformed
-        // TODO add your handling code here:
+    }//GEN-LAST:event_proposeFileActionPerformed
+    
+    private void showListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showListActionPerformed
+        if (usageFrame.getWidth() < 700){
+            usageFrame.setSize(usageFrame.getWidth()+ 230,usageFrame.getHeight());
+        }
+    }//GEN-LAST:event_showListActionPerformed
+    
+    private void hideListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideListActionPerformed
         if (usageFrame.getWidth() > 800){
-            usageFrame.setSize(usageFrame.getWidth()- 230,usageFrame.getHeight());          
+            usageFrame.setSize(usageFrame.getWidth()- 230,usageFrame.getHeight());
         }
-    }//GEN-LAST:event_hideOptionActionPerformed
-
+    }//GEN-LAST:event_hideListActionPerformed
+    
     private void showHideButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showHideButtonActionPerformed
-        // TODO add your handling code here:
         if (usageFrame.getWidth() < 700){
-            usageFrame.setSize(usageFrame.getWidth()+ 230,usageFrame.getHeight());          
+            usageFrame.setSize(usageFrame.getWidth()+ 230,usageFrame.getHeight());
         }else if(usageFrame.getWidth() > 800){
-            usageFrame.setSize(usageFrame.getWidth()- 230,usageFrame.getHeight());          
+            usageFrame.setSize(usageFrame.getWidth()- 230,usageFrame.getHeight());
         }
     }//GEN-LAST:event_showHideButtonActionPerformed
-
+    
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        // TODO add your handling code here:
-         System.out.println("DEBUG *** GUI : pressed SEND ***");
+        System.out.println("DEBUG *** GUI : pressed SEND ***");
         
         if (receiverTextField.getText().equals("")) {
-            // cas ou le remoteName n'est pas dans notre table
-            System.err.println("DEBUG *** GUI : no such remote user ***");
+            // if no receivers were selected
+            System.err.println("DEBUG *** GUI : no user selected ***");
             erreurReceiver();
         } else {
-            // cas nominal on envoie la requete et on affiche dans notre boite de dialogue
-            try {   
+            // if we selected one or more users
+            try {
+                // print a message to the chat
                 for (String s : receiverList){
                     doc.insertString(doc.getLength(), "To " + s + " : " + sendMessageArea.getText() + "\n", sendStyle);
                 }
+                // if text / file
                 if(sendMessageArea.getText().contains("File :")){
-                        System.out.println("DEBUG *** GUI : File transmitted to ctrl : " + sendMessageArea.getText() + " ***");
-                        ChatSystem.getControler().performSendFile(file, receiverList);
-                        file = null;
-                    }else{
-                        System.out.println("DEBUG *** GUI : message transmitted to ctrl : " + sendMessageArea.getText() + " ***");
-                        ChatSystem.getControler().performSendMessage(sendMessageArea.getText(), receiverList);
-                    }               
+                    System.out.println("DEBUG *** GUI : File transmitted to ctrl : " + sendMessageArea.getText() + " ***");
+                    ChatSystem.getControler().performSendFile(file, receiverList);
+                    file = null;
+                }else{
+                    System.out.println("DEBUG *** GUI : message transmitted to ctrl : " + sendMessageArea.getText() + " ***");
+                    ChatSystem.getControler().performSendMessage(sendMessageArea.getText(), receiverList);
+                }
             } catch (BadLocationException e) {
                 System.err.println(e);
             }
@@ -571,23 +582,39 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             receiverList.clear();
         }
     }//GEN-LAST:event_sendButtonActionPerformed
-
+    
     private void listFileMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listFileMousePressed
-        // TODO add your handling code here:
-        System.out.println("DEBUG *** GUI : selected a file ***");              
-         fileHandled = (String)listFile.getSelectedValue();     
-            
+        System.out.println("DEBUG *** GUI : selected a file ***");
+        fileHandled = (String)listFile.getSelectedValue();
+        
     }//GEN-LAST:event_listFileMousePressed
-
+    
+    private void downloadedFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadedFileActionPerformed
+        System.out.println("DEBUG *** GUI : selected downloaded file menu ***");
+        JFileChooser chooser = new JFileChooser("./downloads");
+        int retValue = chooser.showOpenDialog(null);
+        if (retValue == JFileChooser.APPROVE_OPTION){
+            // if user pushed open button : open the file
+            file = chooser.getSelectedFile();          
+            try{
+                Desktop.getDesktop().open(file);
+            }catch(IOException e){
+                System.err.println(e);
+            }
+            file = null;
+        }
+    }//GEN-LAST:event_downloadedFileActionPerformed
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel UsagePanel;
     private javax.swing.JButton connectButton;
     private javax.swing.JList connectedList;
+    private javax.swing.JMenuItem downloadedFile;
     private javax.swing.JPanel entryPanel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JPanel filePanel;
-    private javax.swing.JMenuItem hideOption;
+    private javax.swing.JMenuItem hideList;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JList listFile;
     private javax.swing.JScrollPane listPanel;
@@ -595,8 +622,8 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     private javax.swing.JLabel messageLabel;
     private javax.swing.JButton noButton;
     private javax.swing.JLabel presentationLabel;
-    private javax.swing.JMenuItem proposeOption;
-    private javax.swing.JMenuItem proposedOption;
+    private javax.swing.JMenuItem proposeFile;
+    private javax.swing.JMenuItem proposedFile;
     private javax.swing.JLabel proprietaryLabel;
     private javax.swing.JDialog queryDialog;
     private javax.swing.JLabel questionLabel;
@@ -609,7 +636,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     private javax.swing.JTextArea sendMessageArea;
     private javax.swing.JScrollPane sendMessagePanel;
     private javax.swing.JButton showHideButton;
-    private javax.swing.JMenuItem showOption;
+    private javax.swing.JMenuItem showList;
     private javax.swing.JLabel toLabel;
     private javax.swing.JFrame usageFrame;
     private javax.swing.JLabel userlistLabel;
@@ -618,12 +645,10 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     private javax.swing.JButton yesButton;
     // End of variables declaration//GEN-END:variables
     
-    // toutes les fonctions à implémenter !
+     // called when we receive hello or helloOk
     @Override
-    // appelé quand on recoit un hello ou hellook , il faut ajouter le nom a la list
     public void addUser(String remoteName) {
-        System.out.println("DEBUG *** GUI : addUser <= when we receive a hello ***");
-        
+        System.out.println("DEBUG *** GUI : addUser <= when we receive a hello ***");       
         try {
             doc.insertString(doc.getLength(), remoteName + " is now connected !\n", chatSystemStyle);
         } catch (BadLocationException e) {
@@ -632,25 +657,24 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         connectedList.revalidate();
     }
     
+    // called when we receive a text message
     @Override
-    // appelé quand on recoit un message
     public void processTextMessage(String message, String remoteName,ArrayList<String> to) {
-        System.out.println("DEBUG *** GUI : processTextMessage <= when we receive a message ***");
+        System.out.println("DEBUG *** GUI : processTextMessage :" + message + " sent to : " +arrayToString(to)+ " <= when we receive a message ***");
         try {
             doc.insertString(doc.getLength(), "from " + remoteName + " : " + message + "\n", receiveStyle);
             if (to.size()>1){
-                doc.insertString(doc.getLength(),"(sent to : "+arrayToString(to)+")\n" , receiveStyle);
+                doc.insertString(doc.getLength(),"(sent to these people : "+arrayToString(to)+")\n" , receiveStyle);
             }
         } catch (BadLocationException e) {
             System.err.println(e);
         }
-        System.out.println("DEBUG *** GUI : processTextMessage = "+message+" ***");
     }
     
+    // called when we have successfully sent a file
     @Override
-    // appelé quand le fichier est bien recu
     public void notifyTransmitted() {
-        System.out.println("DEBUG *** GUI : notifyTransmitted <= when we have successfully received the file ***");
+        System.out.println("DEBUG *** GUI : notifyTransmitted <= when we have successfully sent the file ***");
         
         try {
             doc.insertString(doc.getLength(), "File Transmitted ! " + "\n", chatSystemStyle);
@@ -658,11 +682,11 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             System.err.println(e);
         }
     }
-    
+   
+    // called when we haven't successfully sent a file
     @Override
-    // appelé quand le fichier n'a pas été recu
     public void notifyNotTransmitted() {
-        System.out.println("DEBUG *** GUI : notifyNotTransmitted <= when we haven't received the file ***");
+        System.out.println("DEBUG *** GUI : notifyNotTransmitted <= when we haven't successfully sent the file ***");
         
         try {
             doc.insertString(doc.getLength(), "File failed to Transmit ! " + "\n", chatSystemStyle);
@@ -670,10 +694,11 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             System.err.println(e);
         }
     }
+    //called when we receive a file proposal
     @Override
-    //appelé quand on nous demande si on accepte la reception d'un fichier
     public void performFileQuery(FileProposal fp){
-        //fileInfoTextArea.setText("File : " +fp.getFileName()+"\n File size : "+fp.getSize()+"\n From : "+fp.getFrom()+"\n");
+        System.out.println("DEBUG *** GUI : performFileQuery <= when we receive a proposal ***");
+        
         try {
             doc.insertString(doc.getLength(), "You received a knew file proposal !\n", chatSystemStyle);
             listFile.revalidate();
@@ -682,12 +707,11 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         }
     }
     
+    // called when we receive a goodbye
     @Override
-    // appelé par le ctrl quand on recoit un goodbye il faut supprimer le nom de la liste
     public void deleteUser(String remoteName) {
         System.out.println("DEBUG *** GUI : deleteUser <= when we receive a goodBye ***");
         
-        //on supprime l'élément de notre list(que l'utilisateur voit) et on met a jour la liste
         try {
             doc.insertString(doc.getLength(), remoteName + " is now disconnected !\n", chatSystemStyle);
         } catch (BadLocationException e) {
@@ -697,10 +721,8 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         //listModel.removeElement(remoteName);
         connectedList.revalidate();
     }
-    /*
-    fonction utiles dans selection receiver
-    */
-    
+   
+    // to put in string our arrays in the gui only
     public String arrayToString(ArrayList<String> a){
         String result =new String();
         for (String s : a){
@@ -710,7 +732,8 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         }
         return result;
     }
-        
+    
+    // when the user did something wrong : did not select any receiver 
     public void erreurReceiver() {
         System.out.println("DEBUG *** GUI : erreurReceiver <= when we didn't choose any receiver ***");
         

@@ -9,12 +9,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class TCPreceiver {
-
+    
     private Socket s0;
     private InputStream reader;
     private String fileName;
     private int size;
-
+    
     public TCPreceiver(Socket s, String f, int size) {
         this.s0 = s;
         this.size = size;
@@ -25,7 +25,7 @@ class TCPreceiver {
             Logger.getLogger(TCPreceiver.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void receive() {
         System.out.println("Receiver started ***************");
         try {
