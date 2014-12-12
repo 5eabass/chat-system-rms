@@ -23,13 +23,15 @@ public class TCPserver extends Thread {
     @Override
     public void run() {
         try {
+            System.out.println("DEBUG *** TCPserver launched ***");
             ss = new ServerSocket(port, max_connexion);
             for (;;) {
-                // Acceptation d'un flux d'entrée socket
+                // waiting for connection
                 s0 = ss.accept();
-                System.out.println("Connexion detected ***************");
+                System.out.println("DEBUG *** TCPserver Connexion detected ***");
                 rList.add(new TCPreceiver(s0, fileName, size));
                 rList.lastElement().receive();
+                System.out.println("DEBUG *** TCPserver going to close ***");
                 ss.close();
                 break;
             }

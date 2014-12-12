@@ -29,35 +29,37 @@ public class TCPsender extends Thread {
 
     @Override
     public void run() {
+        System.out.println("DEBUG *** TCPsender launch ***");
         connectionEstablishement();
         sendFile();
-
-        try {
+        connectionTearDown();
+        
+        /*try {
             // Wainting for an ack from the remote server then close the connection
-            System.out.println("DEBUG *** TCPsender : waiting for the ack ***");
+            System.out.println("DEBUG *** TCPsender : closing ***");
             reader.read(buffer);
             System.out.println("DEBUG *** TCPsender : ack received closing ***");
             connectionTearDown();
         } catch (IOException ex) {
             Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        
+        }       */
         // appeler transmission ( chez ctrl) dire fichier bien recu par le remote
     }
 
+    // establish the connection
     private void connectionEstablishement() {
         try {
             writer = s1.getOutputStream();
-            reader = s1.getInputStream();
+            //reader = s1.getInputStream();
+            System.out.println("DEBUG *** TCPsender : Connection established ***");
         } catch (IOException ex) {
             Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("DEBUG *** TCPsender : Connection established ***");
     }
 
+    // Send the file 
     public void sendFile() {
-
+        System.out.println("DEBUG *** TCPsender : start sending ***");
         FileInputStream fis = null;
         try {
             byte[] buf = new byte[(int) size];
@@ -67,19 +69,20 @@ public class TCPsender extends Thread {
             this.writer.flush();
             fis.close();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         } catch (IOException ex) {
-            Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
         System.out.println("DEBUG *** TCPsender : File sent ***");
     }
 
+    // close the connection
     public void connectionTearDown() {
         try {
             this.s1.close();
             System.out.println("DEBUG *** TCPsender : Closing the connection ***");
         } catch (IOException ex) {
-            Logger.getLogger(TCPsender.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
 
     }
