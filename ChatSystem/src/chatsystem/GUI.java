@@ -96,6 +96,11 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         usageFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         usageFrame.setResizable(false);
         usageFrame.setSize(new java.awt.Dimension(620, 520));
+        usageFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                usageFrameWindowClosing(evt);
+            }
+        });
 
         UsagePanel.setBackground(new java.awt.Color(102, 102, 102));
         UsagePanel.setPreferredSize(new java.awt.Dimension(650, 447));
@@ -512,12 +517,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     }//GEN-LAST:event_proposedFileActionPerformed
     
     private void quitMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quitMenuMousePressed
-        System.out.println("DEBUG *** GUI : pressed DISCONNECT ***");
-        ChatSystem.getControler().performDisconnect(ChatSystem.getModel().getUsername());
-        receivedMessageArea.setText("");
-        receiverTextField.setText("");
-        usageFrame.setVisible(false);
-        this.setVisible(true);
+        disconnection();
     }//GEN-LAST:event_quitMenuMousePressed
     
     private void proposeFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proposeFileActionPerformed
@@ -604,6 +604,10 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             file = null;
         }
     }//GEN-LAST:event_downloadedFileActionPerformed
+
+    private void usageFrameWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_usageFrameWindowClosing
+        disconnection();                
+    }//GEN-LAST:event_usageFrameWindowClosing
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -648,13 +652,15 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
      // called when we receive hello or helloOk
     @Override
     public void addUser(String remoteName) {
-        System.out.println("DEBUG *** GUI : addUser <= when we receive a hello ***");       
+        System.out.println("DEBUG *** GUI : addUser <= when we receive a hello ***"); 
+        
         try {
             doc.insertString(doc.getLength(), remoteName + " is now connected !\n", chatSystemStyle);
+            connectedList.revalidate();
         } catch (BadLocationException e) {
             System.err.println(e);
         }
-        connectedList.revalidate();
+        
     }
     
     // called when we receive a text message
@@ -714,15 +720,13 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         
         try {
             doc.insertString(doc.getLength(), remoteName + " is now disconnected !\n", chatSystemStyle);
+            connectedList.revalidate();
         } catch (BadLocationException e) {
             System.err.println(e);
-        }
-        
-        //listModel.removeElement(remoteName);
-        connectedList.revalidate();
+        }     
     }
    
-    // to put in string our arrays in the gui only
+    // to put in string the array of receivers we create here
     public String arrayToString(ArrayList<String> a){
         String result =new String();
         for (String s : a){
@@ -731,6 +735,16 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             }
         }
         return result;
+    }
+    
+    // disconnection procedure ( used when pushed quit or close frame )
+    public void disconnection(){
+        System.out.println("DEBUG *** GUI : pressed DISCONNECT ***");
+        ChatSystem.getControler().performDisconnect(ChatSystem.getModel().getUsername());
+        receivedMessageArea.setText("");
+        receiverTextField.setText("");
+        usageFrame.setVisible(false);
+        this.setVisible(true);
     }
     
     // when the user did something wrong : did not select any receiver 

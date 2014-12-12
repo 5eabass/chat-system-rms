@@ -21,28 +21,36 @@ class TCPreceiver {
         this.fileName = f;
         try {
             this.reader = s0.getInputStream();
+            System.out.println("DEBUG *** TCPreceiver created ***");
         } catch (IOException ex) {
-            Logger.getLogger(TCPreceiver.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
     }
     
     public void receive() {
-        System.out.println("Receiver started ***************");
+        System.out.println("DEBUG *** TCPreceiver started ***");
+        int sizeRead = 0;
+        byte[] buffer = new byte[size];
         try {
-            int sizeRead = 0;
-            byte[] buffer = new byte[size];
+            // read the whole buffer received
             while (sizeRead < size) {
                 sizeRead += reader.read(buffer, sizeRead, (size - sizeRead));
-                System.out.println("Received : " + sizeRead + "/" + size + "\n");
+                System.out.println("DEBUG *** TCPreceiver received :" + sizeRead + "/" + size + " ***");
             }
-            //ajouter l'enregistrement du fichier qui etait fait par processTransmission
+            /*
+            *
+            * a changer : passer par le NI puis ctrl ( on a juste a retourner le buffer et le fileName
+            *
+            */
+            // send the buffer to the controler to make the file
             ChatSystem.getControler().processTransmission(buffer, fileName);
             reader.close();
             s0.close();
-            System.out.println("Close on my side ***************");
+            System.out.println("DEBUG *** TCPreceiver closing ***");
             // appeler receipt pour notifier l'utilisateur comme quoi on a bien recu le fichier
+            // ChatSystem.getControler().processReceipt();
         } catch (IOException ex) {
-            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
     }
 }

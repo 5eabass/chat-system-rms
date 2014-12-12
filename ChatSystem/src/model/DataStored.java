@@ -4,35 +4,32 @@ import java.io.File;
 import java.util.*;
 import javax.swing.DefaultListModel;
 import signals.FileProposal;
+
 /*
 * MODEL
 */
 
 public class DataStored {
     
-    private DefaultListModel remoteTable; // info des remotes users table de nom@ip  
-    private DefaultListModel fileStringProposed; // liste des file que l'utilisateur voit
-    private String localName; // nom local user
-    private String localAdress; // @ip local user
-    private String username; // nom@ip de l'utilisateur
-    private String adresseBroadcast; // @broadcast du reseau dans lequel on est
-    private File fileToSend ; // file qu'on send
-    private HashMap<String,FileProposal> fileProposed; // fileproposal enregistré 
+    private DefaultListModel remoteTable; // table storing info about remote users nom@ip  
+    private DefaultListModel fileStringProposed; // list of file proposition the user can see
+    private String localName; // nickname of local user
+    private String localAdress; // @ip of local user
+    private String username; // nickname@ip of local user
+    private String adresseBroadcast; // network's @broadcast
+    private File fileToSend ; // file we are sending
+    private HashMap<String,FileProposal> fileProposed; // stored file proposition
       
             
     public DataStored() {
         this.remoteTable = new DefaultListModel();
         this.fileProposed = new HashMap();
         this.fileStringProposed = new DefaultListModel();
-        //this.receivers = new ArrayList<String>();
-        //this.localName = localName;
-        //this.localAdress = localAdress;
     }
     
     public void addFileProposal(FileProposal fp) {
         String fsp = "From: "+ fp.getFrom() + " File Name: "+ fp.getFileName() + " Size: "+fp.getSize();
-        this.fileProposed.put(fsp,fp);
-        
+        this.fileProposed.put(fsp,fp);    
         this.fileStringProposed.addElement(fsp);
     }
     
@@ -63,12 +60,7 @@ public class DataStored {
     
     public void setLocalAdress(String adr) {
         this.localAdress = adr;
-    }
-    
-    
-    public void setReceivers(ArrayList<String> receiverName) {
-        //this.receivers = receiverName;
-    }
+    }  
     
     public String getUsername() {
         return username;
@@ -86,7 +78,7 @@ public class DataStored {
         this.adresseBroadcast = adr;
     }
     
-    //fonction qui permet de retrouver le nom a partir de la chaine nom@ip
+    //function that retreive juste the nickname of a username (nickname@ip)
     public String getRemoteIp(String remoteString) {
         String remoteIp[] = remoteString.split("@");
         return remoteIp[1];
@@ -116,9 +108,7 @@ public class DataStored {
         this.fileProposed = fileProposed;
     }
     
-    
-    
-             
+    // print the remoteTable 
     @Override
     public String toString() {
         String table = new String();
