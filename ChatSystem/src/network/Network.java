@@ -17,10 +17,8 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class Network implements CtrlToNetwork {
+public class Network implements CtrlToNetwork,ReceiverToNetwork {
     
     private DatagramSocket socket; // the udp socket
     private UDPserver udpServer;
@@ -34,7 +32,7 @@ public class Network implements CtrlToNetwork {
         // this.tcpSender = new Vector<TCPsender>();
         // this.tcpServer = new Vector<TCPserver>();
         this.proposalList = new Vector<FileProposal>();
-        this.ports = 4444;
+        this.ports = 4445;
         this.portd = 4444;
     }
     
@@ -163,8 +161,8 @@ public class Network implements CtrlToNetwork {
     
     // called when we refuse a transfer
     @Override
-    public void performRefuseTransfer(FileProposal fp) {
-        System.out.println("DEBUG *** NETWORK : performRefuseTransfer <= send that we refuse ***");
+    public void processRefuseTransfer(FileProposal fp) {
+        System.out.println("DEBUG *** NETWORK : processRefuseTransfer <= send that we refuse ***");
         FileTransferNotAccepted ftr = new FileTransferNotAccepted(fp.getFileName(), ChatSystem.getModel().getUsername());
         
         try {
@@ -179,18 +177,25 @@ public class Network implements CtrlToNetwork {
     
     // called when we accept a transfer
     @Override
-    public void performAcceptTransfer(FileProposal fp) {
-        System.out.println("DEBUG *** NETWORK : performAcceptTransfer <= send that we accept ***");
+    public void processAcceptTransfer(FileProposal fp) {
+        System.out.println("DEBUG *** NETWORK : processAcceptTransfer <= send that we accept ***");
         FileTransferAccepted fta = new FileTransferAccepted(fp.getFileName(), ChatSystem.getModel().getUsername());
         tcpServer = new TCPserver(fp.getFileName(),(int)fp.getSize(), portd);
-        try {
-            InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fp.getFrom()));
-            udpSender.send(fta, addrIp);
-        } catch (SignalTooBigException ex) {
-            System.err.println(ex);
-        } catch (IOException ex) {
-            System.err.println(ex);
+        if (tcpServer.isAlive()){
+            try {
+                InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fp.getFrom()));
+                udpSender.send(fta, addrIp);
+            } catch (SignalTooBigException ex) {
+                System.err.println(ex);
+            } catch (IOException ex) {
+                System.err.println(ex);
+            }
         }
+        else{
+            processRefuseTransfer(fp);
+            transferNotification(false);
+        }
+        
     }
     
     // called when we send a goodbye
@@ -213,29 +218,6 @@ public class Network implements CtrlToNetwork {
     * FIN FROM CTRL
     */
     
-    // Called when we receive an accept to our file query
-    public void processSendFile(FileTransferAccepted fa) {
-        System.out.println("DEBUG *** NETWORK : processSendFile received accept for :"+fa.getFileName()+" ***");
-        
-        File file = ChatSystem.getModel().getFileToSend();
-        if (!file.getName().equals(fa.getFileName())){
-            System.out.println("DEBUG *** NETWORK : sending " + file.getName() + " <= send the file ***");
-            try {
-                InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fa.getRemoteUsername()));
-                Socket s1 = new Socket(addrIp, portd);
-                // nouvelle partie
-                tcpSender = new TCPsender(s1, file, addrIp.getHostName(), file.length());
-                tcpSender.start();
-                tcpSender = null;
-                // this.tcpSender.add(tcpS);
-                // this.tcpSender.lastElement().start();
-                // this.tcpSender.remove(tcpS);
-            } catch (IOException ex) {
-                System.err.println(ex);
-            }
-        }
-    }
-    
     /*
     * function that receive Signals and manage them
     */
@@ -256,19 +238,62 @@ public class Network implements CtrlToNetwork {
             ChatSystem.getControler().performTextMessage(((TextMessage) s).getMessage(), ((TextMessage) s).getFrom(), ((TextMessage) s).getTo());
         } else if (s instanceof FileProposal) {
             System.out.println("DEBUG *** NETWORK : received a fileProposal ***");
-            ChatSystem.getControler().processFileQuery(((FileProposal) s));
+            ChatSystem.getControler().performFileQuery(((FileProposal) s));
         } else if (s instanceof FileTransferAccepted) {
             System.out.println("DEBUG *** NETWORK : transfer accepted ***");
+            ChatSystem.getControler().performFileAnswer(true);
             this.processSendFile(((FileTransferAccepted) s));
-        }   else if(s instanceof FileTransferNotAccepted){
-            System.out.println("DEBUG *** NETWORK : transfer refused ***");
-            
+        } else if(s instanceof FileTransferNotAccepted){
+            System.out.println("DEBUG *** NETWORK : transfer refused ***"); 
+             ChatSystem.getControler().performFileAnswer(false);
         }
     }
     
-    
-    public void performReceivedFile(){
-        System.out.println("DEBUG *** NETWORK : transfer done sending to ctrl ***");
-        ChatSystem.getControler().processReceipt();
+    // Called when we receive an accept to our file query
+    public void processSendFile(FileTransferAccepted fa) {
+        System.out.println("DEBUG *** NETWORK : processSendFile received accept for :"+fa.getFileName()+" ***");
+        
+        File file = ChatSystem.getModel().getFileToSend();
+        if (file.getName().equals(fa.getFileName())){
+            System.out.println("DEBUG *** NETWORK : sending " + file.getName() + " <= send the file ***");
+            try {
+                InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fa.getRemoteUsername()));
+                Socket s1 = new Socket(addrIp, portd);
+                // nouvelle partie
+                tcpSender = new TCPsender(s1, file, addrIp.getHostName(), file.length());
+                tcpSender.start();
+                tcpSender = null;
+                // this.tcpSender.add(tcpS);
+                // this.tcpSender.lastElement().start();
+                // this.tcpSender.remove(tcpS);
+            } catch (IOException ex) {
+                System.err.println(ex);
+            }
+        }else{
+            transferNotification(false);
+        }
     }
+    
+    public void transferNotification(boolean b){
+        System.out.println("DEBUG *** NETWORK : transferNotification <= when we sent or not a file ***");
+        ChatSystem.getControler().performTransferNotification(b);
+    }
+    
+    /*
+    * From TCPreceiver
+    */
+    
+    //send the buffer to the controler to create the file
+    @Override
+    public void receivedFile(byte[] buffer,String fileName){
+        System.out.println("DEBUG *** NETWORK : receivedFile ==>transfer done sending to ctrl ***");
+        ChatSystem.getControler().performTransmission(buffer,fileName);
+    }
+    
+    @Override
+    public void downloadingInfo(float ratio ,String fileName){
+        System.out.println("DEBUG *** NETWORK : downloadingInfo ==> transfer ratio to ctrl ***");
+        ChatSystem.getControler().performDownloadingInfo(ratio,fileName);
+    }
+    
 }

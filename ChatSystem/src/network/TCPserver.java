@@ -3,6 +3,7 @@ package network;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
+import chatsystem.*;
 
 public class TCPserver extends Thread {
 
@@ -22,6 +23,7 @@ public class TCPserver extends Thread {
 
     @Override
     public void run() {
+       // byte[] buffer = new byte[size];
         try {
             System.out.println("DEBUG *** TCPserver launched ***");
             ss = new ServerSocket(port, max_connexion);
@@ -31,6 +33,7 @@ public class TCPserver extends Thread {
                 System.out.println("DEBUG *** TCPserver Connexion detected ***");
                 rList.add(new TCPreceiver(s0, fileName, size));
                 rList.lastElement().receive();
+                //ChatSystem.getNetwork().performReceivedFile(buffer,fileName);
                 System.out.println("DEBUG *** TCPserver going to close ***");
                 ss.close();
                 break;

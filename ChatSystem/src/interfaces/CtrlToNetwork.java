@@ -10,8 +10,8 @@ public interface CtrlToNetwork {
     public void sendHelloOk(String localname,String remoteName);
     public void processSendMessage(String message ,ArrayList<String> remoteName);
     public void processSendProposal(File file, long size, ArrayList<String> receivers);
-    public void performAcceptTransfer(FileProposal fp);
-    public void performRefuseTransfer(FileProposal fp);
+    public void processAcceptTransfer(FileProposal fp);
+    public void processRefuseTransfer(FileProposal fp);
     public void sendGoodbye(String localName);
     
 }

@@ -481,14 +481,14 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     private void yesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yesButtonActionPerformed
         System.out.println("DEBUG *** GUI : file accepted ***");
         queryDialog.setVisible(false);
-        ChatSystem.getControler().processAcceptTransfer(fileHandled);
+        ChatSystem.getControler().performAcceptTransfer(fileHandled);
         fileHandled = null;
     }//GEN-LAST:event_yesButtonActionPerformed
     
     private void noButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noButtonActionPerformed
         System.out.println("DEBUG *** GUI : file refused ***");
         queryDialog.setVisible(false);
-        ChatSystem.getControler().processRefuseTransfer(fileHandled);
+        ChatSystem.getControler().performRefuseTransfer(fileHandled);
         fileHandled = null;
     }//GEN-LAST:event_noButtonActionPerformed
     
@@ -666,7 +666,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     // called when we receive a text message
     @Override
     public void processTextMessage(String message, String remoteName,ArrayList<String> to) {
-        System.out.println("DEBUG *** GUI : processTextMessage :" + message + " sent to : " +arrayToString(to)+ " <= when we receive a message ***");
+        System.out.println("DEBUG *** GUI : processTextMessage :" + message + " dest : " +arrayToString(to)+ " <= when we receive a message ***");
         try {
             doc.insertString(doc.getLength(), "from " + remoteName + " : " + message + "\n", receiveStyle);
             if (to.size()>1){
@@ -676,6 +676,42 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             System.err.println(e);
         }
     }
+    
+    @Override
+    public void informDownloadingRatio(float ratio,String fileName){
+        System.out.println("DEBUG *** GUI : informDownloadingRatio ***");
+        
+        try {
+            doc.insertString(doc.getLength(), "File : "+ fileName + "received at :" +ratio+ "\n", chatSystemStyle);
+        } catch (BadLocationException e) {
+            System.err.println(e);
+        }
+    }
+    
+    // notify if we successfully received the file and created it
+    @Override
+    public void notifyReceived(String fileName){
+        System.out.println("DEBUG *** GUI : notify received ***");
+        
+        try {
+            doc.insertString(doc.getLength(), "File :"+ fileName+ "received successfully !\n", chatSystemStyle);
+        } catch (BadLocationException e) {
+            System.err.println(e);
+        }
+    }
+    
+    // notify if we didn't succeed to received the whole file 
+    @Override
+    public void notifyNotReceived(String fileName){
+        System.out.println("DEBUG *** GUI : notify not received ***");
+        
+        try {
+            doc.insertString(doc.getLength(), "File :"+ fileName+ " failed in reception !\n", errorStyle);
+        } catch (BadLocationException e) {
+            System.err.println(e);
+        }
+    }
+    
     
     // called when we have successfully sent a file
     @Override
@@ -695,15 +731,41 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         System.out.println("DEBUG *** GUI : notifyNotTransmitted <= when we haven't successfully sent the file ***");
         
         try {
-            doc.insertString(doc.getLength(), "File failed to Transmit ! " + "\n", chatSystemStyle);
+            doc.insertString(doc.getLength(), "File failed to Transmit ! " + "\n", errorStyle);
         } catch (BadLocationException e) {
             System.err.println(e);
         }
     }
+    
+    //called when the remote user accepted our proposal
+    @Override
+    public void processFileAccepted(){
+        System.out.println("DEBUG *** GUI : processFileAccepted <= when the file have been accepted***");
+        
+        try {
+            doc.insertString(doc.getLength(), "File accepted ! " + "\n", chatSystemStyle);
+        } catch (BadLocationException e) {
+            System.err.println(e);
+        }
+    }
+    
+    //called when the remote user didn't accept our proposal
+    @Override
+    public void processFileNotAccepted(){
+        System.out.println("DEBUG *** GUI : processFileNotAccepted <= when the file have been refused ***");
+        
+        try {
+            doc.insertString(doc.getLength(), "File refused ! " + "\n", errorStyle);
+        } catch (BadLocationException e) {
+            System.err.println(e);
+        }
+        
+    }
+       
     //called when we receive a file proposal
     @Override
-    public void performFileQuery(FileProposal fp){
-        System.out.println("DEBUG *** GUI : performFileQuery <= when we receive a proposal ***");
+    public void processFileQuery(FileProposal fp){
+        System.out.println("DEBUG *** GUI : processFileQuery <= when we receive a proposal ***");
         
         try {
             doc.insertString(doc.getLength(), "You received a knew file proposal !\n", chatSystemStyle);
