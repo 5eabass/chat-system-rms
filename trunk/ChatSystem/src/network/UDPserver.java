@@ -16,18 +16,17 @@ public class UDPserver extends Thread {
     }
     
     @Override
-    // lancement du thread
     public void run() {
         try {
-            //initialisation buffer avec la taille
             System.out.println("DEBUG *** UDPserver : run ***");
+            // size initialisation
             byte[] buffer = new byte[Signal.MAX_SIZE];
-            // reception du datagram
             while (true) {
+                // packet reception
                 receivePacket = new DatagramPacket(buffer, buffer.length);
                 serverSocket.receive(receivePacket);
                 System.out.println("DEBUG *** UDPserver : received packet = " + receivePacket + " ***");
-                //envoie du signal au network
+                // send the signal to the network
                 ChatSystem.getNetwork().signalProcess(Signal.fromByteArray(buffer));
             }
         } catch (IOException ex){ 

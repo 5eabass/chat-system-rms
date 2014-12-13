@@ -6,8 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import signals.FileProposal;
 
 public class Controler implements NetworkToCtrl, GUIToCtrl {
@@ -60,30 +59,50 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     
     // called when we receive a proposal
     @Override
-    public void processFileQuery(FileProposal fp) {
-        System.out.println("DEBUG *** CTRL : processFileQuery <= when we're asked to accept/refuse a file receiption***");
+    public void performFileQuery(FileProposal fp) {
+        System.out.println("DEBUG *** CTRL : performFileQuery <= when we're asked to accept/refuse a file receiption***");
         ChatSystem.getModel().addFileProposal(fp);
-        ChatSystem.getGUI().performFileQuery(fp);
+        ChatSystem.getGUI().processFileQuery(fp);
     }
     
-    // called to check if the transmission was successfull
+    // called when we receive the response to the file proposal
     @Override
-    public void processReceipt() {
-        System.out.println("DEBUG *** CTRL : processReceipt <= when the file transmission's is done ***");
-        
+    public void performFileAnswer(boolean b){
+        String s ;
+        if(b){
+            s = "accepted";
+            System.err.println("DEBUG *** CTRL : performFileAccepted or not : " + s + " ***");
+            ChatSystem.getGUI().processFileAccepted();
+        } else{
+            s = "refused";
+            System.err.println("DEBUG *** CTRL : performFileAccepted or not : " + s + " ***");
+            ChatSystem.getGUI().processFileNotAccepted();
+        }
+    }
+    
+    // called to inform to the user the download's progress
+    @Override
+    public void performDownloadingInfo(float ratio, String fileName) {
+        System.out.println("DEBUG *** CTRL : performDownlingInfo " + ratio + "% ***");
+        ChatSystem.getGUI().informDownloadingRatio(ratio,fileName);       
     }
     
     // called when we received a file
     @Override
-    public void processTransmission(byte[] buffer, String fileName) {
-        System.out.println("DEBUG *** CTRL : processTransmission <= when we receive a file ***");
+    public void performTransmission(byte[] buffer, String fileName) {
+        System.out.println("DEBUG *** CTRL : performTransmission <= when we receive a file ***");
         try {
             File fileOut = new File("downloads/" + fileName);
             FileOutputStream fos = new FileOutputStream(fileOut);
             fos.write(buffer);
             fos.flush();
             fos.close();
-            System.out.println("File size : "+fileOut.length()+"/"+buffer.length);
+            System.err.println("DEBUG *** CTRL : File size : "+fileOut.length()+"/"+buffer.length+ " ***");
+            if (fileOut.length()!= buffer.length){           
+                ChatSystem.getGUI().notifyNotReceived(fileName);               
+            }else{
+                ChatSystem.getGUI().notifyReceived(fileName);
+            }      
         } catch (FileNotFoundException ex) {
             System.err.println(ex);
         } catch (IOException ex) {
@@ -91,6 +110,23 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         }
     }
     
+    // called when we sent a file
+    @Override
+    public void performTransferNotification(boolean b){
+        String s;
+        if (b){
+            s = "true";
+            System.err.println("DEBUG *** CTRL : performTransferNotification : " + s + " ***");
+            ChatSystem.getGUI().notifyTransmitted();
+        }else{
+            s = "false";
+            System.err.println("DEBUG *** CTRL : performTransferNotification : " + s + " ***");
+            ChatSystem.getGUI().notifyNotTransmitted();
+        }
+    }
+    
+    
+       
     //called when we receive a goodbye
     @Override
     public void performGoodbye(String remoteName) {
@@ -103,8 +139,7 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     /*
     * FIN FROM NETWORK
     */
-    
-    
+      
     /*
     * FROM GUI
     */
@@ -149,17 +184,17 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     
     // called when we accept a transfer
     @Override
-    public void processAcceptTransfer(String fileName) {
-        System.out.println("DEBUG *** CTRL : processAcceptTransfer <= when we accept transfer ***");
-        ChatSystem.getNetwork().performAcceptTransfer(ChatSystem.getModel().getFileProposal(fileName));
+    public void performAcceptTransfer(String fileName) {
+        System.out.println("DEBUG *** CTRL : performAcceptTransfer <= when we accept transfer ***");
+        ChatSystem.getNetwork().processAcceptTransfer(ChatSystem.getModel().getFileProposal(fileName));
         ChatSystem.getModel().removeFileProposal(fileName);
     }
     
     // called when we refuse a transfer
     @Override
-    public void processRefuseTransfer(String fileName) {
-        System.out.println("DEBUG *** CTRL : processRefuseTransfer <= when we refuse transfer ***");
-        ChatSystem.getNetwork().performRefuseTransfer(ChatSystem.getModel().getFileProposal(fileName));
+    public void performRefuseTransfer(String fileName) {
+        System.out.println("DEBUG *** CTRL : performRefuseTransfer <= when we refuse transfer ***");
+        ChatSystem.getNetwork().processRefuseTransfer(ChatSystem.getModel().getFileProposal(fileName));
         ChatSystem.getModel().removeFileProposal(fileName);
     }
     
