@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import signals.FileProposal;
+import sun.awt.OSInfo;
 
 public class Controler implements NetworkToCtrl, GUIToCtrl {
     
@@ -80,19 +81,17 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         }
     }
     
-    // called to inform to the user the download's progress
-    @Override
-    public void performDownloadingInfo(float ratio, String fileName) {
-        System.out.println("DEBUG *** CTRL : performDownlingInfo " + ratio + "% ***");
-        ChatSystem.getGUI().informDownloadingRatio(ratio,fileName);       
-    }
-    
     // called when we received a file
     @Override
     public void performTransmission(byte[] buffer, String fileName) {
         System.out.println("DEBUG *** CTRL : performTransmission <= when we receive a file ***");
-        try {
-            File fileOut = new File("downloads/" + fileName);
+        String currentDir = System.getProperty("user.dir");
+        File dirDownload = new File("./chatDownload/");
+        try {                    
+            if (!dirDownload.exists()){
+                dirDownload.mkdir();
+            }
+            File fileOut = new File( currentDir+"/chatDownload/"+fileName);                     
             FileOutputStream fos = new FileOutputStream(fileOut);
             fos.write(buffer);
             fos.flush();

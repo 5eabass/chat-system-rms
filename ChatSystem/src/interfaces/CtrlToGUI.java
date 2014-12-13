@@ -7,7 +7,6 @@ public interface CtrlToGUI {
     
     public void addUser(String remoteName);
     public void processTextMessage(String message,String remoteName, ArrayList<String> to);
-    public void informDownloadingRatio(float ratio, String fileName);
     public void notifyReceived(String fileName);
     public void notifyNotReceived(String fileName);
     public void notifyTransmitted();
