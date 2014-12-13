@@ -11,7 +11,6 @@ public interface NetworkToCtrl {
     public void performTransmission(byte[] buffer, String fileName);
     public void performFileQuery(FileProposal fp);
     public void performFileAnswer(boolean b);
-    public void performDownloadingInfo(float ratio, String fileName);
     public void performTransferNotification(boolean b);
     public void performGoodbye(String remoteName);      
 }

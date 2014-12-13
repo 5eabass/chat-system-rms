@@ -34,7 +34,6 @@ class TCPreceiver {
             while (sizeRead < size) {
                 sizeRead += reader.read(buffer, sizeRead, (size - sizeRead));
                 System.out.println("DEBUG *** TCPreceiver received :" + sizeRead + "/" + size + " ***");
-                ChatSystem.getNetwork().downloadingInfo((sizeRead/size)*100, fileName);
             }        
             reader.close();
             s0.close();

@@ -302,9 +302,9 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         );
 
         queryDialog.setBackground(new java.awt.Color(255, 255, 255));
-        queryDialog.setSize(new java.awt.Dimension(524, 396));
+        queryDialog.setSize(new java.awt.Dimension(524, 406));
 
-        filePanel.setBackground(new java.awt.Color(51, 51, 51));
+        filePanel.setBackground(new java.awt.Color(102, 102, 102));
 
         questionLabel.setForeground(new java.awt.Color(255, 255, 255));
         questionLabel.setText("   Do you accept to receive this file ?");
@@ -323,7 +323,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
             }
         });
 
-        listFile.setBackground(new java.awt.Color(0, 0, 0));
+        listFile.setBackground(new java.awt.Color(51, 51, 51));
         listFile.setForeground(new java.awt.Color(255, 255, 255));
         listFile.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -341,7 +341,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
                     .addGroup(filePanelLayout.createSequentialGroup()
                         .addGap(158, 158, 158)
                         .addComponent(yesButton)
-                        .addGap(60, 60, 60)
+                        .addGap(64, 64, 64)
                         .addComponent(noButton))
                     .addGroup(filePanelLayout.createSequentialGroup()
                         .addGap(42, 42, 42)
@@ -354,15 +354,15 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         filePanelLayout.setVerticalGroup(
             filePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(filePanelLayout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
-                .addComponent(questionLabel)
                 .addGap(18, 18, 18)
+                .addComponent(questionLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(scrolFilepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(filePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(yesButton)
                     .addComponent(noButton))
-                .addContainerGap())
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout queryDialogLayout = new javax.swing.GroupLayout(queryDialog.getContentPane());
@@ -417,11 +417,13 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
                                 .addComponent(presentationLabel))
                             .addGroup(entryPanelLayout.createSequentialGroup()
                                 .addGap(91, 91, 91)
-                                .addGroup(entryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(connectButton)
-                                    .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 15, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, entryPanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(connectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         entryPanelLayout.setVerticalGroup(
             entryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -591,7 +593,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     
     private void downloadedFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadedFileActionPerformed
         System.out.println("DEBUG *** GUI : selected downloaded file menu ***");
-        JFileChooser chooser = new JFileChooser("./downloads");
+        JFileChooser chooser = new JFileChooser("./chatDownload");
         int retValue = chooser.showOpenDialog(null);
         if (retValue == JFileChooser.APPROVE_OPTION){
             // if user pushed open button : open the file
@@ -677,24 +679,13 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         }
     }
     
-    @Override
-    public void informDownloadingRatio(float ratio,String fileName){
-        System.out.println("DEBUG *** GUI : informDownloadingRatio ***");
-        
-        try {
-            doc.insertString(doc.getLength(), "File : "+ fileName + "received at :" +ratio+ "\n", chatSystemStyle);
-        } catch (BadLocationException e) {
-            System.err.println(e);
-        }
-    }
-    
     // notify if we successfully received the file and created it
     @Override
     public void notifyReceived(String fileName){
         System.out.println("DEBUG *** GUI : notify received ***");
         
         try {
-            doc.insertString(doc.getLength(), "File :"+ fileName+ "received successfully !\n", chatSystemStyle);
+            doc.insertString(doc.getLength(), "File :"+ fileName+ " received successfully !\n", chatSystemStyle);
         } catch (BadLocationException e) {
             System.err.println(e);
         }

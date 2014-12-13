@@ -29,10 +29,8 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
     private Vector<FileProposal> proposalList; // file proposal we sent
     
     public Network() {
-        // this.tcpSender = new Vector<TCPsender>();
-        // this.tcpServer = new Vector<TCPserver>();
         this.proposalList = new Vector<FileProposal>();
-        this.ports = 4445;
+        this.ports = 4444;
         this.portd = 4444;
     }
     
@@ -47,13 +45,8 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
             System.err.println(ex);
         }
     }
-    /*
-    public void openTCP(String fileName,int size,int port) {
-    this.tcpServer.add(new TCPserver(fileName,size,port));
-    this.tcpServer.lastElement().start();
-    this.tcpServer = new TCPserver(fileName, size, port);
-    }*/
     
+    // function that find our @ip and the broadcast@ depending on our network
     public String getIPs() {
         boolean notFound = true;
         InetAddress addrIP = null;
@@ -62,19 +55,21 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
             Enumeration<NetworkInterface> ni = NetworkInterface.getNetworkInterfaces();
             while (ni.hasMoreElements() && notFound) {
                 NetworkInterface i = (NetworkInterface) ni.nextElement();
-                if ((i.getName().equals("eth0")) || (i.getName().equals("wlan0") || (i.getName().equals("en1")))) { // a changer par eth0 sur ubuntu
-                    notFound = false;
-                    List<InterfaceAddress> list = i.getInterfaceAddresses();
-                    Iterator<InterfaceAddress> it = list.iterator();
-                    for (Enumeration en = i.getInetAddresses(); en.hasMoreElements();) {
-                        InterfaceAddress ia = it.next();
-                        InetAddress addr = (InetAddress) en.nextElement();
-                        if (addr instanceof Inet4Address) {
+                List<InterfaceAddress> list = i.getInterfaceAddresses();
+                Iterator<InterfaceAddress> it = list.iterator();
+                for (Enumeration en = i.getInetAddresses(); en.hasMoreElements();) {
+                    InterfaceAddress ia = it.next();
+                    InetAddress addr = (InetAddress) en.nextElement();
+                    if (addr instanceof Inet4Address) {
+                        if ((!addr.getHostAddress().equals("127.0.0.1") && (!addr.getHostAddress().equals("192.168.239.1")) ) ){
+                           // the 192.168.239.1 is the vmnet8@ when we use virtual machine,
+                           // i needed to disable it take the right one
+                            notFound = false ;
                             addrIP = addr;
                             broadcast = ia.getBroadcast();
                         }
                     }
-                }
+                }              
             }
         } catch (IOException e) {
             System.err.println("error");
@@ -181,6 +176,7 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         System.out.println("DEBUG *** NETWORK : processAcceptTransfer <= send that we accept ***");
         FileTransferAccepted fta = new FileTransferAccepted(fp.getFileName(), ChatSystem.getModel().getUsername());
         tcpServer = new TCPserver(fp.getFileName(),(int)fp.getSize(), portd);
+        tcpServer.start();
         if (tcpServer.isAlive()){
             try {
                 InetAddress addrIp = InetAddress.getByName(ChatSystem.getModel().getRemoteIp(fp.getFrom()));
@@ -244,8 +240,8 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
             ChatSystem.getControler().performFileAnswer(true);
             this.processSendFile(((FileTransferAccepted) s));
         } else if(s instanceof FileTransferNotAccepted){
-            System.out.println("DEBUG *** NETWORK : transfer refused ***"); 
-             ChatSystem.getControler().performFileAnswer(false);
+            System.out.println("DEBUG *** NETWORK : transfer refused ***");
+            ChatSystem.getControler().performFileAnswer(false);
         }
     }
     
@@ -289,11 +285,4 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         System.out.println("DEBUG *** NETWORK : receivedFile ==>transfer done sending to ctrl ***");
         ChatSystem.getControler().performTransmission(buffer,fileName);
     }
-    
-    @Override
-    public void downloadingInfo(float ratio ,String fileName){
-        System.out.println("DEBUG *** NETWORK : downloadingInfo ==> transfer ratio to ctrl ***");
-        ChatSystem.getControler().performDownloadingInfo(ratio,fileName);
-    }
-    
 }
