@@ -470,7 +470,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         ChatSystem.getControler().performConnect();
         // print to the chat the welcome message
         try {
-            doc.insertString(doc.getLength(), "Welcome to the chat ! \nyour adress ip is : " + ChatSystem.getModel().getLocalAdress() + "\n", chatSystemStyle);
+            doc.insertString(doc.getLength(), "Welcome to the chat " + usernameArea.getText() + " ! \nyour adress ip is : " + ChatSystem.getModel().getLocalAdress() + "\n", chatSystemStyle);
         } catch (BadLocationException e) {
             System.err.println(e);
         }
