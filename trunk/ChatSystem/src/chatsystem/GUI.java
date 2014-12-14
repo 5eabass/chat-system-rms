@@ -45,6 +45,9 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         StyleConstants.setForeground(receiveStyle, Color.YELLOW);
         StyleConstants.setForeground(sendStyle, Color.ORANGE);
         receiverList = new ArrayList<String>();
+        usageFrame.setTitle("RMS ChatSystem");
+        queryDialog.setTitle("File Proposed");
+        this.setTitle("RMS ChatSystem");
     }
     
     /**
@@ -302,7 +305,9 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         );
 
         queryDialog.setBackground(new java.awt.Color(255, 255, 255));
-        queryDialog.setSize(new java.awt.Dimension(524, 406));
+        queryDialog.setPreferredSize(new java.awt.Dimension(457, 400));
+        queryDialog.setResizable(false);
+        queryDialog.setSize(new java.awt.Dimension(457, 400));
 
         filePanel.setBackground(new java.awt.Color(102, 102, 102));
 
@@ -337,32 +342,32 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         filePanelLayout.setHorizontalGroup(
             filePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(filePanelLayout.createSequentialGroup()
-                .addGroup(filePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(filePanelLayout.createSequentialGroup()
-                        .addGap(158, 158, 158)
-                        .addComponent(yesButton)
-                        .addGap(64, 64, 64)
-                        .addComponent(noButton))
-                    .addGroup(filePanelLayout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(scrolFilepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(filePanelLayout.createSequentialGroup()
-                        .addGap(138, 138, 138)
-                        .addComponent(questionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addGap(98, 98, 98)
+                .addComponent(yesButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                .addComponent(noButton)
+                .addGap(97, 97, 97))
+            .addGroup(filePanelLayout.createSequentialGroup()
+                .addGap(98, 98, 98)
+                .addComponent(questionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(filePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(scrolFilepanel)
+                .addContainerGap())
         );
         filePanelLayout.setVerticalGroup(
             filePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(filePanelLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(questionLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrolFilepanel, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(filePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(yesButton)
                     .addComponent(noButton))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout queryDialogLayout = new javax.swing.GroupLayout(queryDialog.getContentPane());
@@ -373,10 +378,11 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         );
         queryDialogLayout.setVerticalGroup(
             queryDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(filePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(filePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         entryPanel.setBackground(new java.awt.Color(51, 51, 51));
 
@@ -389,6 +395,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         usernameArea.setForeground(new java.awt.Color(255, 255, 255));
         usernameArea.setText("username");
         usernameArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        usernameArea.setCaretColor(new java.awt.Color(255, 255, 255));
         usernameArea.setSelectedTextColor(new java.awt.Color(153, 153, 255));
 
         connectButton.setText("CONNECT");
@@ -417,13 +424,11 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
                                 .addComponent(presentationLabel))
                             .addGroup(entryPanelLayout.createSequentialGroup()
                                 .addGap(91, 91, 91)
-                                .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(entryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(usernameArea)
+                                    .addComponent(connectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(0, 15, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, entryPanelLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(connectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         entryPanelLayout.setVerticalGroup(
             entryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -456,8 +461,7 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
         System.out.println("DEBUG *** GUI : pressed CONNECT ***");
         // create info thanks to the user input : name
-        ChatSystem.getControler().createLocalInfo(usernameArea.getText());
-        usageFrame.setTitle("Welcome "+usernameArea.getText());
+        ChatSystem.getControler().createLocalInfo(usernameArea.getText());        
         // initialize the list of connected users
         connectedList.setModel(ChatSystem.getModel().getRemoteTable());
         connectedList.validate();
