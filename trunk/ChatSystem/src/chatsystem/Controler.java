@@ -72,11 +72,11 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         String s ;
         if(b){
             s = "accepted";
-            System.err.println("DEBUG *** CTRL : performFileAccepted or not : " + s + " ***");
+            System.err.println("DEBUG *** CTRL : performFileAnswer : " + s + " ***");
             ChatSystem.getGUI().processFileAccepted();
         } else{
             s = "refused";
-            System.err.println("DEBUG *** CTRL : performFileAccepted or not : " + s + " ***");
+            System.err.println("DEBUG *** CTRL : performFileAnswer : " + s + " ***");
             ChatSystem.getGUI().processFileNotAccepted();
         }
     }
