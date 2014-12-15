@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import signals.FileProposal;
-import sun.awt.OSInfo;
+//import sun.awt.OSInfo;
 
 public class Controler implements NetworkToCtrl, GUIToCtrl {
     
