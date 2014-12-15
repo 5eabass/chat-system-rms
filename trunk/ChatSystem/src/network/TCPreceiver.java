@@ -28,14 +28,19 @@ class TCPreceiver {
     public void receive() {
         System.out.println("DEBUG *** TCPreceiver started ***");
         int sizeRead = 0;
+        int reading = 0;
         byte[] buffer = new byte[size];
-        try {
+        try {                                              
             // read the whole buffer received
-            while (sizeRead < size) {
-                sizeRead += reader.read(buffer, sizeRead, (size - sizeRead));
-                System.out.println("DEBUG *** TCPreceiver received :" + sizeRead + "/" + size + " ***");
-            }        
-            reader.close();
+            while ( (sizeRead < size) && ((reading=reader.read(buffer, sizeRead, (size - sizeRead))) != -1)){ 
+              // if ((reading=reader.read(buffer,sizeRead,(size-sizeRead)))!=-1){}                          
+               // sizeRead = sizeRead + reading ;
+                   //sizeRead += reader.read(buffer,0,sizeRead); 
+                   sizeRead = sizeRead + reading;                
+                   System.out.println("DEBUG *** TCPreceiver received :" + sizeRead + "/" + size + " ***");                           
+            }     
+            
+           reader.close();
             s0.close();
             ChatSystem.getNetwork().receivedFile(buffer,fileName);
             System.out.println("DEBUG *** TCPreceiver closing ***");
