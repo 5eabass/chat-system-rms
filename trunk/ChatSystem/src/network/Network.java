@@ -54,12 +54,28 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         String os = System.getProperty("os.name");
         
         try {
-            // if we have Mac os X or Windows the following works 
+            // if we have Mac os X or Windows the following works
             if (os.contains("Windows") || os.contains("Mac")){
-                
+                // we find our @ip
+                boolean found = false;
                 addrIP = InetAddress.getLocalHost();
-                broadcast = NetworkInterface.getByInetAddress(addrIP).getInterfaceAddresses().get(1).getBroadcast();
+                NetworkInterface i = NetworkInterface.getByInetAddress(addrIP);
                 
+                // we enumerate interface's @ip to find the broadcast one
+                List<InterfaceAddress> list = i.getInterfaceAddresses();
+                Iterator<InterfaceAddress> it = list.iterator();
+                Enumeration en = i.getInetAddresses();
+                while(en.hasMoreElements() && !found) {
+                    InterfaceAddress ia = it.next();
+                    InetAddress addr = (InetAddress) en.nextElement();
+                    
+                    // we choose the ipv4 one and its @broadcast associated
+                    if (addr instanceof Inet4Address) {
+                        found = true;
+                        broadcast = ia.getBroadcast();
+                        break;
+                    }
+                }
                 // else several Ubuntu versions doesn't fit with the previous lines so we need to do this :
             }else if (os.contains("Ubuntu")){
                 
@@ -67,8 +83,8 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
                 Enumeration<NetworkInterface> ni = NetworkInterface.getNetworkInterfaces();
                 while (ni.hasMoreElements() && notFound) {
                     NetworkInterface i = (NetworkInterface) ni.nextElement();
-                    // if the interface we are checking is eth0 or wlan0 then we suppose it's found  
-                    // note : we suppose wlan0 and eth0 or not active in the same time 
+                    // if the interface we are checking is eth0 or wlan0 then we suppose it's found
+                    // note : we suppose wlan0 and eth0 or not active in the same time
                     if ((i.getName().equals("eth0")) || (i.getName().equals("wlan0"))){
                         notFound = false ;
                         List<InterfaceAddress> list = i.getInterfaceAddresses();
@@ -81,7 +97,6 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
                             
                             // we choose the ipv4 one and its @broadcast associated
                             if (addr instanceof Inet4Address) {
-                                notFound = false ;
                                 addrIP = addr;
                                 broadcast = ia.getBroadcast();
                                 
