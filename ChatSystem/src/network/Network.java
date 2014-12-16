@@ -51,25 +51,44 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         boolean notFound = true;
         InetAddress addrIP = null;
         InetAddress broadcast = null;
+        String os = System.getProperty("os.name");
+        
         try {
-            Enumeration<NetworkInterface> ni = NetworkInterface.getNetworkInterfaces();
-            while (ni.hasMoreElements() && notFound) {
-                NetworkInterface i = (NetworkInterface) ni.nextElement();
-                List<InterfaceAddress> list = i.getInterfaceAddresses();
-                Iterator<InterfaceAddress> it = list.iterator();
-                for (Enumeration en = i.getInetAddresses(); en.hasMoreElements();) {
-                    InterfaceAddress ia = it.next();
-                    InetAddress addr = (InetAddress) en.nextElement();
-                    if (addr instanceof Inet4Address) {
-                        if ((!addr.getHostAddress().equals("127.0.0.1") && (!addr.getHostAddress().equals("192.168.239.1")) ) ){
-                           // the 192.168.239.1 is the vmnet8@ when we use virtual machine,
-                           // i needed to disable it take the right one
-                            notFound = false ;
-                            addrIP = addr;
-                            broadcast = ia.getBroadcast();
+            // if we have Mac os X or Windows the following works 
+            if (os.contains("Windows") || os.contains("Mac")){
+                
+                addrIP = InetAddress.getLocalHost();
+                broadcast = NetworkInterface.getByInetAddress(addrIP).getInterfaceAddresses().get(1).getBroadcast();
+                
+                // else several Ubuntu versions doesn't fit with the previous lines so we need to do this :
+            }else if (os.contains("Ubuntu")){
+                
+                //enumeration of the interface we have
+                Enumeration<NetworkInterface> ni = NetworkInterface.getNetworkInterfaces();
+                while (ni.hasMoreElements() && notFound) {
+                    NetworkInterface i = (NetworkInterface) ni.nextElement();
+                    // if the interface we are checking is eth0 or wlan0 then we suppose it's found  
+                    // note : we suppose wlan0 and eth0 or not active in the same time 
+                    if ((i.getName().equals("eth0")) || (i.getName().equals("wlan0"))){
+                        notFound = false ;
+                        List<InterfaceAddress> list = i.getInterfaceAddresses();
+                        Iterator<InterfaceAddress> it = list.iterator();
+                        
+                        //we enumerate each @IP of the interface , we can have ipv6 and ipv4
+                        for (Enumeration en = i.getInetAddresses(); en.hasMoreElements();) {
+                            InterfaceAddress ia = it.next();
+                            InetAddress addr = (InetAddress) en.nextElement();
+                            
+                            // we choose the ipv4 one and its @broadcast associated
+                            if (addr instanceof Inet4Address) {
+                                notFound = false ;
+                                addrIP = addr;
+                                broadcast = ia.getBroadcast();
+                                
+                            }
                         }
                     }
-                }              
+                }
             }
         } catch (IOException e) {
             System.err.println("error");

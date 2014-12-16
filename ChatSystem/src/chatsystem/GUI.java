@@ -305,7 +305,6 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
         );
 
         queryDialog.setBackground(new java.awt.Color(255, 255, 255));
-        queryDialog.setPreferredSize(new java.awt.Dimension(457, 400));
         queryDialog.setResizable(false);
         queryDialog.setSize(new java.awt.Dimension(457, 400));
 
@@ -437,9 +436,9 @@ public class GUI extends javax.swing.JFrame implements CtrlToGUI {
                 .addComponent(presentationLabel)
                 .addGap(18, 18, 18)
                 .addComponent(usernameArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(connectButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(proprietaryLabel)
                 .addContainerGap())
         );
