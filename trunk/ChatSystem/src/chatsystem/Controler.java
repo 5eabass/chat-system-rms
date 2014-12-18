@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import signals.FileProposal;
 //import sun.awt.OSInfo;
 
+/** 
+     * This class is the CONTROLER class and is in relation with the Network and the GUI 
+     * @return 
+     */
+
 public class Controler implements NetworkToCtrl, GUIToCtrl {
     
     public Controler() {
@@ -19,8 +24,13 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     * FROM NETWORK
     */
     
-    // called when we receive hello
-    @Override
+    
+    
+   
+    /** 
+     * FROM NETWORK - This method is calles when we receive a "hello" signal during the connection of the remote users 
+     * @return 
+     */
     public void performHello(String username) {
         
         System.out.println("DEBUG *** CTRL : performHello <= when we receive a Hello ***");
@@ -36,7 +46,10 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         }
     }
     
-    // called when we receive helloOK
+    /** 
+     * FROM NETWORK - This method is called when we receive a "helloOK" signal
+     * @return 
+     */
     @Override
     public void performHelloOk(String username) {
         System.out.println("DEBUG *** CTRL : performHelloOK <= when we receive HelloOK ***");
@@ -51,14 +64,22 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         }
     }
     
-    // called when we receive a textMessage
+    /** 
+     * FROM NETWORK - This method is called when we receive a textMessage from the others users
+     * @return 
+     */
+    // 
     @Override
     public void performTextMessage(String message, String remoteName, ArrayList<String> to) {
         System.out.println("DEBUG *** CTRL : performTextMessage <= when we receive a message ***");
         ChatSystem.getGUI().processTextMessage(message, remoteName, to);
     }
     
-    // called when we receive a proposal
+    /** 
+     * FROM NETWORK - This method is called when we receive a file proposal from the others users
+     * @return 
+     */
+    
     @Override
     public void performFileQuery(FileProposal fp) {
         System.out.println("DEBUG *** CTRL : performFileQuery <= when we're asked to accept/refuse a file receiption***");
@@ -66,7 +87,11 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         ChatSystem.getGUI().processFileQuery(fp);
     }
     
-    // called when we receive the response to the file proposal
+    /** 
+     * FROM NETWORK - This method is called when we receive the response to the file proposal from the others users
+     * @return 
+     */
+     
     @Override
     public void performFileAnswer(boolean b){
         String s ;
@@ -81,7 +106,11 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         }
     }
     
-    // called when we received a file
+    /** 
+     * FROM NETWORK - This method is called when we receive a file
+     * @return 
+     */
+    
     @Override
     public void performTransmission(byte[] buffer, String fileName) {
         System.out.println("DEBUG *** CTRL : performTransmission <= when we receive a file ***");
@@ -109,7 +138,11 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         }
     }
     
-    // called when we sent a file
+    /** 
+     * FROM NETWORK - This method is called when we have sent a file
+     * @return 
+     */
+    
     @Override
     public void performTransferNotification(boolean b){
         String s;
@@ -126,7 +159,11 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     
     
        
-    //called when we receive a goodbye
+    /** 
+     * FROM NETWORK - This method is called when we receive a "goodbye" signal during the disconnection of the remote users
+     * @return 
+     */
+    
     @Override
     public void performGoodbye(String remoteName) {
         System.out.println("DEBUG *** CTRL : performGoodbye <= when receiving goodbye ***");
@@ -143,7 +180,12 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
     * FROM GUI
     */
     
-    // called to create local info : username,adresse ip+broadcast , initialise lists
+    
+     /** 
+     * FROM GUI - This method is called to create local info : username,adresse ip+broadcast, initialize lists
+     * @return 
+     */
+    
     @Override
     public void createLocalInfo(String localName) {
         System.out.println("DEBUG *** CTRL : createLocalInfo  with localname :"+localName+"<= when we connect to chatsystem ***");
@@ -159,7 +201,12 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         System.out.println("DEBUG *** CTRL : "+ ChatSystem.getModel().getUsername()+" ***");
     }
     
-    // called when we connect to the chat
+    
+    /** 
+     * FROM GUI - This method is called when we connect to the chat
+     * @return 
+     */
+   
     @Override
     public void performConnect() {
         System.out.println("DEBUG *** CTRL : performConnect <= when we connect to chatsystem ***");
@@ -167,21 +214,34 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         ChatSystem.getNetwork().sendHello(ChatSystem.getModel().getUsername());
     }
     
-    // called when we send a message
+    
+    /** 
+     * FROM GUI - This method is called when we send a message
+     * @return 
+     */
+  
     @Override
     public void performSendMessage(String message, ArrayList<String> remoteName) {
         System.out.println("DEBUG *** CTRL : performSendMessage  <= when we send a message ***");
         ChatSystem.getNetwork().processSendMessage(message, remoteName);
     }
     
-    // called when we want to send a file
+    /** 
+     * FROM GUI - This method is called when we want to send a file
+     * @return 
+     */
+  
     @Override
     public void performSendFile(File file, ArrayList<String> remoteName) {
         System.out.println("DEBUG *** CTRL : performSendFile"+ file.getName() + " <= when we send file ***");
         ChatSystem.getNetwork().processSendProposal(file, file.length(), remoteName);
     }
     
-    // called when we accept a transfer
+    /** 
+     * FROM GUI - This method is called when we accept a file transfer
+     * @return 
+     */
+
     @Override
     public void performAcceptTransfer(String fileName) {
         System.out.println("DEBUG *** CTRL : performAcceptTransfer <= when we accept transfer ***");
@@ -189,7 +249,12 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         ChatSystem.getModel().removeFileProposal(fileName);
     }
     
-    // called when we refuse a transfer
+    
+    /** 
+     * FROM GUI - This method is called when we refuse a file transfer
+     * @return 
+     */
+  
     @Override
     public void performRefuseTransfer(String fileName) {
         System.out.println("DEBUG *** CTRL : performRefuseTransfer <= when we refuse transfer ***");
@@ -197,7 +262,11 @@ public class Controler implements NetworkToCtrl, GUIToCtrl {
         ChatSystem.getModel().removeFileProposal(fileName);
     }
     
-    // called when we disconnect
+    /** 
+     * FROM GUI - This method is called when we disconnect
+     * @return 
+     */
+
     @Override
     public void performDisconnect(String userName) {
         System.out.println("DEBUG *** CTRL : performDisconnect <= when we disconnect ***");

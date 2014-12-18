@@ -6,16 +6,29 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+/** 
+     * This class is the UDPsender class and permits to send messages in UDP to remote chat systems
+     * @return 
+     */
 public class UDPsender {
     
     private DatagramSocket socket;
     private int port;
+    
+    /** 
+     * This constructor creates a new port and socket to send a message 
+     * @return 
+     */
     
     public UDPsender(DatagramSocket s,int p) {
         this.port = p;    
         this.socket = s;
     }
     
+    /** 
+     * This methods is called when we send a message
+     * @return 
+     */
     public void send(Signal s, InetAddress adrIP) throws SignalTooBigException, IOException {
         try {
             System.out.println("DEBUG *** UDPsender : send ***");

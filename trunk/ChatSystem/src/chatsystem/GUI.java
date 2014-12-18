@@ -13,6 +13,11 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import signals.FileProposal;
 
+/** 
+     * This class "GUI" creates the graphical interface of the chat system 
+     * @return 
+     */
+
 public class GUI extends javax.swing.JFrame implements CtrlToGUI {
     
     /**

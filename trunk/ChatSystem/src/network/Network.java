@@ -18,6 +18,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+/** 
+     * This class is the NETWORK class and is in relation with the Controller
+     * @return 
+     */
 public class Network implements CtrlToNetwork,ReceiverToNetwork {
     
     private DatagramSocket socket; // the udp socket
@@ -28,6 +32,10 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
     private int ports, portd; // we differenciate 2 ports to test on the same laptop
     private Vector<FileProposal> proposalList; // file proposal we sent
     
+    /** 
+     * This constructors permits to create a file proposal list and set the source and destination port to "4444"
+     * @return 
+     */
     public Network() {
         this.proposalList = new Vector<FileProposal>();
         this.ports = 4444;
@@ -46,7 +54,11 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         }
     }
     
-    // function that find our @ip and the broadcast@ depending on our network
+    /** 
+     * This method permits to find our ip adress and the broadcast adress depending on our network
+     * @return 
+     */
+
     public String getIPs() {
         boolean notFound = true;
         InetAddress addrIP = null;
@@ -121,7 +133,12 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
     * FROM CONTROLER
     */
     
-    // called when we send a Hello
+    
+    /** 
+     * FROM CONTROLER - This method is called when we send a "hello" signal
+     * @return 
+     */
+
     @Override
     public void sendHello(String u) {
         System.out.println("DEBUG *** NETWORK : sendHello , userName = " + u + " ***");
@@ -137,7 +154,11 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         
     }
     
-    // called when we send a helloOk
+    /**
+     * FROM CONTROLER - This method is called when we send a "helloOk" signal to the remote users
+     * @return 
+     */
+
     @Override
     public void sendHelloOk(String localName, String remoteName) {
         System.out.println("DEBUG *** NETWORK : sendHelloOK , username = " + localName + "to remoteName :" + remoteName + " ***");
@@ -152,7 +173,11 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         
     }
     
-    // called when we send a Message
+    /** 
+     * FROM CONTROLER - This method is called when we send a message
+     * @return 
+     */
+  
     @Override
     public void processSendMessage(String message, ArrayList<String> receivers) {
         System.out.println("DEBUG *** NETWORK : processSendMessage ,message : " + message + " ***");
@@ -169,7 +194,11 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         }
     }
     
-    // Called when we send a file proposal
+    /** 
+     * FROM CONTROLER - This method is called when we send a file proposal
+     * @return 
+     */
+
     @Override
     public void processSendProposal(File file, long size, ArrayList<String> receivers) {
         System.out.println("DEBUG *** NETWORK : processSendProposal "+ file.getName() +" <= ask to send a file ***");
@@ -188,7 +217,11 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         }
     }
     
-    // called when we refuse a transfer
+    /** 
+     * FROM CONTROLER - This method is called when we refuse a file transfer
+     * @return 
+     */
+
     @Override
     public void processRefuseTransfer(FileProposal fp) {
         System.out.println("DEBUG *** NETWORK : processRefuseTransfer <= send that we refuse ***");
@@ -204,7 +237,11 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         }
     }
     
-    // called when we accept a transfer
+    /** 
+     * FROM CONTROLER - This method is called when we accept a file transfer
+     * @return 
+     */
+
     @Override
     public void processAcceptTransfer(FileProposal fp) {
         System.out.println("DEBUG *** NETWORK : processAcceptTransfer <= send that we accept ***");
@@ -228,7 +265,11 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         
     }
     
-    // called when we send a goodbye
+    /** 
+     * FROM CONTROLER - This method is called when we send a "goodbye" signal to the others users (disconnection) 
+     * @return 
+     */
+
     @Override
     public void sendGoodbye(String username) {
         System.out.println("DEBUG *** NETWORK : send GOODBYE , name sent = " + username + " ***");
@@ -248,11 +289,11 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
     * FIN FROM CTRL
     */
     
-    /*
-    * function that receive Signals and manage them
-    */
-    
-    public void signalProcess(Signal s) { // a modifier
+    /**
+     * This method receive signals and manage them
+     * @return 
+     */
+    public void signalProcess(Signal s) { 
         System.out.println("DEBUG *** NETWORK : signal processing ***");
         if (s instanceof Hello) {
             System.out.println("DEBUG *** NETWORK : received Hello ***");
@@ -279,7 +320,11 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         }
     }
     
-    // Called when we receive an accept to our file query
+    /** 
+     * This method is called when we receive an accept from a remote user to our file query
+     * @return 
+     */
+
     public void processSendFile(FileTransferAccepted fa) {
         System.out.println("DEBUG *** NETWORK : processSendFile received accept for :"+fa.getFileName()+" ***");
         
@@ -304,6 +349,10 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
         }
     }
     
+    /** 
+     * This method is called to notify if the file has been successfully sent or not
+     * @return 
+     */
     public void transferNotification(boolean b){
         System.out.println("DEBUG *** NETWORK : transferNotification <= when we sent or not a file ***");
         ChatSystem.getControler().performTransferNotification(b);
@@ -313,7 +362,11 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
     * From TCPreceiver
     */
     
-    //send the buffer to the controler to create the file
+    /** 
+     * FROM TCP RECEIVER - This method send the buffer to the controler to create the file
+     * @return 
+     */
+ 
     @Override
     public void receivedFile(byte[] buffer,String fileName){
         System.out.println("DEBUG *** NETWORK : receivedFile ==>transfer done sending to ctrl ***");

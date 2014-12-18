@@ -1,5 +1,9 @@
 package signals;
 
+/** 
+     * This class Hello is a signal called when we launch a connection to the chat system
+     * @return 
+     */
 public class Hello extends Signal {
 	private String username;
 

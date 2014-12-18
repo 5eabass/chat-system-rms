@@ -6,15 +6,27 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import signals.*;
 
+/** 
+     * This class is the UDPserver thread 
+     * @return 
+     */
 public class UDPserver extends Thread {
     
     private DatagramPacket receivePacket;
     private DatagramSocket serverSocket;
     
+    /** 
+     * This constructor creates a new socket  
+     * @return 
+     */
     public UDPserver(DatagramSocket s) {
             this.serverSocket = s;
     }
     
+    /** 
+     * This run method launch the reception of messages from remote users 
+     * @return 
+     */
     @Override
     public void run() {
         try {

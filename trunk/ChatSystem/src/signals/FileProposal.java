@@ -2,6 +2,10 @@ package signals;
 
 import java.util.ArrayList;
 
+/** 
+     * This class FileProposal is a signal called when we are sending a new file proposal to a remote user 
+     * @return 
+     */
 public class FileProposal extends Signal {
         private String fileName;
         private long size;
