@@ -11,6 +11,10 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/** 
+     * This class is the TCPsender class and permits to send files in TCP to remote chat systems
+     * @return 
+     */
 public class TCPsender extends Thread {
     
     private Socket s1;
@@ -20,6 +24,10 @@ public class TCPsender extends Thread {
     private long size;
     private File file;
     
+  /** 
+     * This constructor initializes in emission the socket, the buffer, the name of the file and his size
+     * @return 
+     */
     public TCPsender(Socket s, File file, String remoteName, long size) {
         
         this.s1 = s;
@@ -28,6 +36,10 @@ public class TCPsender extends Thread {
         this.buffer = new byte[(int) size];
     }
     
+    /** 
+     * This method send a new connection establishement, send the file to the remote users and close the connection
+     * @return 
+     */
     @Override
     public void run() {
         System.out.println("DEBUG *** TCPsender launch ***");
@@ -47,7 +59,11 @@ public class TCPsender extends Thread {
         // appeler transmission ( chez ctrl) dire fichier bien recu par le remote
     }
     
-    // establish the connection
+    /** 
+     * This method is called when we are sending a new connection establishement 
+     * @return 
+     */
+
     private void connectionEstablishement() {
         try {
             writer = s1.getOutputStream();
@@ -58,7 +74,11 @@ public class TCPsender extends Thread {
         }
     }
     
-    // Send the file
+    /** 
+     * This method is called when we send the file
+     * @return 
+     */
+
     public void sendFile() {
         System.out.println("DEBUG *** TCPsender : start sending ***");
         try {
@@ -84,7 +104,11 @@ public class TCPsender extends Thread {
         System.out.println("DEBUG *** TCPsender : File sent ***");
     }
     
-    // close the connection
+    /** 
+     * This method is called when we close the connection
+     * @return 
+     */
+    
     public void connectionTearDown() {
         try {
             this.s1.close();

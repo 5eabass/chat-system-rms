@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
+/** 
+     * This class is the TCPreceiver class and permits to receive files in TCP from remote chat systems
+     * @return 
+     */
 class TCPreceiver {
     
     private Socket s0;
@@ -13,6 +17,10 @@ class TCPreceiver {
     private String fileName;
     private int size;
     
+    /** 
+     * This constructor initializes in reception the socket, the bufferReader, the name of the file and his size
+     * @return 
+     */
     public TCPreceiver(Socket s, String f, int size) {
         this.s0 = s;
         this.size = size;
@@ -25,6 +33,10 @@ class TCPreceiver {
         }
     }
     
+    /** 
+     * This method is called when we receive a file
+     * @return 
+     */
     public void receive() {
         System.out.println("DEBUG *** TCPreceiver started ***");
         int sizeRead = 0;

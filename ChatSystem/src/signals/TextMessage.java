@@ -2,6 +2,10 @@ package signals;
 
 import java.util.ArrayList;
 
+/** 
+     * This class TextMessage is a signal called when we send a text message  
+     * @return 
+     */
 public class TextMessage extends Signal {
 	private String message;
 	private String from;

@@ -5,6 +5,10 @@ import java.net.Socket;
 import java.util.Vector;
 import chatsystem.*;
 
+/** 
+     * This class is the TCPserver thread 
+     * @return 
+     */
 public class TCPserver extends Thread {
 
     private ServerSocket ss;
@@ -21,6 +25,10 @@ public class TCPserver extends Thread {
         this.max_connexion = 1;
     }
 
+    /** 
+     * This run method creates a new server socket and wait for the connection, then receipts the file 
+     * @return 
+     */
     @Override
     public void run() {
        // byte[] buffer = new byte[size];

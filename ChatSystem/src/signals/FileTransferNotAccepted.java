@@ -1,15 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package signals;
 
 /**
+ * This class FileTransferNotAccepted is a signal called when we refuse a file transfer
+ * transfer from the remote user
  *
- * @author gb
+ * @return
  */
 public class FileTransferNotAccepted extends Signal {
+
     private String fileName;
     private String remoteUsername;
 
