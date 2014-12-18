@@ -77,7 +77,7 @@ public class Network implements CtrlToNetwork,ReceiverToNetwork {
                     }
                 }
                 // else several Ubuntu versions doesn't fit with the previous lines so we need to do this :
-            }else if (os.contains("Ubuntu")){
+            }else if (os.contains("Linux")){
                 
                 //enumeration of the interface we have
                 Enumeration<NetworkInterface> ni = NetworkInterface.getNetworkInterfaces();
