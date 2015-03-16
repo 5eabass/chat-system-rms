@@ -1,0 +1,1 @@
+The goal of this project is to create a peer to peer chat system in groups of two or three people.
